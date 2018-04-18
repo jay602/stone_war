@@ -150,7 +150,8 @@ cc.Class({
                 
                 this.curPlayerCount++;
             }else if(entity.className == "Item") {
-
+                cc.log("1212 Item:%s enter world", entity.name);
+                ae = cc.instantiate(ItemPrefabMap[entity.name]);
             }
             
             this.node.addChild(ae);

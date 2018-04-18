@@ -9,11 +9,17 @@
   "collision-matrix": [
     [
       true,
+      true,
       true
     ],
     [
       true,
       false
+    ],
+    [
+      true,
+      false,
+      true
     ]
   ],
   "design-resolution-height": 640,
@@ -23,7 +29,8 @@
   "fit-width": true,
   "group-list": [
     "default",
-    "player"
+    "player",
+    "item"
   ],
   "simulator-orientation": false,
   "simulator-resolution": {

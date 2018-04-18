@@ -34,6 +34,7 @@ cc.Class({
     onLoad: function () {
         this.initKbengine();
         this.installEvents();
+        this.loadItemPrefab();
        
         this.btn_start.node.on('click', this.startGame, this);
         this.textinput_name.string = this.randomstring(4);
@@ -50,6 +51,20 @@ cc.Class({
         while(s.length< L) s+= randomchar();
         return s;
     },
+
+    loadItemPrefab: function() {
+        cc.loader.loadResArray(ItemPrefabUrl['map1'], cc.Prefab, function (err, prefabArray) {
+            if (err) {
+                cc.error("load item prefab error: " + err);
+                return;
+            }
+            cc.log("load item prefab....");
+            for(var prefab of prefabArray) {
+                ItemPrefabMap[prefab.name] = prefab;
+            }
+           
+        });
+     },
 
      initKbengine: function() {
         var args = new KBEngine.KBEngineArgs();
@@ -72,23 +87,30 @@ cc.Class({
      },
 
      onConnectionState : function(success) {
+        var logStr = '';
 		if(!success) {
-            cc.log(" Connect(" + KBEngine.app.ip + ":" + KBEngine.app.port + ") is error! (连接错误)");
+            logStr = " Connect(" + KBEngine.app.ip + ":" + KBEngine.app.port + ") is error! (连接错误)";
         }
 		else {
-            cc.log("Connect successfully, please wait...(连接成功，请等候...)")
+            logStr = "Connect successfully, please wait...(连接成功，请等候...)";
         }
+        this.label_hint.string = logStr;
+        cc.log(logStr);
 	},
 
      onLoginFailed : function(failedcode) {
-         if(failedcode == 20)
-         {
-             cc.log("Login is failed(登陆失败), err=" + KBEngine.app.serverErr(failedcode) + ", " + KBEngine.app.serverdatas);
-         }
-         else
-         {
-            cc.log("Login is failed(登陆失败), err=" + KBEngine.app.serverErr(failedcode));
-         }    	
+        var logStr = '';
+        if(failedcode == 20)
+        {
+           logStr = "Login is failed(登陆失败), err=" + KBEngine.app.serverErr(failedcode) + ", " + KBEngine.app.serverdatas;
+        }
+        else
+        {
+           logStr = "Login is failed(登陆失败), err=" + KBEngine.app.serverErr(failedcode);
+        }    
+        
+        this.label_hint.string = logStr;
+        cc.log(logStr); 	
      },
 
      onReloginBaseappFailed: function(failedcode){
@@ -128,7 +150,6 @@ cc.Class({
  
  
     startGame: function (event) {
-        cc.log(" 8888 start game...........");
         if(this.textinput_name.string.length < 3)
         {
             this.label_hint.string = "长度必须大于等于3!";

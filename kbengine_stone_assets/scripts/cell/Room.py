@@ -23,17 +23,18 @@ class Room(KBEngine.Entity):
 		self.items = []
 		DEBUG_MSG('created space[%d] entityID = %i.' % (self.roomKeyC, self.id))
 		KBEngine.globalData["Room_%i" % self.spaceID] = self.base
-		#self.createItems()
+		self.createItems()
 		
 	def createItems(self):
 		"""
 		生成房间内的物品
 		"""
-		index = 0
-		for name, harm in GameConfigs.ITEMS["map1"].items():
-			pos = GameConfigs.ITEMS_POSITION["map1"][index]
-			index += 1
+		for name, prop in GameConfigs.ITEMS["map1"].items():
+			harm = prop['harm']
+			pos = prop['pos']
 			DEBUG_MSG("create item: name=%s harm=%i." % (name, harm))
+			DEBUG_MSG("prop: ")
+			DEBUG_MSG(prop)
 			DEBUG_MSG("item positin")
 			DEBUG_MSG(pos)
 			dir = (0.0, 0.0, 0.0)

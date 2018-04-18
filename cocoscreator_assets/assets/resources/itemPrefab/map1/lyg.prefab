@@ -1,0 +1,487 @@
+[
+  {
+    "__type__": "cc.Prefab",
+    "_name": "",
+    "_objFlags": 0,
+    "_rawFiles": null,
+    "data": {
+      "__id__": 1
+    }
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "lyg",
+    "_objFlags": 0,
+    "_parent": null,
+    "_children": [],
+    "_tag": -1,
+    "_active": true,
+    "_components": [
+      {
+        "__id__": 2
+      },
+      {
+        "__id__": 3
+      },
+      {
+        "__id__": 4
+      }
+    ],
+    "_prefab": {
+      "__id__": 5
+    },
+    "_id": "",
+    "_opacity": 255,
+    "_color": {
+      "__type__": "cc.Color",
+      "r": 255,
+      "g": 255,
+      "b": 255,
+      "a": 255
+    },
+    "_cascadeOpacityEnabled": true,
+    "_anchorPoint": {
+      "__type__": "cc.Vec2",
+      "x": 0.5,
+      "y": 0.5
+    },
+    "_contentSize": {
+      "__type__": "cc.Size",
+      "width": 103,
+      "height": 82
+    },
+    "_rotationX": 0,
+    "_rotationY": 0,
+    "_scaleX": 1,
+    "_scaleY": 1,
+    "_position": {
+      "__type__": "cc.Vec2",
+      "x": 845,
+      "y": 179
+    },
+    "_skewX": 0,
+    "_skewY": 0,
+    "_localZOrder": 0,
+    "_globalZOrder": 0,
+    "_opacityModifyRGB": false,
+    "groupIndex": 2
+  },
+  {
+    "__type__": "cc.Sprite",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 1
+    },
+    "_enabled": true,
+    "_spriteFrame": {
+      "__uuid__": "3dd5bfe9-0e2b-415f-bdc1-975a8ab5fda2"
+    },
+    "_type": 0,
+    "_sizeMode": 1,
+    "_fillType": 0,
+    "_fillCenter": {
+      "__type__": "cc.Vec2",
+      "x": 0,
+      "y": 0
+    },
+    "_fillStart": 0,
+    "_fillRange": 0,
+    "_isTrimmedMode": true,
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
+    "_atlas": null
+  },
+  {
+    "__type__": "cc.RigidBody",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 1
+    },
+    "_enabled": true,
+    "_type": 2,
+    "_allowSleep": true,
+    "_gravityScale": 1,
+    "_linearDamping": 0,
+    "_angularDamping": 0,
+    "_linearVelocity": {
+      "__type__": "cc.Vec2",
+      "x": 0,
+      "y": 0
+    },
+    "_angularVelocity": 0,
+    "_fixedRotation": false,
+    "enabledContactListener": true,
+    "bullet": false
+  },
+  {
+    "__type__": "cc.PhysicsChainCollider",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 1
+    },
+    "_enabled": true,
+    "tag": 102,
+    "_density": 1,
+    "_sensor": false,
+    "_friction": 0.2,
+    "_restitution": 0,
+    "body": null,
+    "loop": false,
+    "points": [
+      {
+        "__type__": "cc.Vec2",
+        "x": -8.5,
+        "y": 41
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -11.5,
+        "y": 37
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -11.5,
+        "y": 34
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -8.5,
+        "y": 31
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -11.5,
+        "y": 26
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -13.5,
+        "y": 17
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -15.5,
+        "y": 17
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -21.5,
+        "y": 22
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -24.5,
+        "y": 22
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -22.5,
+        "y": 26
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -23.5,
+        "y": 30
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -30.5,
+        "y": 31
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -38.5,
+        "y": 26
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -36.5,
+        "y": 22
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -40.5,
+        "y": 23
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -48.5,
+        "y": 16
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -48.5,
+        "y": 14
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -51.5,
+        "y": 11
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -50.5,
+        "y": -9
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -42.5,
+        "y": -15
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -30.5,
+        "y": -18
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -30.5,
+        "y": -20
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -34.5,
+        "y": -21
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -36.5,
+        "y": -26
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -29.5,
+        "y": -31
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -23.5,
+        "y": -31
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -21.5,
+        "y": -29
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -21.5,
+        "y": -24
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -23.5,
+        "y": -23
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -21.5,
+        "y": -21
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -20.5,
+        "y": -28
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -15.5,
+        "y": -33
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -9.5,
+        "y": -33
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -6.5,
+        "y": -30
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -6.5,
+        "y": -28
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 0.5,
+        "y": -27
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 3.5,
+        "y": -29
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 38.5,
+        "y": -37
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 40.5,
+        "y": -41
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 48.5,
+        "y": -41
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 51.5,
+        "y": -37
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 50.5,
+        "y": -27
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 46.5,
+        "y": -25
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 40.5,
+        "y": -25
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 34.5,
+        "y": -19
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 25.5,
+        "y": -14
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 21.5,
+        "y": -9
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 19.5,
+        "y": -9
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 11.5,
+        "y": -3
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 14.5,
+        "y": -1
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 16.5,
+        "y": -1
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 16.5,
+        "y": -3
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 20.5,
+        "y": -5
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 24.5,
+        "y": -3
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 25.5,
+        "y": 10
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 21.5,
+        "y": 16
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 16.5,
+        "y": 15
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 14.5,
+        "y": 13
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 14.5,
+        "y": 10
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 3.5,
+        "y": 6
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 0.5,
+        "y": 6
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -3.5,
+        "y": 10
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -8.5,
+        "y": 12
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -0.5,
+        "y": 29
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 2.5,
+        "y": 29
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 5.5,
+        "y": 32
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 5.5,
+        "y": 38
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 1.5,
+        "y": 41
+      }
+    ]
+  },
+  {
+    "__type__": "cc.PrefabInfo",
+    "root": {
+      "__id__": 1
+    },
+    "asset": {
+      "__uuid__": "e9f20e3c-4d5c-4682-b863-2ddfe795a6ee"
+    },
+    "fileId": "6bP+SroKhKvI6WWhPW+Dso",
+    "sync": false
+  }
+]
