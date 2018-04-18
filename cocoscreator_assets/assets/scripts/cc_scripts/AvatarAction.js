@@ -15,7 +15,7 @@ cc.Class({
     properties: {
         gravity: -1000,
 
-        jumpSpeed: cc.v2(300, 300),
+        jumpSpeed: cc.v2(300, 500),
         maxSpeed: cc.v2(400, 600),
         walkspeed: cc.v2(120, 50),
         jumpSpeedY : 0,
@@ -272,8 +272,8 @@ cc.Class({
         var start = this.start_point.convertToWorldSpaceAR(cc.v2(0, 0));
         var end = this.end_point.convertToWorldSpaceAR(cc.v2(0, 0));
         results = cc.director.getPhysicsManager().rayCast(start, end, cc.RayCastType.AllClosest);
-        cc.log("6666 down rayCast Result Count=%d", results.length);
-        cc.log("6666 down rayCast: start(%f, %f)  end(%f, %f)", start.x, start.y, end.x, end.y);
+       // cc.log("6666 down rayCast Result Count=%d", results.length);
+      //  cc.log("6666 down rayCast: start(%f, %f)  end(%f, %f)", start.x, start.y, end.x, end.y);
 
         this.ctx.moveTo(start.x, start.y);
         this.ctx.lineTo(end.x, end.y);
@@ -282,7 +282,7 @@ cc.Class({
         for (var i = 0; i < results.length; i++) {
             var result = results[i];
             var collider = result.collider;
-            cc.log("6666 down rayCast Result %d  name: %s,  point(%s, %s)", i, collider.node.name, result.point.x, result.point.y);
+            //cc.log("6666 down rayCast Result %d  name: %s,  point(%s, %s)", i, collider.node.name, result.point.x, result.point.y);
             if(collider.node.name == "land_bg") {
                 var foot_point = this.node.parent.convertToNodeSpace(result.point);
                 this.node.y = foot_point.y;
