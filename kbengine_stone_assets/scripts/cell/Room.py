@@ -23,7 +23,7 @@ class Room(KBEngine.Entity):
 		self.items = []
 		DEBUG_MSG('created space[%d] entityID = %i.' % (self.roomKeyC, self.id))
 		KBEngine.globalData["Room_%i" % self.spaceID] = self.base
-		self.createItems()
+		#self.createItems()
 		
 	def createItems(self):
 		"""
