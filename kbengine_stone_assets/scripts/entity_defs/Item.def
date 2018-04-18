@@ -1,0 +1,22 @@
+<root>
+	<Properties>
+		<name>
+			<Type>		STRING				</Type>
+			<Flags>		ALL_CLIENTS			</Flags>
+		</name>
+		<harm>
+			<Type>	UINT8 </Type>
+			<Flags>		ALL_CLIENTS			</Flags>
+		</harm>
+	</Properties>
+
+	<ClientMethods>
+	</ClientMethods>
+
+	<BaseMethods>
+	</BaseMethods>
+
+	<CellMethods>
+	</CellMethods>
+
+</root>
