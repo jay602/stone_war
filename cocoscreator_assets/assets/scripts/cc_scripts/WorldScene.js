@@ -54,24 +54,28 @@ cc.Class({
         this.entities = {};
         this.playerControl = null;
 
-        this.initPhysicManager();
+        this.enablePhysicManager();
+       // this.enablePhysicsDebugDraw();
         this.installEvents();
         
     },
 
-    initPhysicManager: function () {
+    enablePhysicManager: function () {
+        cc.director.getCollisionManager().enabled = true;
+        cc.director.getPhysicsManager().enabled = true;
+    },
+
+    enablePhysicsDebugDraw: function() {
         var manager = cc.director.getCollisionManager();
-        manager.enabled = true;
         manager.enabledDebugDraw = true;
         manager.enabledDrawBoundingBox = true;
 
-        cc.director.getPhysicsManager().enabled = true;
         cc.director.getPhysicsManager().debugDrawFlags = cc.PhysicsManager.DrawBits.e_aabbBit |
-            cc.PhysicsManager.DrawBits.e_pairBit |
-            cc.PhysicsManager.DrawBits.e_centerOfMassBit |
-            cc.PhysicsManager.DrawBits.e_jointBit |
-            cc.PhysicsManager.DrawBits.e_shapeBit |
-            cc.PhysicsManager.DrawBits.e_rayCast;
+        cc.PhysicsManager.DrawBits.e_pairBit |
+        cc.PhysicsManager.DrawBits.e_centerOfMassBit |
+        cc.PhysicsManager.DrawBits.e_jointBit |
+        cc.PhysicsManager.DrawBits.e_shapeBit |
+        cc.PhysicsManager.DrawBits.e_rayCast;
     },
 
     installEvents : function() {
@@ -90,12 +94,6 @@ cc.Class({
         KBEngine.Event.register("otherAvatarOnJump", this, "otherAvatarOnJump");
         KBEngine.Event.register("set_position", this, "set_position");
     },
-
-    getCurTime: function() {
-        var date = new Date();
-        return date.toLocaleTimeString();
-    },
-
 
     onKicked : function(failedcode){
         
@@ -152,6 +150,9 @@ cc.Class({
             }else if(entity.className == "Item") {
                 cc.log("1212 Item:%s enter world", entity.name);
                 ae = cc.instantiate(ItemPrefabMap[entity.name]);
+                var action = ae.addComponent("ItemAction");
+                action.setPlayer(this.player);
+                action.setCamera(this.camera);
             }
             
             this.node.addChild(ae);
@@ -167,6 +168,7 @@ cc.Class({
 
     onAvatarEnterWorld : function(rndUUID, eid, avatar){
         if(!this.player) {
+            cc.log("player id=%d onAvatarEnterWorld", avatar.id);
             if(avatar.modelID == 0) {
                 this.player = cc.instantiate(this.pipiPrefab);
             }else if(avatar.modelID == 1) {
