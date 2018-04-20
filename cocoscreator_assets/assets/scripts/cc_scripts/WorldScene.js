@@ -148,17 +148,17 @@ cc.Class({
                 
                 this.curPlayerCount++;
             }else if(entity.className == "Item") {
-                cc.log("1212 Item:%s enter world", entity.name);
+                cc.log("Item:%s enter world", entity.name);
                 ae = cc.instantiate(ItemPrefabMap[entity.name]);
                 var action = ae.addComponent("ItemAction");
                 action.setPlayer(this.player);
-                action.setCamera(this.camera);
+               // action.setCamera(this.camera);
             }
             
             this.node.addChild(ae);
             ae.setPosition( entity.position.x*SCALE,  entity.position.z*SCALE);
             this.entities[entity.id] = ae;
-            cc.log("7788 other  join room");
+            cc.log("other  join room");
         }
     },
 

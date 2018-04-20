@@ -53,10 +53,13 @@ cc.Class({
     onLoad () {
         this.start_point = this.node.getChildByName("start_point");
         this.end_point = this.node.getChildByName("end_point");
+        this.item_point = this.node.getChildByName("item_point");
         this.drawNode = cc.find("worldDraw");
         this.ctx = this.drawNode.getComponent(cc.Graphics);
         this.targetPosition = null;
         this.isCollision = false;
+        this.hasPickUpItem = false;
+        this.item = null;
     },
 
     start () {
@@ -168,6 +171,14 @@ cc.Class({
 
     setAnim: function(anim) {
         this.anim = anim;
+    },
+
+    pickUpItem: function(item) {
+        cc.log("player pick up item");
+        var item_point = this.item_point.convertToWorldSpace(cc.v2(0, 0));
+        var pos = this.node.parent.convertToNodeSpace(item_point);
+        item.node.setPosition(pos);
+        this.hasPickUpItem = true;
     },
 
     setPosition: function(position) {

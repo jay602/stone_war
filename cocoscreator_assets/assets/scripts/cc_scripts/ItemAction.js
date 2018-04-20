@@ -41,36 +41,38 @@ cc.Class({
     },
 
     onLoad () {
-        this.polygonCollider = this.node.getComponent(cc.PolygonCollider);
-    
+        this.chainCollider = this.node.getComponent(cc.PhysicsChainCollider );
+        this.polyCollider = this.node.getComponent(cc.PolygonCollider);
         this.center = this.node.getChildByName("center");
         this.worldNode = cc.find("worldNode");
-        //this.camera = cc.find("Camera");
-        this.canPicked = false;
+        this.camera = cc.find("Camera").getComponent(cc.Camera);
+        this.ctx = cc.find("worldDraw").getComponent(cc.Graphics);
 
         this.node.on(cc.Node.EventType.MOUSE_DOWN, this.pickUped, this);
 
-        this.drawNode = cc.find("worldDraw");
-        this.ctx = this.drawNode.getComponent(cc.Graphics);
+        this.draw = new cc.DrawNode();
+        this.node._sgNode.addChild(this.draw);
+
+        this.canPicked = false;
     },
 
     onCollisionEnter: function (other, self) {
         if(other.node.name === this.player.name) {
-            //this.draw.drawPoly(this.bodyCollider.points, cc.color(100, 0, 0, 50), 1, cc.color(0, 0, 0, 125));
+            this.draw.drawPoly(this.chainCollider.points, cc.color(100, 0, 0, 50), 1, cc.color(0, 0, 0, 125));
             this.canPicked = true;
         }
     },
 
     onCollisionStay: function (other, self) {
         if(other.node.name === this.player.name) {
-           // this.draw.drawPoly(this.bodyCollider.points, cc.color(100, 0, 0, 50), 1, cc.color(0, 0, 0, 125));
+            this.draw.drawPoly(this.chainCollider.points, cc.color(100, 0, 0, 50), 1, cc.color(0, 0, 0, 125));
             this.canPicked = true;
         }
     },
 
     onCollisionExit: function (other, self) {
         if(other.node.name === this.player.name) {
-            //this.draw.clear();
+            this.draw.clear();
             this.canPicked = false;
         }
     },
@@ -85,25 +87,28 @@ cc.Class({
         pickPos = this.camera.getCameraToWorldPoint(pickPos);
         this.worldNode.setPosition(pickPos);
 
-        cc.log("0000 mouse down:  worldNodePoint(%f, %f)",   this.worldNode.x,  this.worldNode.y);
+        cc.log("mouse down:  worldNodePoint(%f, %f)",   this.worldNode.x,  this.worldNode.y);
 
-        var isHited = cc.Intersection.pointInPolygon(pickPos, this.polygonCollider.world.points);
-        cc.log("0000 isHit=%d", isHited);
+        var isHited = cc.Intersection.pointInPolygon(pickPos, this.polyCollider.world.points);
         if(event.getButton() === cc.Event.EventMouse.BUTTON_LEFT && this.canPicked && isHited) {
-            cc.log("0000 pick up Item %s ", this.node.name);
+            cc.log("pick up Item %s ", this.node.name);
+            if(this.player) {
+                this.player.getComponent("AvatarAction").pickUpItem(this);
+            }
         }else {
-            cc.log("0000 not hit Item %s ", this.node.name);
+            cc.log("not hit Item %s ", this.node.name);
         }
     },
 
     setPlayer: function(player) {
-        this.player = player;
+        if(player) {
+            this.player = player;
+        }
     },
 
     getPlayerDistance: function () {
         var playerPos = this.player.getPosition();
         var dist = cc.pDistance(this.node.getPosition(), playerPos);
-        cc.log("0000 Item:%s(%f, %f) distance player(%f, %f): %f", this.node.name, this.node.x, this.node.y, playerPos.x, playerPos.y, dist);
         return dist;
     },
 
@@ -132,7 +137,5 @@ cc.Class({
         //     cc.log("0000 Item:%s show red", this.node.name);
         //    this.draw.drawPoly(this.collider.points, cc.color(200, 0, 0, 100), 1, cc.color(0, 0, 0, 125));
         // }
-
-        //this.ctx.clear();
     },
 });
