@@ -19,6 +19,16 @@ cc.Class({
             default: null,
             type: cc.Node,
         },
+
+        camera: {
+            default: null,
+            type: cc.Camera,
+        },
+
+        canvas: {
+            default: null,
+            type: cc.Node,
+        },
     },
 
     onLoad () {
@@ -32,6 +42,10 @@ cc.Class({
         //     onKeyReleased: this.onKeyReleased.bind(this),
         // }, this.node);
 
+        this.camera = cc.find("Camera").getComponent(cc.Camera);
+        cc.find("Canvas").on(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
+        this.node.on(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
+        this.node.on(cc.Node.EventType.MOUSE_UP , this.starThrowItem, this);
     },
 
     createEventListener: function () {
@@ -39,7 +53,7 @@ cc.Class({
             var keyBoardListener = cc.EventListener.create({
                 event: cc.EventListener.KEYBOARD,
                 onKeyPressed: function(keyCode, event){
-                    cc.log("789 press key=%f", keyCode);
+                    cc.log("AvatarControl press key=%d", keyCode);
                     switch(keyCode) {
                         case cc.KEY.a: 
                             self.player.leftWalk();
@@ -55,7 +69,7 @@ cc.Class({
                     };
                 },
                 onKeyReleased: function(keyCode, event){
-                    // cc.log("999 release key=%f", keyCode);
+                    cc.log("AvatarControl release key=%d", keyCode);
                     switch(keyCode) {
                         case cc.KEY.a: 
                         case cc.KEY.d:
@@ -116,6 +130,20 @@ cc.Class({
         if(player) {
             this.player = player.getComponent("AvatarAction");
         }
+    },
+
+    adjustThrow: function(event) {
+        var pos = this.camera.getCameraToWorldPoint(event.getLocation());
+        var v2 = new cc.Vec2();
+        v2.x = pos.x;
+        v2.y = pos.y;
+
+        cc.log("0000 AvatarControl adjustThrow: movePos(%f, %f)", v2.x, v2.y);
+        this.player.adjustThrow(v2);
+    },
+
+    starThrowItem: function() {
+        this.player.throwItem();
     },
 
     update: function (dt) {

@@ -78,7 +78,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "center",
+    "_name": "arrow",
     "_objFlags": 0,
     "_parent": {
       "__id__": 1
@@ -107,8 +107,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 0,
-      "height": 0
+      "width": 281,
+      "height": 39
     },
     "_rotationX": 0,
     "_rotationY": 0,

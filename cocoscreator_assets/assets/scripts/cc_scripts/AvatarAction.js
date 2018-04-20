@@ -29,11 +29,6 @@ cc.Class({
         rightDir: -1,
         eid:0,
 
-        drawNode: {
-            default: null,
-            type: cc.Node,
-        },
-
         anim: {
             default: null,
             type: cc.Node,
@@ -48,18 +43,58 @@ cc.Class({
             default: null,
             type: cc.Node,
         },
+
+        arrow : {
+            default: null,
+            type: cc.Node,
+        },
+
+        leftHand: {
+            default: null,
+            type: cc.Node,
+        },
+
+        rightHand: {
+            default: null,
+            type: cc.Node,
+        },
+
+        testNode1:{
+            default: null,
+            type: cc.Node,
+        },
+
+        testNode2:{
+            default: null,
+            type: cc.Node,
+        },
+
+        basePoint: {
+            default: null,
+            type: cc.Node,
+        },
     },
 
     onLoad () {
         this.start_point = this.node.getChildByName("start_point");
         this.end_point = this.node.getChildByName("end_point");
-        this.item_point = this.node.getChildByName("item_point");
-        this.drawNode = cc.find("worldDraw");
-        this.ctx = this.drawNode.getComponent(cc.Graphics);
+        this.basePoint = this.node.getChildByName("basePoint");
+        
+        this.arrow = this.node.getChildByName("arrow");
+        this.arrow.active = false;
+
+        this.leftHand = this.node.getChildByName("leftHand");
+        this.rightHand = this.node.getChildByName("rightHand");
+
+        this.testNode1 = cc.find("testNode1");
+        this.testNode2 = cc.find("testNode2");
+        this.ctx = cc.find("worldDraw").getComponent(cc.Graphics);
+
         this.targetPosition = null;
         this.isCollision = false;
         this.hasPickUpItem = false;
         this.item = null;
+        this.arrowAngle = 0.0;
     },
 
     start () {
@@ -113,8 +148,9 @@ cc.Class({
         if(!this.jumping) {
             this.node.scaleX = this.leftDir;
         }
-           
         this._playWalkAnim();
+
+        //this.arrow.scaleX = this.leftDir;
     },
 
     rightWalk: function() {
@@ -125,8 +161,9 @@ cc.Class({
         if(!this.jumping) {
             this.node.scaleX = this.rightDir;
         }
-        
         this._playWalkAnim();
+
+        //this.arrow.scaleX = this.rightDir;
     },
 
     _playWalkAnim: function() {
@@ -137,7 +174,6 @@ cc.Class({
 
     stopWalk: function() {
         if(!this.jumping && this.moveFlag!=STATIC) {
-            //this.moveFlag &= ~MOVE_LEFT;
             this.moveFlag = STATIC;
             if(this.anim){
                 this.anim.stopPlayAnim();
@@ -173,12 +209,81 @@ cc.Class({
         this.anim = anim;
     },
 
-    pickUpItem: function(item) {
-        cc.log("player pick up item");
-        var item_point = this.item_point.convertToWorldSpace(cc.v2(0, 0));
-        var pos = this.node.parent.convertToNodeSpace(item_point);
-        item.node.setPosition(pos);
+    pickUpItem: function(item, pickPos) {
+        cc.log("player start pick up item ....");
+        var itemPoint = null;
+
+        var num = 1;
+        if(this.node.scaleX == this.rightDir) {
+            cc.log("player left hand pick up item ....");
+            var leftHandPoint = this.leftHand.convertToWorldSpaceAR(cc.v2(0, 0));
+            itemPoint = this.node.parent.convertToNodeSpaceAR(leftHandPoint);
+            this.arrow.scaleX = this.rightDir;
+            num = 1;
+        } else if(this.node.scaleX == this.leftDir) {
+            cc.log("player righ hand pick up item ....");
+            var rightHandPoint = this.rightHand.convertToWorldSpaceAR(cc.v2(0, 0));
+            itemPoint = this.node.parent.convertToNodeSpaceAR(rightHandPoint);
+            this.arrow.scaleX = this.leftDir;
+            num = -1;
+        }
+
+        var itemRigidbody = item.node.getComponent(cc.RigidBody);
+        itemRigidbody.gravityScale = 0;
+        itemRigidbody.linearVelocity = cc.v2(0, 0);
+        item.node.setPosition(itemPoint);
+
         this.hasPickUpItem = true;
+        
+        var arrowWorldPoint = this.arrow.convertToWorldSpaceAR(cc.v2(0, 0));
+        cc.log("0000 arrowPoint(%f, %f)", arrowWorldPoint.x, arrowWorldPoint.y);
+        cc.log("0000 pickPos(%f, %f)", pickPos.x, pickPos.y);
+
+        
+
+        var dx = pickPos.x - arrowWorldPoint.x;
+        var dy = pickPos.y - arrowWorldPoint.y;
+        this.arrow.active = true;
+        var angle = Math.atan2(dy, dx) * 180 / Math.PI;
+        this.arrowAngle = angle * num;
+        
+        cc.log("0000  dx=%f, dy=%f", dx, dy);
+        cc.log("0000  arrowRotation=%f angle=%f", this.arrowAngle, angle);
+
+        this.testNode1.setPosition(arrowWorldPoint);
+        this.testNode2.setPosition(pickPos);
+    },
+
+    adjustThrow: function(pos) {
+        //if(!this.hasPickUpItem) return;
+
+        var arrowWorldPoint = this.arrow.convertToWorldSpaceAR(cc.v2(0, 0));
+        var dx = pos.x - arrowWorldPoint.x;
+        var dy = pos.y - arrowWorldPoint.y;
+
+        cc.log("0000 arrowPoint(%f, %f)", arrowWorldPoint.x, arrowWorldPoint.y);
+
+        var num = 1;
+        if(this.node.scaleX == this.rightDir) {
+            this.arrow.scaleX = this.rightDir;
+            num = 1;
+        } else if(this.node.scaleX == this.leftDir) {
+            this.arrow.scaleX = this.leftDir;
+            num = -1;
+        }
+        
+        var angle = Math.atan2(dy, dx) * 180 / Math.PI;
+        this.arrowAngle = angle*num;
+
+        cc.log("0000  dx=%f, dy=%f", dx, dy);
+        cc.log("0000  22 arrowRotation=%f angle=%f", this.arrowAngle, angle);
+
+        this.testNode1.setPosition(arrowWorldPoint);
+        this.testNode2.setPosition(pos);
+    },
+
+    throwItem: function() {
+
     },
 
     setPosition: function(position) {
@@ -196,9 +301,9 @@ cc.Class({
     },
 
     onBeginContact: function (contact, selfCollider, otherCollider) {
-        cc.log("8888 onBeginContact selfCollider.tag=%d", selfCollider.tag);
-        cc.log("8888 onBeginContact otherCollider.tag=%d", otherCollider.tag);
-        if(otherCollider.tag == 999) {
+        cc.log("onBeginContact selfCollider.tag=%d", selfCollider.tag);
+        cc.log("onBeginContact otherCollider.tag=%d", otherCollider.tag);
+        if(otherCollider.node.name == "land_bg") {
             contact.disabled = true;
             this.isCollision = true;
         }
@@ -206,18 +311,18 @@ cc.Class({
 
     // 只在两个碰撞体结束接触时被调用一次
     onEndContact: function (contact, selfCollider, otherCollider) {
-        cc.log("8888 onEndContact selfCollider.tag=%d", selfCollider.tag);
-        cc.log("8888 onEndContact otherCollider.tag=%d", otherCollider.tag);
-        if(otherCollider.tag == 999) {
+        cc.log("onEndContact selfCollider.tag=%d", selfCollider.tag);
+        cc.log("onEndContact otherCollider.tag=%d", otherCollider.tag);
+        if(otherCollider.node.name == "land_bg") {
             this.isCollision = false;
         }
     },
 
     // 每次将要处理碰撞体接触逻辑时被调用
     onPreSolve: function (contact, selfCollider, otherCollider) {
-        cc.log("8888 onPreSolve selfCollider.tag=%d", selfCollider.tag);
+        cc.log("onPreSolve selfCollider.tag=%d", selfCollider.tag);
         cc.log("8888 onPreSolve otherCollider.tag=%d", otherCollider.tag);
-        if(otherCollider.tag == 999) {
+        if(otherCollider.node.name == "land_bg") {
             contact.disabled = true;
             this.isCollision = true;
         }
@@ -225,22 +330,47 @@ cc.Class({
 
     // 每次处理完碰撞体接触逻辑时被调用
     onPostSolve: function (contact, selfCollider, otherCollider) {
-        cc.log("8888 onPostSolve selfCollider.tag=%d", selfCollider.tag);
-        cc.log("8888 onPostSolve otherCollider.tag=%d", otherCollider.tag);
+        cc.log("onPostSolve selfCollider.tag=%d", selfCollider.tag);
+        cc.log("onPostSolve otherCollider.tag=%d", otherCollider.tag);
         // if(otherCollider.tag == 999) {
         //     cc.log("888 selfCollider.sensor=%s", selfCollider.sensor.toString());
         //     selfCollider.sensor = false;
         // }
         
     },
+
+    drawTestNode: function() {
+        this.ctx.clear();
+
+        this.ctx.circle(this.testNode1.x, this.testNode1.y, 3);
+        this.ctx.fillColor = cc.Color.RED;
+        this.ctx.fill();
+
+        this.ctx.circle(this.testNode2.x, this.testNode2.y, 3);
+        this.ctx.fillColor = cc.Color.GREEN;
+        this.ctx.fill();
+
+        this.ctx.moveTo(this.testNode1.x, this.testNode1.y);
+        this.ctx.lineTo(this.testNode2.x, this.testNode2.y);
+        this.ctx.stroke();
+
+        // var basePoint = this.basePoint.convertToWorldSpaceAR(cc.v2(0, 0));
+        // this.ctx.rect(basePoint.x, basePoint.y, 256, 256);
+
+        this.ctx.stroke();
+    },
     
    
     update: function(dt) {
+        this.drawTestNode();
+
+        if(this.arrow.active) {
+            this.arrow.rotation = this.arrowAngle;
+        }
+
         var player = KBEngine.app.player();
         var speedX = this.walkspeed.x * dt;
         var results = null;
-
-        this.ctx.clear();
 
         if(this.moveFlag == MOVE_LEFT) {
             if(player.id == this.eid) {
@@ -283,17 +413,19 @@ cc.Class({
         var start = this.start_point.convertToWorldSpaceAR(cc.v2(0, 0));
         var end = this.end_point.convertToWorldSpaceAR(cc.v2(0, 0));
         results = cc.director.getPhysicsManager().rayCast(start, end, cc.RayCastType.AllClosest);
-       // cc.log("6666 down rayCast Result Count=%d", results.length);
-      //  cc.log("6666 down rayCast: start(%f, %f)  end(%f, %f)", start.x, start.y, end.x, end.y);
 
-        this.ctx.moveTo(start.x, start.y);
-        this.ctx.lineTo(end.x, end.y);
-        this.ctx.stroke();
+       // cc.log("down rayCast Result Count=%d", results.length);
+      //  cc.log("down rayCast: start(%f, %f)  end(%f, %f)", start.x, start.y, end.x, end.y);
+
+        // this.ctx.clear();
+        // this.ctx.moveTo(start.x, start.y);
+        // this.ctx.lineTo(end.x, end.y);
+        // this.ctx.stroke();
 
         for (var i = 0; i < results.length; i++) {
             var result = results[i];
             var collider = result.collider;
-            //cc.log("6666 down rayCast Result %d  name: %s,  point(%s, %s)", i, collider.node.name, result.point.x, result.point.y);
+            //cc.log("down rayCast Result %d  name: %s,  point(%s, %s)", i, collider.node.name, result.point.x, result.point.y);
             if(collider.node.name == "land_bg") {
                 var foot_point = this.node.parent.convertToNodeSpace(result.point);
                 this.node.y = foot_point.y;

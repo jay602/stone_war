@@ -24,12 +24,7 @@ cc.Class({
             type: cc.Node,
         },
 
-        center: {
-            default: null,
-            type: cc.Node,
-        },
-
-        worldNode: {
+        testNode1: {
             default: null,
             type: cc.Node,
         },
@@ -43,8 +38,8 @@ cc.Class({
     onLoad () {
         this.chainCollider = this.node.getComponent(cc.PhysicsChainCollider );
         this.polyCollider = this.node.getComponent(cc.PolygonCollider);
-        this.center = this.node.getChildByName("center");
-        this.worldNode = cc.find("worldNode");
+        
+        this.testNode1 = cc.find("testNode1");
         this.camera = cc.find("Camera").getComponent(cc.Camera);
         this.ctx = cc.find("worldDraw").getComponent(cc.Graphics);
 
@@ -85,15 +80,15 @@ cc.Class({
         var pickPos = event.getLocation();
         
         pickPos = this.camera.getCameraToWorldPoint(pickPos);
-        this.worldNode.setPosition(pickPos);
-
-        cc.log("mouse down:  worldNodePoint(%f, %f)",   this.worldNode.x,  this.worldNode.y);
 
         var isHited = cc.Intersection.pointInPolygon(pickPos, this.polyCollider.world.points);
         if(event.getButton() === cc.Event.EventMouse.BUTTON_LEFT && this.canPicked && isHited) {
             cc.log("pick up Item %s ", this.node.name);
             if(this.player) {
-                this.player.getComponent("AvatarAction").pickUpItem(this);
+                var v2 = new cc.Vec2();
+                v2.x = pickPos.x;
+                v2.y = pickPos.y;
+                this.player.getComponent("AvatarAction").pickUpItem(this, v2);
             }
         }else {
             cc.log("not hit Item %s ", this.node.name);
@@ -117,7 +112,7 @@ cc.Class({
     },
 
     update (dt) {
-        // var centerPoint = this.center.convertToWorldSpaceAR(cc.v2(0, 0));
+        // var centerPoint = this.node.convertToWorldSpaceAR(cc.v2(0, 0));
         // var worldPoint = this.worldNode.convertToWorldSpaceAR(cc.v2(0, 0));
 
         // this.ctx.clear();
