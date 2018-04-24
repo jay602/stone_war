@@ -42,7 +42,6 @@ class Avatar(KBEngine.Proxy):
 
 		# 销毁base
 		self.destroy()
-		
 
 	def onTimer(self, id, userArg):
 		"""

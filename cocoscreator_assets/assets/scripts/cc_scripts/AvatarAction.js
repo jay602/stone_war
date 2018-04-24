@@ -73,11 +73,22 @@ cc.Class({
             default: null,
             type: cc.Node,
         },
+
+        item_point: {
+            default: null,
+            type: cc.Node,
+        },
+
+        item: {
+            default: null,
+            type: cc.Node,
+        },
     },
 
     onLoad () {
         this.start_point = this.node.getChildByName("start_point");
         this.end_point = this.node.getChildByName("end_point");
+        this.item_point = this.node.getChildByName("item_point");
         this.basePoint = this.node.getChildByName("basePoint");
         
         this.arrow = this.node.getChildByName("arrow");
@@ -93,7 +104,6 @@ cc.Class({
         this.targetPosition = null;
         this.isCollision = false;
         this.hasPickUpItem = false;
-        this.item = null;
         this.arrowAngle = 0.0;
     },
 
@@ -144,6 +154,9 @@ cc.Class({
         if(this.moveFlag == MOVE_LEFT) 
             return;
 
+        if(this.hasPickUpItem)
+            return;
+
         this.moveFlag = MOVE_LEFT;
         if(!this.jumping) {
             this.node.scaleX = this.leftDir;
@@ -155,6 +168,9 @@ cc.Class({
 
     rightWalk: function() {
         if(this.moveFlag == MOVE_RIGHT) 
+            return;
+
+        if(this.hasPickUpItem)
             return;
 
         this.moveFlag = MOVE_RIGHT;
@@ -182,6 +198,9 @@ cc.Class({
     },
 
     jump: function() {
+        if(this.hasPickUpItem)
+            return;
+
         this._jump();
         if(this.jumping) {
             var player = KBEngine.app.player();
@@ -211,57 +230,53 @@ cc.Class({
 
     pickUpItem: function(item, pickPos) {
         cc.log("player start pick up item ....");
-        var itemPoint = null;
-
+        this.hasPickUpItem = true;
+        this.moveFlag = STATIC;
+        this.item = item;
         var num = 1;
+        var itemPoint = null;
         if(this.node.scaleX == this.rightDir) {
             cc.log("player left hand pick up item ....");
-            var leftHandPoint = this.leftHand.convertToWorldSpaceAR(cc.v2(0, 0));
-            itemPoint = this.node.parent.convertToNodeSpaceAR(leftHandPoint);
+            //var leftHandPoint = this.leftHand.convertToWorldSpaceAR(cc.v2(0, 0));
+           // itemPoint = this.node.parent.convertToNodeSpace(leftHandPoint);
             this.arrow.scaleX = this.rightDir;
             num = 1;
         } else if(this.node.scaleX == this.leftDir) {
             cc.log("player righ hand pick up item ....");
-            var rightHandPoint = this.rightHand.convertToWorldSpaceAR(cc.v2(0, 0));
-            itemPoint = this.node.parent.convertToNodeSpaceAR(rightHandPoint);
+          //  var rightHandPoint = this.rightHand.convertToWorldSpaceAR(cc.v2(0, 0));
+          //  itemPoint = this.node.parent.convertToNodeSpace(rightHandPoint);
             this.arrow.scaleX = this.leftDir;
             num = -1;
         }
 
+        itemPoint = this.leftHand.convertToWorldSpaceAR(cc.v2(0, 0));
+        itemPoint = this.node.parent.convertToNodeSpace(itemPoint);
+
+        //改变石头的位置，放到手中
         var itemRigidbody = item.node.getComponent(cc.RigidBody);
         itemRigidbody.gravityScale = 0;
         itemRigidbody.linearVelocity = cc.v2(0, 0);
         item.node.setPosition(itemPoint);
-
-        this.hasPickUpItem = true;
         
         var arrowWorldPoint = this.arrow.convertToWorldSpaceAR(cc.v2(0, 0));
-        cc.log("0000 arrowPoint(%f, %f)", arrowWorldPoint.x, arrowWorldPoint.y);
-        cc.log("0000 pickPos(%f, %f)", pickPos.x, pickPos.y);
-
-        
-
+        //箭头的旋转角度
         var dx = pickPos.x - arrowWorldPoint.x;
         var dy = pickPos.y - arrowWorldPoint.y;
         this.arrow.active = true;
         var angle = Math.atan2(dy, dx) * 180 / Math.PI;
         this.arrowAngle = angle * num;
         
-        cc.log("0000  dx=%f, dy=%f", dx, dy);
-        cc.log("0000  arrowRotation=%f angle=%f", this.arrowAngle, angle);
 
         this.testNode1.setPosition(arrowWorldPoint);
         this.testNode2.setPosition(pickPos);
     },
 
     adjustThrow: function(pos) {
-        //if(!this.hasPickUpItem) return;
+        if(!this.hasPickUpItem) return;
 
         var arrowWorldPoint = this.arrow.convertToWorldSpaceAR(cc.v2(0, 0));
         var dx = pos.x - arrowWorldPoint.x;
         var dy = pos.y - arrowWorldPoint.y;
-
-        cc.log("0000 arrowPoint(%f, %f)", arrowWorldPoint.x, arrowWorldPoint.y);
 
         var num = 1;
         if(this.node.scaleX == this.rightDir) {
@@ -275,15 +290,27 @@ cc.Class({
         var angle = Math.atan2(dy, dx) * 180 / Math.PI;
         this.arrowAngle = angle*num;
 
-        cc.log("0000  dx=%f, dy=%f", dx, dy);
-        cc.log("0000  22 arrowRotation=%f angle=%f", this.arrowAngle, angle);
-
         this.testNode1.setPosition(arrowWorldPoint);
         this.testNode2.setPosition(pos);
     },
 
-    throwItem: function() {
+    throwItem: function(pos) {
+        if(!this.hasPickUpItem) return;
 
+        cc.log("0000 AvatarAction: throw item");
+        var arrowWorldPoint = this.arrow.convertToWorldSpaceAR(cc.v2(0, 0));
+        var itemRigidbody = this.item.node.getComponent(cc.RigidBody);
+
+        var force = arrowWorldPoint.sub(pos);
+        force.mulSelf(MULTIPLE);
+        cc.log("0000 AvatarAction throwItem: force(%f, %f)", force.x, force.y);
+        itemRigidbody.gravityScale = 1;
+        var worldCenter = itemRigidbody.getWorldCenter();
+        itemRigidbody.applyLinearImpulse(force, worldCenter, true);
+
+        this.hasPickUpItem = false;
+        this.arrow.active = false;
+        this.item = null;
     },
 
     setPosition: function(position) {
@@ -341,6 +368,7 @@ cc.Class({
 
     drawTestNode: function() {
         this.ctx.clear();
+        if(!this.hasPickUpItem) return;
 
         this.ctx.circle(this.testNode1.x, this.testNode1.y, 3);
         this.ctx.fillColor = cc.Color.RED;
@@ -438,8 +466,6 @@ cc.Class({
                 break;
             }
         }
-
-       
     },
 
 });

@@ -88,7 +88,7 @@ cc.Class({
                 var v2 = new cc.Vec2();
                 v2.x = pickPos.x;
                 v2.y = pickPos.y;
-                this.player.getComponent("AvatarAction").pickUpItem(this, v2);
+                this.player.getComponent("AvatarControl").pickUpItem(this, v2);
             }
         }else {
             cc.log("not hit Item %s ", this.node.name);

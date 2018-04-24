@@ -26,12 +26,17 @@
 		<HP>
 			<Type>		INT32				</Type>
 			<Flags>		ALL_CLIENTS			</Flags>
+			<Default>		300				</Default>
 		</HP>
 	</Properties>
 
 	<ClientMethods>
 		<onJump>
 		</onJump>
+
+		<startPlay>
+				<Arg>		ENTITY_ID		</Arg>
+		</startPlay>
 	</ClientMethods>
 
 	<BaseMethods>

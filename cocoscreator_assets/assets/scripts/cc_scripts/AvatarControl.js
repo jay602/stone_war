@@ -29,30 +29,74 @@ cc.Class({
             default: null,
             type: cc.Node,
         },
+
+        item: {
+            default: null,
+            type: cc.Node,
+        },
+
+        enableEvent: false,
     },
 
     onLoad () {
         //cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyPressed, this);
         //cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP, this.onKeyReleased, this);
-        cc.log("234 AvatarControl onLoad");
+
         this.createEventListener();
-        // cc.eventManager.addListener({
-        //     event: cc.EventListener.KEYBOARD,
-        //     onKeyPressed: this.onKeyPressed.bind(this),
-        //     onKeyReleased: this.onKeyReleased.bind(this),
-        // }, this.node);
 
         this.camera = cc.find("Camera").getComponent(cc.Camera);
+    },
+
+    enableEventListen: function() {
+        cc.log("666 enableEventListen");
+        this.enableEvent = true;
+    },
+
+    disEnableEventListen: function() {
+        cc.log("666 disEnableEventListen");
+        this.enableEvent = false;
+    },
+
+
+    enableMouseEvent: function() {
         cc.find("Canvas").on(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
         this.node.on(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
         this.node.on(cc.Node.EventType.MOUSE_UP , this.starThrowItem, this);
+
+        this.enableItemMouseEvent();
     },
+
+    disEnableMouseEvent: function() {
+        cc.find("Canvas").off(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
+        this.node.off(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
+        this.node.off(cc.Node.EventType.MOUSE_UP , this.starThrowItem, this);
+
+        this.disEnableItemMouseEvent();
+    },
+
+    enableItemMouseEvent: function() {
+        if(this.item) {
+            this.item.on(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
+            this.item.on(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
+            this.item.on(cc.Node.EventType.MOUSE_UP , this.starThrowItem, this);
+        }
+    },
+
+    disEnableItemMouseEvent: function() {
+        if(this.item) {
+            this.item.off(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
+            this.item.off(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
+            this.item.off(cc.Node.EventType.MOUSE_UP , this.starThrowItem, this);
+        }
+    },
+
 
     createEventListener: function () {
             var self = this;
             var keyBoardListener = cc.EventListener.create({
                 event: cc.EventListener.KEYBOARD,
                 onKeyPressed: function(keyCode, event){
+                    if(!self.enableEvent) return;
                     cc.log("AvatarControl press key=%d", keyCode);
                     switch(keyCode) {
                         case cc.KEY.a: 
@@ -69,6 +113,7 @@ cc.Class({
                     };
                 },
                 onKeyReleased: function(keyCode, event){
+                    if(!self.enableEvent) return;
                     cc.log("AvatarControl release key=%d", keyCode);
                     switch(keyCode) {
                         case cc.KEY.a: 
@@ -84,6 +129,7 @@ cc.Class({
     },
 
     onKeyPressed: function (keyCode, event) {
+        if(!this.enableEvent) return;
         cc.log("789 press key: ", keyCode);
         switch(keyCode) {
             case cc.KEY.a:
@@ -108,6 +154,7 @@ cc.Class({
     },
     
     onKeyReleased: function (keyCode, event) {
+        if(!this.enableEvent) return;
         cc.log("789 release key: ", keyCode);
         switch(keyCode) {
             case cc.KEY.a:
@@ -133,17 +180,37 @@ cc.Class({
     },
 
     adjustThrow: function(event) {
+        if(!this.enableEvent) return;
+
         var pos = this.camera.getCameraToWorldPoint(event.getLocation());
         var v2 = new cc.Vec2();
         v2.x = pos.x;
         v2.y = pos.y;
 
-        cc.log("0000 AvatarControl adjustThrow: movePos(%f, %f)", v2.x, v2.y);
         this.player.adjustThrow(v2);
     },
 
-    starThrowItem: function() {
-        this.player.throwItem();
+    starThrowItem: function(event) {
+        if(!this.enableEvent) return;
+
+        cc.log("0000 player start throw item");
+        var pos = this.camera.getCameraToWorldPoint(event.getLocation());
+        var v2 = new cc.Vec2();
+        v2.x = pos.x;
+        v2.y = pos.y;
+
+        this.player.throwItem(v2);
+        this.disEnableMouseEvent();
+    },
+
+    pickUpItem: function(item, pickPos) {
+        if(!this.enableEvent) return;
+
+        cc.log("0000 AvatarControl pickUpItem:");
+        this.player.pickUpItem(item, pickPos);
+        this.item = item;
+
+        this.enableMouseEvent();
     },
 
     update: function (dt) {

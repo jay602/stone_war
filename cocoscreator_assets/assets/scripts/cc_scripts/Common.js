@@ -6,6 +6,10 @@ window.MOVE_DOWN = 4;
 
 window.SCALE = 10;
 
+window.MULTIPLE = 15;
+
+window.
+
 window.ItemPrefabUrl = {
     'map1': ['itemPrefab/map1/cd','itemPrefab/map1/pdg', 'itemPrefab/map1/sk', 'itemPrefab/map1/sk2', 'itemPrefab/map1/sk3', 'itemPrefab/map1/sl'],
     'map2': ['itemPrefab/map1/cd','itemPrefab/map1/lyg', 'itemPrefab/map1/pdg', 'itemPrefab/map1/sk2'],

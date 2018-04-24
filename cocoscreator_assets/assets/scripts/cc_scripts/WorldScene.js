@@ -42,6 +42,11 @@ cc.Class({
             type: cc.Camera,
         },
 
+        cameraControl: {
+            default: null,
+            type: cc.Node,
+        },
+
         maxPlayerCount: 2,
     },
 
@@ -53,11 +58,12 @@ cc.Class({
         this.curPlayerCount = 0;
         this.entities = {};
         this.playerControl = null;
+        this.curEntityId = 0;
+        this.cameraControl =this.camera.getComponent("CameraControl");
 
         this.enablePhysicManager();
        // this.enablePhysicsDebugDraw();
         this.installEvents();
-        
     },
 
     enablePhysicManager: function () {
@@ -93,6 +99,7 @@ cc.Class({
         KBEngine.Event.register("updatePosition", this, "updatePosition");
         KBEngine.Event.register("otherAvatarOnJump", this, "otherAvatarOnJump");
         KBEngine.Event.register("set_position", this, "set_position");
+        KBEngine.Event.register("startPlay", this, "startPlay");
     },
 
     onKicked : function(failedcode){
@@ -189,10 +196,11 @@ cc.Class({
 
             ctrl.setPlayer(this.player);
 
-            var cameraControl =this.camera.getComponent("CameraControl");
-            cameraControl.setTarget(this.player);
+            this.cameraControl.setTarget(this.player);
             this.node.addChild(this.player);
             this.player.setPosition(avatar.position.x*SCALE, avatar.position.z*SCALE);
+
+            this.entities[avatar.id] = this.player;
         }
     },
 
@@ -231,8 +239,32 @@ cc.Class({
         ae.y = entity.position.z * SCALE;
         ae.setPosition(ae.x, ae.y);
     },
+
+    setCameraTarget: function(entityID){
+        var ae = this.entities[entityID];
+		if(ae == undefined)
+            return;
+            
+        this.cameraControl.setTarget(ae);
+    },
+
+    startPlay: function(entityID){
+        this.curEntityId = entityID;
+        this.setCameraTarget(entityID);
+        cc.log("666 WorldScene::startPlay: eid=%d  playerID=%d", entityID,  KBEngine.app.player().id);
+        if(this.curEntityId == KBEngine.app.player().id) {
+            this.enableControlPlayer();
+        }
+    },
     
-    
+    enableControlPlayer: function() {
+        this.player.getComponent("AvatarControl").enableEventListen();
+    },
+
+    disEnableControlPlayer: function() {
+        this.player.getComponent("AvatarControl").disEnableEventListen();
+    },
+
     update: function (dt) {
         
     },

@@ -6,6 +6,6 @@
 	-->
 	<Avatar hasClient="true"></Avatar><!-- <Avatar hasCell="true" hasBase="true" hasClient="true"></Player> -->
 	<Halls/>
-	<Room/>
+	<Room ></Room>
 	<Item hasClient="true"></Item>
 </root>

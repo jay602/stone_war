@@ -28,12 +28,19 @@ KBEngine.Avatar = KBEngine.Entity.extend(
             cc.log("Avatar Jump Cell");
 		    this.cellCall("jump");
         }, 
-          
+
+        startPlay : function(eid)
+	    {
+            cc.log("666 avatar %d startPlay", this.id);
+		    KBEngine.Event.fire("startPlay", eid);
+        }, 
+
         onJump : function()
 	    {
             cc.log("666 avatar %d otherAvatarOnJump", this.id);
 		    KBEngine.Event.fire("otherAvatarOnJump", this);
-  	    }, 
+        }, 
+         
     });
     
     

@@ -11,6 +11,8 @@
 	</Properties>
 
 	<ClientMethods>
+		<hello>
+		</hello>
 	</ClientMethods>
 
 	<BaseMethods>

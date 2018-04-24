@@ -284,8 +284,8 @@
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": -90,
-      "y": 50
+      "x": -20,
+      "y": 220
     },
     "_skewX": 0,
     "_skewY": 0,
