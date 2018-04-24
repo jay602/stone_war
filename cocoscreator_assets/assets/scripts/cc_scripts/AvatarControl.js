@@ -35,6 +35,8 @@ cc.Class({
             type: cc.Node,
         },
 
+        itemID : 0,
+
         enableEvent: false,
     },
 
@@ -59,22 +61,11 @@ cc.Class({
 
 
     enableMouseEvent: function() {
+        cc.log("0000 AvatarControl::enableMouseEvent");
         cc.find("Canvas").on(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
         this.node.on(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
         this.node.on(cc.Node.EventType.MOUSE_UP , this.starThrowItem, this);
 
-        this.enableItemMouseEvent();
-    },
-
-    disEnableMouseEvent: function() {
-        cc.find("Canvas").off(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
-        this.node.off(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
-        this.node.off(cc.Node.EventType.MOUSE_UP , this.starThrowItem, this);
-
-        this.disEnableItemMouseEvent();
-    },
-
-    enableItemMouseEvent: function() {
         if(this.item) {
             this.item.on(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
             this.item.on(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
@@ -82,14 +73,18 @@ cc.Class({
         }
     },
 
-    disEnableItemMouseEvent: function() {
+    disEnableMouseEvent: function() {
+        cc.log("0000 AvatarControl::disEnableMouseEvent");
+        cc.find("Canvas").off(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
+        this.node.off(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
+        this.node.off(cc.Node.EventType.MOUSE_UP , this.starThrowItem, this);
+
         if(this.item) {
             this.item.off(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
             this.item.off(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
             this.item.off(cc.Node.EventType.MOUSE_UP , this.starThrowItem, this);
         }
     },
-
 
     createEventListener: function () {
             var self = this;
@@ -201,15 +196,15 @@ cc.Class({
 
         this.player.throwItem(v2);
         this.disEnableMouseEvent();
+        this.item = null;
     },
 
-    pickUpItem: function(item, pickPos) {
+    pickUpItem: function(item, itemID, pickPos) {
         if(!this.enableEvent) return;
 
         cc.log("0000 AvatarControl pickUpItem:");
-        this.player.pickUpItem(item, pickPos);
+        this.player.pickUpItem(item, itemID, pickPos);
         this.item = item;
-
         this.enableMouseEvent();
     },
 

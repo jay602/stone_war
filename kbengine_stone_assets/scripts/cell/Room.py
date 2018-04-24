@@ -83,11 +83,11 @@ class Room(KBEngine.Entity):
 			self.nextPlayer()
 
 	def startGame(self):
-		self.startPlay(self.curEid)
+		self.newTurn(self.curEid)
 	
-	def startPlay(self, eid):
+	def newTurn(self, eid):
 		for entity in self.avatars.values():
-			entity.client.startPlay(eid)
+			entity.client.newTurn(eid)
 
 	def onLeave(self, entityID):
 		"""

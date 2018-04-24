@@ -25,21 +25,32 @@ KBEngine.Avatar = KBEngine.Entity.extend(
 
         jump : function()
 	    {
-            cc.log("Avatar Jump Cell");
 		    this.cellCall("jump");
         }, 
 
-        startPlay : function(eid)
+        newTurn : function(eid)
 	    {
-            cc.log("666 avatar %d startPlay", this.id);
-		    KBEngine.Event.fire("startPlay", eid);
+            cc.log("0000 avatar %d newTurn", this.id);
+		    KBEngine.Event.fire("newTurn", eid);
         }, 
 
         onJump : function()
 	    {
-            cc.log("666 avatar %d otherAvatarOnJump", this.id);
+            cc.log("0000 avatar %d otherAvatarOnJump", this.id);
 		    KBEngine.Event.fire("otherAvatarOnJump", this);
         }, 
+
+        onPickUpItem : function(itemID)
+        {
+            cc.log("0000 other avatar %d pick up item=%d", this.id, itemID);
+            KBEngine.Event.fire("otherAvatarOnPickUpItem", this.id, itemID);
+        },
+
+        pickUpItem : function(itemID)
+	    {
+            cc.log("0000 avatar %d pick up item=%d", this.id, itemID);
+		    this.cellCall("pickUpItem", itemID);
+  	    }, 
          
     });
     

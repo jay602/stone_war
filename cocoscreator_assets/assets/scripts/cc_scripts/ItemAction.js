@@ -33,6 +33,8 @@ cc.Class({
             default: null,
             type: cc.Camera,
         },
+
+        itemID : 0,
     },
 
     onLoad () {
@@ -88,7 +90,7 @@ cc.Class({
                 var v2 = new cc.Vec2();
                 v2.x = pickPos.x;
                 v2.y = pickPos.y;
-                this.player.getComponent("AvatarControl").pickUpItem(this, v2);
+                this.player.getComponent("AvatarControl").pickUpItem(this.node, this.itemID, v2);
             }
         }else {
             cc.log("not hit Item %s ", this.node.name);
@@ -100,6 +102,11 @@ cc.Class({
             this.player = player;
         }
     },
+
+    setItemID: function(itemID) {
+        this.itemID = itemID;
+    },
+    
 
     getPlayerDistance: function () {
         var playerPos = this.player.getPosition();

@@ -34,9 +34,13 @@
 		<onJump>
 		</onJump>
 
-		<startPlay>
+		<newTurn>
 				<Arg>		ENTITY_ID		</Arg>
-		</startPlay>
+		</newTurn>
+
+		<onPickUpItem>
+				<Arg>		ENTITY_ID		</Arg>
+		</onPickUpItem>
 	</ClientMethods>
 
 	<BaseMethods>
@@ -49,6 +53,11 @@
 		<jump>
 			<Exposed/>
 		</jump>
+
+		<pickUpItem>
+			<Exposed/>
+			<Arg>		ENTITY_ID		</Arg>
+		</pickUpItem>
 	</CellMethods>
 
 </root>

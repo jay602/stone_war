@@ -58,7 +58,7 @@ cc.Class({
         this.curPlayerCount = 0;
         this.entities = {};
         this.playerControl = null;
-        this.curEntityId = 0;
+        this.curAvatarID = 0;
         this.cameraControl =this.camera.getComponent("CameraControl");
 
         this.enablePhysicManager();
@@ -99,7 +99,8 @@ cc.Class({
         KBEngine.Event.register("updatePosition", this, "updatePosition");
         KBEngine.Event.register("otherAvatarOnJump", this, "otherAvatarOnJump");
         KBEngine.Event.register("set_position", this, "set_position");
-        KBEngine.Event.register("startPlay", this, "startPlay");
+        KBEngine.Event.register("newTurn", this, "newTurn");
+        KBEngine.Event.register("otherAvatarOnPickUpItem", this, "otherAvatarOnPickUpItem");
     },
 
     onKicked : function(failedcode){
@@ -144,7 +145,7 @@ cc.Class({
                 }
                 var action = ae.addComponent("AvatarAction");
                 var anim = ae.addComponent("AvatarAnim");
-
+                cc.log("another avatar %d enter world", entity.id);
                 //注意顺序： anim ---> action
                 anim.setModelID(entity.modelID);
                 anim.setAnim(ae.getComponent(cc.Animation));
@@ -159,13 +160,13 @@ cc.Class({
                 ae = cc.instantiate(ItemPrefabMap[entity.name]);
                 var action = ae.addComponent("ItemAction");
                 action.setPlayer(this.player);
-               // action.setCamera(this.camera);
+                action.setItemID(entity.id);
             }
             
             this.node.addChild(ae);
-            ae.setPosition( entity.position.x*SCALE,  entity.position.z*SCALE);
+            ae.setPosition(entity.position.x*SCALE,  entity.position.z*SCALE);
             this.entities[entity.id] = ae;
-            cc.log("other  join room");
+            cc.log("other join room");
         }
     },
 
@@ -248,13 +249,23 @@ cc.Class({
         this.cameraControl.setTarget(ae);
     },
 
-    startPlay: function(entityID){
-        this.curEntityId = entityID;
-        this.setCameraTarget(entityID);
-        cc.log("666 WorldScene::startPlay: eid=%d  playerID=%d", entityID,  KBEngine.app.player().id);
-        if(this.curEntityId == KBEngine.app.player().id) {
+    newTurn: function(avatarID){
+        this.curAvatarID = avatarID;
+        this.setCameraTarget(avatarID);
+        cc.log("0000 WorldScene::newTurn: eid=%d  playerID=%d", avatarID,  KBEngine.app.player().id);
+        if(this.curAvatarID == KBEngine.app.player().id) {
             this.enableControlPlayer();
         }
+    },
+
+    otherAvatarOnPickUpItem: function(avatarID, itemID) {
+        cc.log("0000 WorldScene_otherAvatarOnPickUpItem: avatarID=%d, itemID=%d ", avatarID, itemID);
+        var player = this.entities[avatarID];
+        var item = this.entities[itemID];
+        if(player == undefined || item == undefined)
+            return;
+        var action = player.getComponent("AvatarAction");
+        action.setPlaceItem(item);
     },
     
     enableControlPlayer: function() {

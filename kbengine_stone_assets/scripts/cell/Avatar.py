@@ -71,3 +71,14 @@ class Avatar(KBEngine.Entity, EntityCommon):
 			return
 		DEBUG_MSG("avatar %i start jump" % (self.id))
 		self.otherClients.onJump()
+
+	def pickUpItem(self, exposed, itemID):
+		"""
+		defined.
+		玩家跳跃 我们广播这个行为
+		"""
+		DEBUG_MSG("receive avavtar %i pickUpItem, selfID=%i" % (exposed, self.id))
+		if exposed != self.id:
+			return
+		DEBUG_MSG("avatar %i pick up item=%i" % (self.id, itemID))
+		self.otherClients.onPickUpItem(itemID)
