@@ -82,3 +82,13 @@ class Avatar(KBEngine.Entity, EntityCommon):
 			return
 		DEBUG_MSG("avatar %i pick up item=%i" % (self.id, itemID))
 		self.otherClients.onPickUpItem(itemID)
+
+
+	def throwItem(self, exposed, itemID, force):
+		DEBUG_MSG("receive avavtar %i throw item=%d, force, selfID=%i" % (exposed, itemID, self.id))
+		DEBUG_MSG(force)
+		if exposed != self.id:
+			return
+		DEBUG_MSG("avatar %i pick up item=%i" % (self.id, itemID))
+		self.otherClients.onThrowItem(itemID, force)
+

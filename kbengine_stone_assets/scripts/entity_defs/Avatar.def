@@ -41,6 +41,11 @@
 		<onPickUpItem>
 				<Arg>		ENTITY_ID		</Arg>
 		</onPickUpItem>
+
+		<onThrowItem>
+				<Arg>		ENTITY_ID		</Arg>
+				<Arg>		VECTOR3			</Arg>
+		</onThrowItem>
 	</ClientMethods>
 
 	<BaseMethods>
@@ -58,6 +63,12 @@
 			<Exposed/>
 			<Arg>		ENTITY_ID		</Arg>
 		</pickUpItem>
+
+		<throwItem>
+			<Exposed/>
+			<Arg>		ENTITY_ID	</Arg>
+			<Arg>		VECTOR3		</Arg>
+		</throwItem>
 	</CellMethods>
 
 </root>

@@ -50,8 +50,26 @@ KBEngine.Avatar = KBEngine.Entity.extend(
 	    {
             cc.log("0000 avatar %d pick up item=%d", this.id, itemID);
 		    this.cellCall("pickUpItem", itemID);
-  	    }, 
+        }, 
+          
+        throwItem : function(itemID, force)
+        {
+            cc.log("0000 avatar %d throw item=%d", this.id, itemID);
+            var vec3 = new KBEngine.Vector3();
+            vec3.x = force.x;
+            vec3.y = force.y;
+            vec3.z = 0.0;
+		    this.cellCall("throwItem", itemID, vec3);
+        },
          
+        onThrowItem : function(itemID, force)
+        {
+            var v2 = new cc.Vec2();
+            v2.x = force.x;
+            v2.y = force.y;
+            cc.log("0000 other avatar %d throw item=%d", this.id, itemID);
+		    KBEngine.Event.fire("otherAvatarThrowItem", this.id, itemID, v2);
+        },
     });
     
     

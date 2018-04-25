@@ -106,7 +106,6 @@ cc.Class({
     setItemID: function(itemID) {
         this.itemID = itemID;
     },
-    
 
     getPlayerDistance: function () {
         var playerPos = this.player.getPosition();

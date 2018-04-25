@@ -101,6 +101,7 @@ cc.Class({
         KBEngine.Event.register("set_position", this, "set_position");
         KBEngine.Event.register("newTurn", this, "newTurn");
         KBEngine.Event.register("otherAvatarOnPickUpItem", this, "otherAvatarOnPickUpItem");
+        KBEngine.Event.register("otherAvatarThrowItem", this, "otherAvatarThrowItem");
     },
 
     onKicked : function(failedcode){
@@ -266,6 +267,18 @@ cc.Class({
             return;
         var action = player.getComponent("AvatarAction");
         action.setPlaceItem(item);
+    },
+
+    otherAvatarThrowItem: function(avatarID, itemID, force){
+        cc.log("0000 WorldScene_otherAvatarThrowItem: avatarID=%d, itemID=%d ", avatarID, itemID);
+        var player = this.entities[avatarID];
+        var item = this.entities[itemID];
+        if(player == undefined || item == undefined)
+            return;
+        
+        this.setCameraTarget(itemID);
+        var action = player.getComponent("AvatarAction");
+        action.throwItem(item, force);
     },
     
     enableControlPlayer: function() {

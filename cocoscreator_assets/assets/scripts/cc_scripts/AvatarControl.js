@@ -25,6 +25,11 @@ cc.Class({
             type: cc.Camera,
         },
 
+        cameraControl: {
+            default: null,
+            type: cc.Node,
+        },
+
         canvas: {
             default: null,
             type: cc.Node,
@@ -33,6 +38,11 @@ cc.Class({
         item: {
             default: null,
             type: cc.Node,
+        },
+
+        itemBody: {
+            default: null,
+            type: cc.RigidBody,
         },
 
         itemID : 0,
@@ -47,6 +57,7 @@ cc.Class({
         this.createEventListener();
 
         this.camera = cc.find("Camera").getComponent(cc.Camera);
+        this.cameraControl = cc.find("Camera").getComponent("CameraControl");
     },
 
     enableEventListen: function() {
@@ -194,9 +205,12 @@ cc.Class({
         v2.x = pos.x;
         v2.y = pos.y;
 
-        this.player.throwItem(v2);
+        if(this.item) {
+            this.cameraControl.setTarget(this.item);
+        }
+       
+        this.player.throw(v2);
         this.disEnableMouseEvent();
-        this.item = null;
     },
 
     pickUpItem: function(item, itemID, pickPos) {
@@ -205,6 +219,7 @@ cc.Class({
         cc.log("0000 AvatarControl pickUpItem:");
         this.player.pickUpItem(item, itemID, pickPos);
         this.item = item;
+        this.itemBody = this.item.getComponent(cc.RigidBody);
         this.enableMouseEvent();
     },
 

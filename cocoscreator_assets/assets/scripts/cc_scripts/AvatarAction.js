@@ -105,6 +105,7 @@ cc.Class({
         this.isCollision = false;
         this.hasPickUpItem = false;
         this.arrowAngle = 0.0;
+        this.itemID = 0;
     },
 
 
@@ -257,14 +258,15 @@ cc.Class({
         cc.log("player start pick up item ....");
         this.hasPickUpItem = true;
         this.item = item;
-
-        this.setPlaceItem(item);
-        this.adjustArrowDir(pickPos);
+        this.itemID = itemID;
 
         var player = KBEngine.app.player();
         if(player != undefined && player.inWorld) {
             player.pickUpItem(itemID);
         }
+
+        this.setPlaceItem(item);
+        this.adjustArrowDir(pickPos);
     },
 
     adjustArrowDir: function(pos) {
@@ -296,23 +298,34 @@ cc.Class({
         this.adjustArrowDir(pos);
     },
 
-    throwItem: function(pos) {
+    throw: function(pos) {
         if(!this.hasPickUpItem) return;
 
         cc.log("0000 AvatarAction: throw item");
         var arrowWorldPoint = this.arrow.convertToWorldSpaceAR(cc.v2(0, 0));
-        var itemRigidbody = this.item.getComponent(cc.RigidBody);
-
+        
         var force = arrowWorldPoint.sub(pos);
         force.mulSelf(MULTIPLE);
         cc.log("0000 AvatarAction throwItem: force(%f, %f)", force.x, force.y);
-        itemRigidbody.gravityScale = 1;
-        var worldCenter = itemRigidbody.getWorldCenter();
-        itemRigidbody.applyLinearImpulse(force, worldCenter, true);
 
+        var player = KBEngine.app.player();
+        if(player != undefined && player.inWorld) {
+            player.throwItem(this.itemID, force);
+        }
+
+        this.throwItem(this.item, force);
+       
         this.hasPickUpItem = false;
         this.arrow.active = false;
         this.item = null;
+    },
+
+    throwItem: function(item, force) {
+        cc.log("0000 AvatarActio::thowItem : force(%f, %f)", force.x, force.y);
+        var itemRigidbody = item.getComponent(cc.RigidBody);
+        itemRigidbody.gravityScale = 1;
+        var worldCenter = itemRigidbody.getWorldCenter();
+        itemRigidbody.applyLinearImpulse(force, worldCenter, true);
     },
 
     setPosition: function(position) {
