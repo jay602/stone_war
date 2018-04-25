@@ -47,7 +47,7 @@ cc.Class({
 
         itemID : 0,
 
-        enableEvent: false,
+        enableEvent: true,
     },
 
     onLoad () {
@@ -199,27 +199,29 @@ cc.Class({
     starThrowItem: function(event) {
         if(!this.enableEvent) return;
 
-        cc.log("0000 player start throw item");
+        cc.log("player start throw item");
         var pos = this.camera.getCameraToWorldPoint(event.getLocation());
         var v2 = new cc.Vec2();
         v2.x = pos.x;
         v2.y = pos.y;
 
         if(this.item) {
+            cc.log("carama settarget item");
             this.cameraControl.setTarget(this.item);
         }
-       
+        
         this.player.throw(v2);
+        this.itemBody = this.item.getComponent(cc.RigidBody);
         this.disEnableMouseEvent();
     },
 
     pickUpItem: function(item, itemID, pickPos) {
         if(!this.enableEvent) return;
 
-        cc.log("0000 AvatarControl pickUpItem:");
+        cc.log("AvatarControl pickUpItem:");
         this.player.pickUpItem(item, itemID, pickPos);
         this.item = item;
-        this.itemBody = this.item.getComponent(cc.RigidBody);
+       
         this.enableMouseEvent();
     },
 
@@ -232,5 +234,14 @@ cc.Class({
         player.position.y = 0;
         player.position.z = this.node.y/SCALE;
         player.isOnGround = this.player.isOnGround;
+
+        if(this.itemBody) {
+            var velocity = this.itemBody.linearVelocity;
+            if(velocity.equals(cc.Vec2.ZERO)) {
+                this.item = null;
+                this.itemBody = null;
+                //player.newTurn();
+            }
+        }
     },
 });

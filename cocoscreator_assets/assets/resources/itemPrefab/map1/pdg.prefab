@@ -278,7 +278,7 @@
       "x": 0,
       "y": 0
     },
-    "_radius": 65
+    "_radius": 70
   },
   {
     "__type__": "cc.PolygonCollider",

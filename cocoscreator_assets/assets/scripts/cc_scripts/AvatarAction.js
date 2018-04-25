@@ -19,6 +19,7 @@ cc.Class({
         maxSpeed: cc.v2(400, 600),
         walkspeed: cc.v2(120, 50),
         jumpSpeedY : 0,
+        maxThrowSpeed: cc.v2(800, 800),
 
         jumping : false,
         isOnGround : true,
@@ -102,7 +103,7 @@ cc.Class({
         this.ctx = cc.find("worldDraw").getComponent(cc.Graphics);
 
         this.targetPosition = null;
-        this.isCollision = false;
+        this.isCollideLand = false;
         this.hasPickUpItem = false;
         this.arrowAngle = 0.0;
         this.itemID = 0;
@@ -182,13 +183,29 @@ cc.Class({
         }
     },
 
-    stopWalk: function() {
+    _stopWalk: function() {
         if(!this.jumping && this.moveFlag!=STATIC) {
             this.moveFlag = STATIC;
             if(this.anim){
                 this.anim.stopPlayAnim();
             }
         }
+    },
+
+    stopWalk: function() {
+        this._stopWalk();
+
+        // if(!this.jumping && this.moveFlag!=STATIC) { 
+        //     var player = KBEngine.app.player();
+        //     if(player != undefined && player.inWorld) {
+        //         player.stopWalk(this.node.getPosition());
+        //     }
+        // }
+    },
+
+    onStopWalk: function(pos) {
+        this._stopWalk();
+        this.node.setPosition(pos.x, pos.y);
     },
 
     jump: function() {
@@ -223,7 +240,7 @@ cc.Class({
     },
 
     setPlaceItem: function(item) {
-        cc.log("0000 AvatarAction::setPlaceItem");
+        cc.log("AvatarAction::setPlaceItem");
         this.moveFlag = STATIC;
         var factor = 1;
         var itemPoint = null;
@@ -301,12 +318,12 @@ cc.Class({
     throw: function(pos) {
         if(!this.hasPickUpItem) return;
 
-        cc.log("0000 AvatarAction: throw item");
+        cc.log("AvatarAction: throw item");
         var arrowWorldPoint = this.arrow.convertToWorldSpaceAR(cc.v2(0, 0));
         
         var force = arrowWorldPoint.sub(pos);
         force.mulSelf(MULTIPLE);
-        cc.log("0000 AvatarAction throwItem: force(%f, %f)", force.x, force.y);
+        cc.log("AvatarAction throwItem: force(%f, %f)", force.x, force.y);
 
         var player = KBEngine.app.player();
         if(player != undefined && player.inWorld) {
@@ -321,7 +338,9 @@ cc.Class({
     },
 
     throwItem: function(item, force) {
-        cc.log("0000 AvatarActio::thowItem : force(%f, %f)", force.x, force.y);
+        cc.log("AvatarActio::thowItem : force(%f, %f)", force.x, force.y);
+        if(force.y >= 810)
+            force.y = 810;
         var itemRigidbody = item.getComponent(cc.RigidBody);
         itemRigidbody.gravityScale = 1;
         var worldCenter = itemRigidbody.getWorldCenter();
@@ -343,42 +362,100 @@ cc.Class({
     },
 
     onBeginContact: function (contact, selfCollider, otherCollider) {
-        //cc.log("onBeginContact selfCollider.tag=%d", selfCollider.tag);
-        //cc.log("onBeginContact otherCollider.tag=%d", otherCollider.tag);
-        if(otherCollider.node.name == "land_bg") {
+        cc.log("0000 onBeginContact selfCollider: tag=%d  name=%s", selfCollider.tag, selfCollider.name);
+        cc.log("0000 onBeginContact otherCollider: tag=%d name=%s", otherCollider.tag, otherCollider.name);
+        cc.log("0000 onBeginContact contact: colliderA=%s colliderB=%s", contact.colliderA.node.name, contact.colliderB.node.name);
+        if(otherCollider.tag == 999) {
+            this.isCollideLand = true;
+        }else if(otherCollider.node.name == "land_bg") {
             contact.disabled = true;
-            this.isCollision = true;
+        }else if(otherCollider.tag == 100 ) {
+            var rigidBody = otherCollider.node.getComponent(cc.RigidBody);
+            var speedX =  rigidBody.linearVelocity.x;
+            var speedY =  rigidBody.linearVelocity.y;
+            cc.log("0000 onBeginContact rigidBody linearSpeed(%f, %f) angularSpeed=%f", speedX, speedY, rigidBody.angularVelocity); 
+
+            if( (speedX<=0.5 && speedX>=-0.5) && (speedY<=0.5 && speedY>=-0.5)) {
+                cc.log("9999 onBeginContact item is staticed");
+                contact.disabled = true;
+            }
         }
     },
 
     // 只在两个碰撞体结束接触时被调用一次
     onEndContact: function (contact, selfCollider, otherCollider) {
-       // cc.log("onEndContact selfCollider.tag=%d", selfCollider.tag);
-       // cc.log("onEndContact otherCollider.tag=%d", otherCollider.tag);
-        if(otherCollider.node.name == "land_bg") {
-            this.isCollision = false;
+       cc.log("0000 onEndContact selfCollider: tag=%d name=%s", selfCollider.tag, selfCollider.name);
+       cc.log("0000 onEndContact otherCollider: tag=%d name=%s", otherCollider.tag, otherCollider.name);
+       cc.log("0000 onEndContact contact: colliderA=%s colliderB=%s", contact.colliderA.node.name, contact.colliderB.node.name);
+       if(otherCollider.tag == 999) {
+            this.isCollideLand = false;
+        }else if(otherCollider.node.name == "land_bg") {
+            this.isCollideLand = false;
+            //contact.disabled = true;
+        }else if(otherCollider.tag == 100 ) {
+            var rigidBody = otherCollider.node.getComponent(cc.RigidBody);
+            var speedX =  rigidBody.linearVelocity.x;
+            var speedY =  rigidBody.linearVelocity.y;
+            cc.log("0000 onEndContact rigidBody linearSpeed(%f, %f) angularSpeed=%f", speedX, speedY, rigidBody.angularVelocity); 
+            
+            if( (speedX<=0.5 && speedX>=-0.5) && (speedY<=0.5 && speedY>=-0.5) ) {
+                cc.log("9999 onEndContact item is staticed");
+               // contact.disabled = true;
+            }
         }
     },
 
     // 每次将要处理碰撞体接触逻辑时被调用
     onPreSolve: function (contact, selfCollider, otherCollider) {
-        //cc.log("onPreSolve selfCollider.tag=%d", selfCollider.tag);
-       // cc.log("8888 onPreSolve otherCollider.tag=%d", otherCollider.tag);
-        if(otherCollider.node.name == "land_bg") {
+        cc.log("0000 onPreSolve selfCollider.tag=%d name=%s", selfCollider.tag, selfCollider.name);
+        cc.log("0000 onPreSolve otherCollider.tag=%d name=%s", otherCollider.tag, otherCollider.name);
+        cc.log("0000 onPreSolve contact: colliderA=%s colliderB=%s", contact.colliderA.node.name, contact.colliderB.node.name);
+        if(otherCollider.tag == 999) {
+            this.isCollideLand = true;
+        }else if(otherCollider.node.name == "land_bg") {
             contact.disabled = true;
-            this.isCollision = true;
+        }else if(otherCollider.tag == 100) {
+            var rigidBody = otherCollider.node.getComponent(cc.RigidBody);
+            var speedX =  rigidBody.linearVelocity.x;
+            var speedY =  rigidBody.linearVelocity.y;
+            cc.log("0000 onPreSolve rigidBody linearSpeed(%f, %f) angularSpeed=%f", speedX, speedY, rigidBody.angularVelocity); 
+
+            if( (speedX<=0.5 && speedX>=-0.5) && (speedY<=0.5 && speedY>=-0.5) ) {
+                cc.log("9999 onPreSolve item is staticed");
+                contact.disabled = true;
+            }
         }
     },
 
     // 每次处理完碰撞体接触逻辑时被调用
     onPostSolve: function (contact, selfCollider, otherCollider) {
-        //cc.log("onPostSolve selfCollider.tag=%d", selfCollider.tag);
-       // cc.log("onPostSolve otherCollider.tag=%d", otherCollider.tag);
-        // if(otherCollider.tag == 999) {
-        //     cc.log("888 selfCollider.sensor=%s", selfCollider.sensor.toString());
-        //     selfCollider.sensor = false;
-        // }
-        
+        cc.log("0000 onPostSolve selfCollider.tag=%d name=%s", selfCollider.tag, selfCollider.name);
+        cc.log("0000 onPostSolve otherCollider.tag=%d name=%s", otherCollider.tag, otherCollider.name);
+        cc.log("0000 onPostSolve contact: colliderA=%s colliderB=%s", contact.colliderA.node.name, contact.colliderB.node.name);
+        if(otherCollider.tag == 999) {
+            this.isCollideLand = true;
+        }
+        else if(otherCollider.node.name == "land_bg") {
+            contact.disabled = true;
+        }
+        else if(otherCollider.tag == 100) {
+            // var impulse = contact.getImpulse();
+            // var normalImpulses = impulse.normalImpulses;
+            // var tangentImpulses = impulse.tangentImpulses;
+            // cc.log("0000 normalImpulses len=%d normal0(%f)", normalImpulses.length, normalImpulses[0], normalImpulses[0]);
+            // cc.log("0000 tangentImpulses len=%d tangent0(%f)", tangentImpulses.length, tangentImpulses[0], tangentImpulses[0]);
+
+            var rigidBody = otherCollider.node.getComponent(cc.RigidBody);
+            var speedX =  rigidBody.linearVelocity.x;
+            var speedY =  rigidBody.linearVelocity.y;
+            cc.log("0000 onPostSolve rigidBody linearSpeed(%f, %f) angularSpeed=%f", speedX, speedY, rigidBody.angularVelocity); 
+
+            if( (speedX<=0.5 && speedX>=-0.5) && (speedY<=0.5 && speedY>=-0.5) ) {
+                cc.log("9999 onPostSolve item is staticed");
+                // contact.disabled = true;
+            }
+            
+        }
     },
 
     drawTestNode: function() {
@@ -402,7 +479,6 @@ cc.Class({
 
         this.ctx.stroke();
     },
-    
    
     update: function(dt) {
         this.drawTestNode();
@@ -417,9 +493,9 @@ cc.Class({
 
         if(this.moveFlag == MOVE_LEFT) {
             if(player.id == this.eid) {
-                if(!this.isCollision) {
+               if(!this.isCollideLand) {
                     this.addAxisX(-speedX);
-                }
+               }
             }else {
                 if(this.node.x >= this.targetPosition.x) {
                     this.addAxisX(-speedX);
@@ -430,7 +506,7 @@ cc.Class({
         } 
         else if (this.moveFlag == MOVE_RIGHT ) {
             if(player.id == this.eid) {
-                if(!this.isCollision) {
+                if(!this.isCollideLand) {
                     this.addAxisX(speedX);
                 }
             }else {
@@ -457,18 +533,18 @@ cc.Class({
         var end = this.end_point.convertToWorldSpaceAR(cc.v2(0, 0));
         results = cc.director.getPhysicsManager().rayCast(start, end, cc.RayCastType.AllClosest);
 
-       // cc.log("down rayCast Result Count=%d", results.length);
-      //  cc.log("down rayCast: start(%f, %f)  end(%f, %f)", start.x, start.y, end.x, end.y);
+      // cc.log("0000 down rayCast Result Count=%d", results.length);
+      // cc.log("0000 down rayCast: start(%f, %f)  end(%f, %f)", start.x, start.y, end.x, end.y);
 
-        // this.ctx.clear();
-        // this.ctx.moveTo(start.x, start.y);
-        // this.ctx.lineTo(end.x, end.y);
-        // this.ctx.stroke();
+        this.ctx.clear();
+        this.ctx.moveTo(start.x, start.y);
+        this.ctx.lineTo(end.x, end.y);
+        this.ctx.stroke();
 
         for (var i = 0; i < results.length; i++) {
             var result = results[i];
             var collider = result.collider;
-            //cc.log("down rayCast Result %d  name: %s,  point(%s, %s)", i, collider.node.name, result.point.x, result.point.y);
+            //cc.log("0000 down rayCast Result %d  name: %s,  point(%s, %s)", i, collider.node.name, result.point.x, result.point.y);
             if(collider.node.name == "land_bg") {
                 var foot_point = this.node.parent.convertToNodeSpace(result.point);
                 this.node.y = foot_point.y;

@@ -34,9 +34,12 @@
 		<onJump>
 		</onJump>
 
-		<newTurn>
+		<onStopWalk>
+		</onStopWalk>
+
+		<onNewTurn>
 				<Arg>		ENTITY_ID		</Arg>
-		</newTurn>
+		</onNewTurn>
 
 		<onPickUpItem>
 				<Arg>		ENTITY_ID		</Arg>
@@ -55,6 +58,11 @@
 	</BaseMethods>
 
 	<CellMethods>
+		<stopWalk>
+			<Exposed/>
+			<Arg>		VECTOR3		</Arg>
+		</stopWalk>
+
 		<jump>
 			<Exposed/>
 		</jump>
@@ -69,6 +77,10 @@
 			<Arg>		ENTITY_ID	</Arg>
 			<Arg>		VECTOR3		</Arg>
 		</throwItem>
+
+		<newTurn>
+			<Exposed/>
+		</newTurn>
 	</CellMethods>
 
 </root>

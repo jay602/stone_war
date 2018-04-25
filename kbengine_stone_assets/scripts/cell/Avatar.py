@@ -92,3 +92,20 @@ class Avatar(KBEngine.Entity, EntityCommon):
 		DEBUG_MSG("avatar %i pick up item=%i" % (self.id, itemID))
 		self.otherClients.onThrowItem(itemID, force)
 
+	def newTurn(self, exposed):
+		DEBUG_MSG("receive avavtar %i newTurn, selfID=%i" % (exposed, self.id))
+		if exposed != self.id:
+			return
+
+		room = self.getCurrRoom()
+		
+		if room:
+			room.nextPlayer()
+
+
+	def stopWalk(self, exposed, pos):
+		DEBUG_MSG("receive avavtar %i stopWalk, selfID=%i" % (exposed, self.id))
+		if exposed != self.id:
+			return
+
+		self.otherClients.onStopWalk(pos)

@@ -20,7 +20,7 @@ cc.Class({
         maxSpeed: cc.v2(400, 600),
         speedY : 300,
         moveFlag : 0,
-        isCollision : false,
+        isCollideLand : false,
         isOnGround : true,
         walkAnim : null,
         jumpAnim : null,
@@ -141,7 +141,7 @@ cc.Class({
     onCollisionEnter: function (other, self) {
         if(self.tag == 333) {
             self.node.y += 1.5;
-            this.isCollision = true;
+            this.isCollideLand = true;
             if(this.jumping) {
                 this.jumping = false;
                 this.offsetY = 0;
@@ -175,23 +175,23 @@ cc.Class({
     },
 
     onCollisionExit: function (other) {
-        this.isCollision = false;
+        this.isCollideLand = false;
     },
 
     update: function (dt) {
-        if(!this.isCollision && !this.jumping){
+        if(!this.isCollideLand && !this.jumping){
             this.addAxisY(-1);
         }
 
         var  isStop = true;
         if(this.moveFlag == MOVE_LEFT) {
             this.addAxisX(-1);
-            this.isCollision = false;
+            this.isCollideLand = false;
             isStop = false;
         } 
         else if (this.moveFlag == MOVE_RIGHT ) {
             this.addAxisX(1);
-            this.isCollision = false;
+            this.isCollideLand = false;
             isStop = false;
         }  
 

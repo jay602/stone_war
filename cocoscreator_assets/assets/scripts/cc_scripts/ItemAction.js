@@ -113,10 +113,6 @@ cc.Class({
         return dist;
     },
 
-    start () {
-
-    },
-
     update (dt) {
         // var centerPoint = this.node.convertToWorldSpaceAR(cc.v2(0, 0));
         // var worldPoint = this.worldNode.convertToWorldSpaceAR(cc.v2(0, 0));

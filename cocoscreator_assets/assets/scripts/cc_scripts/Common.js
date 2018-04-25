@@ -6,7 +6,7 @@ window.MOVE_DOWN = 4;
 
 window.SCALE = 10;
 
-window.MULTIPLE = 5;
+window.MULTIPLE = 8;
 
 window.
 

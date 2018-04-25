@@ -14,7 +14,6 @@ KBEngine.Avatar = KBEngine.Entity.extend(
             }
         },
                    
-          
         onEnterWorld : function()
         {
             this._super();
@@ -23,15 +22,28 @@ KBEngine.Avatar = KBEngine.Entity.extend(
             }		
         },
 
+        stopWalk: function(pos)
+        {
+            cc.log("0000 avatar %d stop walk", this.id);
+            var vec3 = new KBEngine.Vector3();
+            vec3.x = pos.x;
+            vec3.y = pos.y;
+            vec3.z = 0.0;
+            this.cellCall("stopWalk", pos);
+        },
+
+        onStopWalk: function(pos)
+        {
+            cc.log("0000 other avatar %d stop walk", this.id);
+            var v2 = new cc.Vec2();
+            v2.x = pos.x;
+            v2.y = pos.y;
+            KBEngine.Event.fire("otherAvatarOnStopWalk", this.id, v2);
+        },
+
         jump : function()
 	    {
 		    this.cellCall("jump");
-        }, 
-
-        newTurn : function(eid)
-	    {
-            cc.log("0000 avatar %d newTurn", this.id);
-		    KBEngine.Event.fire("newTurn", eid);
         }, 
 
         onJump : function()
@@ -70,6 +82,18 @@ KBEngine.Avatar = KBEngine.Entity.extend(
             cc.log("0000 other avatar %d throw item=%d", this.id, itemID);
 		    KBEngine.Event.fire("otherAvatarThrowItem", this.id, itemID, v2);
         },
+
+        onNewTurn : function(eid)
+	    {
+            cc.log("0000 avatar %d newTurn", this.id);
+		    KBEngine.Event.fire("newTurn", eid);
+        }, 
+
+        newTurn : function()
+	    {
+            cc.log("0000 avatar %d newTurn", this.id);
+            this.cellCall("newTurn");
+        }, 
     });
     
     

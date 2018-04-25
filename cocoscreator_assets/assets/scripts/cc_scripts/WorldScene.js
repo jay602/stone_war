@@ -62,7 +62,7 @@ cc.Class({
         this.cameraControl =this.camera.getComponent("CameraControl");
 
         this.enablePhysicManager();
-       // this.enablePhysicsDebugDraw();
+        this.enablePhysicsDebugDraw();
         this.installEvents();
     },
 
@@ -102,6 +102,7 @@ cc.Class({
         KBEngine.Event.register("newTurn", this, "newTurn");
         KBEngine.Event.register("otherAvatarOnPickUpItem", this, "otherAvatarOnPickUpItem");
         KBEngine.Event.register("otherAvatarThrowItem", this, "otherAvatarThrowItem");
+        KBEngine.Event.register("otherAvatarOnStopWalk", this, "otherAvatarOnStopWalk");
     },
 
     onKicked : function(failedcode){
@@ -156,14 +157,17 @@ cc.Class({
                 action.setEntityId(entity.id);
                 
                 this.curPlayerCount++;
+               
             }else if(entity.className == "Item") {
                 cc.log("Item:%s enter world", entity.name);
                 ae = cc.instantiate(ItemPrefabMap[entity.name]);
                 var action = ae.addComponent("ItemAction");
+                //var worldPoint = this.node.convertToWorldSpace(entity.position.x*SCALE,  entity.position.z*SCALE);
+               // ae.setPosition(worldPoint.x, worldPoint.y);
                 action.setPlayer(this.player);
                 action.setItemID(entity.id);
+               // this.camera.addTarget(ae);
             }
-            
             this.node.addChild(ae);
             ae.setPosition(entity.position.x*SCALE,  entity.position.z*SCALE);
             this.entities[entity.id] = ae;
@@ -254,9 +258,11 @@ cc.Class({
         this.curAvatarID = avatarID;
         this.setCameraTarget(avatarID);
         cc.log("0000 WorldScene::newTurn: eid=%d  playerID=%d", avatarID,  KBEngine.app.player().id);
-        if(this.curAvatarID == KBEngine.app.player().id) {
-            this.enableControlPlayer();
-        }
+        // if(this.curAvatarID == KBEngine.app.player().id) {
+        //     this.enableControlPlayer();
+        // }else {
+        //     this.disEnableControlPlayer();
+        // }
     },
 
     otherAvatarOnPickUpItem: function(avatarID, itemID) {
@@ -280,6 +286,16 @@ cc.Class({
         var action = player.getComponent("AvatarAction");
         action.throwItem(item, force);
     },
+
+    otherAvatarOnStopWalk: function(avatarID, pos){
+        cc.log("0000 WorldScene::otherAvatarOnStopWalk: avatarID=%d, pos(%f, %f) ", avatarID, pos.x, pos.y);
+        var player = this.entities[avatarID];
+        if(player == undefined)
+            return;
+
+        var action = player.getComponent("AvatarAction");
+        action.onStopWalk(pos);
+    },
     
     enableControlPlayer: function() {
         this.player.getComponent("AvatarControl").enableEventListen();
@@ -288,14 +304,4 @@ cc.Class({
     disEnableControlPlayer: function() {
         this.player.getComponent("AvatarControl").disEnableEventListen();
     },
-
-    update: function (dt) {
-        
-    },
-
-
-    start () {
-                
-    },
-
 });

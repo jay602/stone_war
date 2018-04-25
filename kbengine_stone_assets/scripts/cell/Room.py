@@ -24,6 +24,7 @@ class Room(KBEngine.Entity):
 		self.avatars = {}	
 		self.items = []
 		self.curEid = 0
+		self.newTurnTimer = 0
 		DEBUG_MSG('created space[%d] entityID = %i.' % (self.roomKeyC, self.id))
 		KBEngine.globalData["Room_%i" % self.spaceID] = self.base
 		self.createItems()
@@ -75,9 +76,9 @@ class Room(KBEngine.Entity):
 		@param userArg	: addTimer 最后一个参数所给入的数据
 		"""
 		if TIMER_TYPE_GAME_START == userArg:
-			DEBUG_MSG("Time to Game Start")
 			self.startGame()
-			self.addTimer(GameConfigs.PLAY_TIME_PER_TURN, 0, TIMER_TYPE_NEXT_PLAYER)
+			#self.newTurnTimer = self.addTimer(GameConfigs.PLAY_TIME_PER_TURN, GameConfigs.PLAY_TIME_PER_TURN, TIMER_TYPE_NEXT_PLAYER)
+			DEBUG_MSG("Time to Game Start, newTurnTimer=%i" % (self.newTurnTimer))
 
 		if TIMER_TYPE_NEXT_PLAYER == userArg:
 			self.nextPlayer()
@@ -87,7 +88,7 @@ class Room(KBEngine.Entity):
 	
 	def newTurn(self, eid):
 		for entity in self.avatars.values():
-			entity.client.newTurn(eid)
+			entity.client.onNewTurn(eid)
 
 	def onLeave(self, entityID):
 		"""
@@ -104,10 +105,12 @@ class Room(KBEngine.Entity):
 
 
 	def nextPlayer(self):
+		self.delTimer(self.newTurnTimer)
 		for eid, entity in self.avatars.items():
 			if self.curEid != eid:
 				self.curEid = eid
 				break
-
-		DEBUG_MSG('Room::nextPlayer: eid=%i' % (self.curEid))
-
+		
+		self.newTurn(self.curEid)
+		self.newTurnTimer = self.addTimer(GameConfigs.PLAY_TIME_PER_TURN, 0, TIMER_TYPE_NEXT_PLAYER)
+		DEBUG_MSG('Room::nextPlayer: eid=%i  newTurnTimer=%i' % (self.curEid, self.newTurnTimer))

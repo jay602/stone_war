@@ -132,7 +132,7 @@
     "_position": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": -4.6
+      "y": -8
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -598,6 +598,26 @@
     "bullet": false
   },
   {
+    "__type__": "cc.BoxCollider",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 1
+    },
+    "_enabled": false,
+    "tag": 400,
+    "_offset": {
+      "__type__": "cc.Vec2",
+      "x": -15,
+      "y": 105
+    },
+    "_size": {
+      "__type__": "cc.Size",
+      "width": 111,
+      "height": 191
+    }
+  },
+  {
     "__type__": "cc.PhysicsPolygonCollider",
     "_name": "",
     "_objFlags": 0,
@@ -605,7 +625,7 @@
       "__id__": 1
     },
     "_enabled": true,
-    "tag": 300,
+    "tag": 0,
     "_density": 1,
     "_sensor": false,
     "_friction": 0.2,
@@ -613,51 +633,66 @@
     "body": null,
     "_offset": {
       "__type__": "cc.Vec2",
-      "x": -13,
-      "y": 150
+      "x": -12,
+      "y": 66
     },
     "points": [
       {
         "__type__": "cc.Vec2",
-        "x": -23,
-        "y": -86
+        "x": -33,
+        "y": -48
       },
       {
         "__type__": "cc.Vec2",
-        "x": 18,
-        "y": -84
+        "x": 29,
+        "y": -48
       },
       {
         "__type__": "cc.Vec2",
-        "x": 50,
-        "y": 50
+        "x": 49,
+        "y": -10
       },
       {
         "__type__": "cc.Vec2",
-        "x": -51,
-        "y": 49
+        "x": 29,
+        "y": 29
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 21,
+        "y": 99
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 14,
+        "y": 111
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -7,
+        "y": 119
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -25,
+        "y": 112
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -37,
+        "y": 100
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -38,
+        "y": 29
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -55,
+        "y": -5
       }
     ]
-  },
-  {
-    "__type__": "cc.BoxCollider",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 1
-    },
-    "_enabled": true,
-    "tag": 400,
-    "_offset": {
-      "__type__": "cc.Vec2",
-      "x": -16,
-      "y": 107
-    },
-    "_size": {
-      "__type__": "cc.Size",
-      "width": 111,
-      "height": 195
-    }
   },
   {
     "__type__": "cc.PrefabInfo",
