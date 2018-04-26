@@ -84,6 +84,11 @@ cc.Class({
             default: null,
             type: cc.Node,
         },
+
+        playerRigidBody: {
+            default: null,
+            type: cc.RigidBody,
+        }
     },
 
     onLoad () {
@@ -101,6 +106,8 @@ cc.Class({
         this.testNode1 = cc.find("testNode1");
         this.testNode2 = cc.find("testNode2");
         this.ctx = cc.find("worldDraw").getComponent(cc.Graphics);
+
+        this.playerRigidBody = this.node.getComponent(cc.RigidBody);
 
         this.targetPosition = null;
         this.isCollideLand = false;
@@ -373,11 +380,13 @@ cc.Class({
             var rigidBody = otherCollider.node.getComponent(cc.RigidBody);
             var speedX =  rigidBody.linearVelocity.x;
             var speedY =  rigidBody.linearVelocity.y;
-            cc.log("0000 onBeginContact rigidBody linearSpeed(%f, %f) angularSpeed=%f", speedX, speedY, rigidBody.angularVelocity); 
+            cc.log("0000 onBeginContact other rigidBody linearSpeed(%f, %f) angularSpeed=%f", speedX, speedY, rigidBody.angularVelocity); 
 
             if( (speedX<=0.5 && speedX>=-0.5) && (speedY<=0.5 && speedY>=-0.5)) {
                 cc.log("9999 onBeginContact item is staticed");
                 contact.disabled = true;
+            }else {
+               // this.playerRigidBody.linearVelocity = cc.Vec2.ZERO;
             }
         }
     },
@@ -396,11 +405,13 @@ cc.Class({
             var rigidBody = otherCollider.node.getComponent(cc.RigidBody);
             var speedX =  rigidBody.linearVelocity.x;
             var speedY =  rigidBody.linearVelocity.y;
-            cc.log("0000 onEndContact rigidBody linearSpeed(%f, %f) angularSpeed=%f", speedX, speedY, rigidBody.angularVelocity); 
+            cc.log("0000 onEndContact other rigidBody linearSpeed(%f, %f) angularSpeed=%f", speedX, speedY, rigidBody.angularVelocity); 
             
             if( (speedX<=0.5 && speedX>=-0.5) && (speedY<=0.5 && speedY>=-0.5) ) {
                 cc.log("9999 onEndContact item is staticed");
                // contact.disabled = true;
+            }else {
+                this.playerRigidBody.linearVelocity = cc.Vec2.ZERO;
             }
         }
     },
@@ -418,11 +429,13 @@ cc.Class({
             var rigidBody = otherCollider.node.getComponent(cc.RigidBody);
             var speedX =  rigidBody.linearVelocity.x;
             var speedY =  rigidBody.linearVelocity.y;
-            cc.log("0000 onPreSolve rigidBody linearSpeed(%f, %f) angularSpeed=%f", speedX, speedY, rigidBody.angularVelocity); 
+            cc.log("0000 onPreSolve other rigidBody linearSpeed(%f, %f) angularSpeed=%f", speedX, speedY, rigidBody.angularVelocity); 
 
             if( (speedX<=0.5 && speedX>=-0.5) && (speedY<=0.5 && speedY>=-0.5) ) {
                 cc.log("9999 onPreSolve item is staticed");
                 contact.disabled = true;
+            }else {
+               // this.playerRigidBody.linearVelocity = cc.Vec2.ZERO;
             }
         }
     },
@@ -448,11 +461,13 @@ cc.Class({
             var rigidBody = otherCollider.node.getComponent(cc.RigidBody);
             var speedX =  rigidBody.linearVelocity.x;
             var speedY =  rigidBody.linearVelocity.y;
-            cc.log("0000 onPostSolve rigidBody linearSpeed(%f, %f) angularSpeed=%f", speedX, speedY, rigidBody.angularVelocity); 
+            cc.log("0000 onPostSolve other rigidBody linearSpeed(%f, %f) angularSpeed=%f", speedX, speedY, rigidBody.angularVelocity); 
 
             if( (speedX<=0.5 && speedX>=-0.5) && (speedY<=0.5 && speedY>=-0.5) ) {
                 cc.log("9999 onPostSolve item is staticed");
                 // contact.disabled = true;
+            }else {
+                this.playerRigidBody.linearVelocity = cc.Vec2.ZERO;
             }
             
         }
@@ -518,6 +533,7 @@ cc.Class({
             }
         }  
 
+        
         if(this.jumping) {
             this.jumpSpeedY +=  this.gravity * dt;
 
