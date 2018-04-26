@@ -31,11 +31,15 @@
 	</Properties>
 
 	<ClientMethods>
-		<onJump>
-		</onJump>
+		<onStartWalk>
+		</onStartWalk>
 
 		<onStopWalk>
+			<Arg>		VECTOR3			</Arg>
 		</onStopWalk>
+
+		<onJump>
+		</onJump>
 
 		<onNewTurn>
 				<Arg>		ENTITY_ID		</Arg>
@@ -58,6 +62,10 @@
 	</BaseMethods>
 
 	<CellMethods>
+		<startWalk>
+			<Exposed/>
+		</startWalk>
+
 		<stopWalk>
 			<Exposed/>
 			<Arg>		VECTOR3		</Arg>

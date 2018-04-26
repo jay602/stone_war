@@ -58,7 +58,6 @@ cc.Class({
                 cc.error("load item prefab error: " + err);
                 return;
             }
-            cc.log("load item prefab....");
             for(var prefab of prefabArray) {
                 ItemPrefabMap[prefab.name] = prefab;
             }

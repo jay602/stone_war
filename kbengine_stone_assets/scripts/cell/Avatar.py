@@ -77,7 +77,7 @@ class Avatar(KBEngine.Entity, EntityCommon):
 		defined.
 		玩家跳跃 我们广播这个行为
 		"""
-		DEBUG_MSG("receive avavtar %i pickUpItem, selfID=%i" % (exposed, self.id))
+		DEBUG_MSG("avavtar %i pickUpItem, selfID=%i" % (exposed, self.id))
 		if exposed != self.id:
 			return
 		DEBUG_MSG("avatar %i pick up item=%i" % (self.id, itemID))
@@ -85,7 +85,7 @@ class Avatar(KBEngine.Entity, EntityCommon):
 
 
 	def throwItem(self, exposed, itemID, force):
-		DEBUG_MSG("receive avavtar %i throw item=%d, force, selfID=%i" % (exposed, itemID, self.id))
+		DEBUG_MSG("avavtar %i throw item=%d, force, selfID=%i" % (exposed, itemID, self.id))
 		DEBUG_MSG(force)
 		if exposed != self.id:
 			return
@@ -93,7 +93,7 @@ class Avatar(KBEngine.Entity, EntityCommon):
 		self.otherClients.onThrowItem(itemID, force)
 
 	def newTurn(self, exposed):
-		DEBUG_MSG("receive avavtar %i newTurn, selfID=%i" % (exposed, self.id))
+		DEBUG_MSG("avavtar %i newTurn, selfID=%i" % (exposed, self.id))
 		if exposed != self.id:
 			return
 
@@ -104,8 +104,17 @@ class Avatar(KBEngine.Entity, EntityCommon):
 
 
 	def stopWalk(self, exposed, pos):
-		DEBUG_MSG("receive avavtar %i stopWalk, selfID=%i" % (exposed, self.id))
+		DEBUG_MSG("avavtar %i stopWalk, selfID=%i" % (exposed, self.id))
 		if exposed != self.id:
 			return
 
 		self.otherClients.onStopWalk(pos)
+
+
+	def startWalk(self, exposed):
+		DEBUG_MSG("avavtar %i start walk, selfID=%i" % (exposed, self.id))
+		if exposed != self.id:
+			return
+
+		self.otherClients.onStartWalk()
+

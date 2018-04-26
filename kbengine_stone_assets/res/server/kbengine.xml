@@ -73,7 +73,7 @@
 			<criticallyLowSize> 2000 </criticallyLowSize>				<!-- Type: Integer -->
 		</ids>
 		<defaultViewRadius>			
-			<radius> 200.0 </radius>
+			<radius> 500.0 </radius>
 			<hysteresisArea> 5.0 </hysteresisArea>
 		</defaultViewRadius>
 	</cellapp>

@@ -17,7 +17,7 @@ cc.Class({
 
         jumpSpeed: cc.v2(300, 500),
         maxSpeed: cc.v2(400, 600),
-        walkspeed: cc.v2(120, 50),
+        walkspeed: cc.v2(110, 50),
         jumpSpeedY : 0,
         maxThrowSpeed: cc.v2(800, 800),
 
@@ -167,7 +167,12 @@ cc.Class({
         if(!this.jumping) {
             this.node.scaleX = this.leftDir;
         }
-        this._playWalkAnim();
+        this.playWalkAnim();
+
+        var player = KBEngine.app.player();
+        if(player != undefined && player.inWorld) {
+            player.startWalk();
+        }
     },
 
     rightWalk: function() {
@@ -181,38 +186,54 @@ cc.Class({
         if(!this.jumping) {
             this.node.scaleX = this.rightDir;
         }
-        this._playWalkAnim();
+        this.playWalkAnim();
+
+        var player = KBEngine.app.player();
+        if(player != undefined && player.inWorld) {
+            player.startWalk();
+        }
     },
 
-    _playWalkAnim: function() {
+    playWalkAnim: function() {
         if(!this.jumping && this.anim) {
+            cc.log("playWalkAnim 8888");
             this.anim.playWalkAnim();
         }
     },
 
     _stopWalk: function() {
+        var canStop = false;
         if(!this.jumping && this.moveFlag!=STATIC) {
+            cc.log("8989 stop stalk");
             this.moveFlag = STATIC;
             if(this.anim){
                 this.anim.stopPlayAnim();
             }
+            canStop = true;
         }
+
+        return canStop;
     },
 
     stopWalk: function() {
-        this._stopWalk();
+        var canStop = this._stopWalk();
 
-        // if(!this.jumping && this.moveFlag!=STATIC) { 
-        //     var player = KBEngine.app.player();
-        //     if(player != undefined && player.inWorld) {
-        //         player.stopWalk(this.node.getPosition());
-        //     }
-        // }
+        if(canStop) {
+            var player = KBEngine.app.player();
+            if(player != undefined && player.inWorld) {
+                player.stopWalk(this.node.getPosition());
+            }
+        }
     },
 
     onStopWalk: function(pos) {
-        this._stopWalk();
-        this.node.setPosition(pos.x, pos.y);
+        cc.log("Avatar onStopWalk");
+        //this._stopWalk();
+        this.moveFlag = STATIC;
+        if(this.anim){
+            this.anim.stopPlayAnim();
+        }
+        //this.node.setPosition(pos.x, pos.y);
     },
 
     jump: function() {
@@ -239,6 +260,7 @@ cc.Class({
     },
 
     onJump: function() {
+        cc.log("AvatarAction onJump");
         this._jump();
     },
 
@@ -253,10 +275,8 @@ cc.Class({
 
         if(this.node.scaleX == this.rightDir) {
             this.arrow.scaleX = this.rightDir;
-           // this.arrow.scaleX = -1;
         } else if(this.node.scaleX == this.leftDir) {
             this.arrow.scaleX = this.leftDir;
-            //this.arrow.scaleX = 1;
         }
 
         itemPoint = this.leftHand.convertToWorldSpaceAR(cc.v2(0, 0));
@@ -294,12 +314,9 @@ cc.Class({
         var factor = 1;
         if(this.node.scaleX == this.rightDir) {
             this.arrow.scaleX = this.rightDir;
-            //this.arrow.scaleX = -1;
             factor = this.modelID==0 ? 1 : -1;
         } else if(this.node.scaleX == this.leftDir) {
             this.arrow.scaleX = this.leftDir;
-            //this.arrow.scaleX = 1;
-            //factor = -1;
             factor = this.modelID==0 ? -1 : 1;
         }
 
@@ -348,24 +365,27 @@ cc.Class({
         itemRigidbody.applyLinearImpulse(force, worldCenter, true);
     },
 
-    setPosition: function(position) {
+    onStartMove: function(position) {
         this.targetPosition = position;
         var dx = position.x - this.node.x;
-       
-        if (dx > 1) // 右
+        cc.log("7878 AvatarAction::onStartMove, dx=%f", dx);
+        if (dx > 0.3) // 右
         {
-            this.rightWalk();
+            this.moveFlag = MOVE_RIGHT;
         }
-        else if (dx < -1) //左
+        else if (dx < -0.3) //左
         {
-            this.leftWalk();
+            this.moveFlag = MOVE_LEFT;
+        }else {
+            //this.moveFlag = STATIC;
         }
+        cc.log("7878 AvatarAction::onStartMove, dx=%f, move=%f", dx, this.moveFlag);
     },
 
     onBeginContact: function (contact, selfCollider, otherCollider) {
-        cc.log("0000 onBeginContact selfCollider: tag=%d  name=%s", selfCollider.tag, selfCollider.name);
-        cc.log("0000 onBeginContact otherCollider: tag=%d name=%s", otherCollider.tag, otherCollider.name);
-        cc.log("0000 onBeginContact contact: colliderA=%s colliderB=%s", contact.colliderA.node.name, contact.colliderB.node.name);
+        // cc.log("0000 onBeginContact selfCollider: tag=%d  name=%s", selfCollider.tag, selfCollider.name);
+        // cc.log("0000 onBeginContact otherCollider: tag=%d name=%s", otherCollider.tag, otherCollider.name);
+        // cc.log("0000 onBeginContact contact: colliderA=%s colliderB=%s", contact.colliderA.node.name, contact.colliderB.node.name);
         if(otherCollider.tag == 999) {
             this.isCollideLand = true;
         }else if(otherCollider.node.name == "land_bg") {
@@ -380,30 +400,29 @@ cc.Class({
                 cc.log("9999 onBeginContact item is staticed");
                 contact.disabled = true;
             }else {
-               // this.playerRigidBody.linearVelocity = cc.Vec2.ZERO;
+                this.playerRigidBody.linearVelocity = cc.Vec2.ZERO;
             }
         }
     },
 
     // 只在两个碰撞体结束接触时被调用一次
     onEndContact: function (contact, selfCollider, otherCollider) {
-       cc.log("0000 onEndContact selfCollider: tag=%d name=%s", selfCollider.tag, selfCollider.name);
-       cc.log("0000 onEndContact otherCollider: tag=%d name=%s", otherCollider.tag, otherCollider.name);
-       cc.log("0000 onEndContact contact: colliderA=%s colliderB=%s", contact.colliderA.node.name, contact.colliderB.node.name);
+    //    cc.log("0000 onEndContact selfCollider: tag=%d name=%s", selfCollider.tag, selfCollider.name);
+    //    cc.log("0000 onEndContact otherCollider: tag=%d name=%s", otherCollider.tag, otherCollider.name);
+    //    cc.log("0000 onEndContact contact: colliderA=%s colliderB=%s", contact.colliderA.node.name, contact.colliderB.node.name);
        if(otherCollider.tag == 999) {
             this.isCollideLand = false;
         }else if(otherCollider.node.name == "land_bg") {
-            this.isCollideLand = false;
-            //contact.disabled = true;
+            // this.isCollideLand = false;
         }else if(otherCollider.tag == 100 ) {
             var rigidBody = otherCollider.node.getComponent(cc.RigidBody);
             var speedX =  rigidBody.linearVelocity.x;
             var speedY =  rigidBody.linearVelocity.y;
-            cc.log("0000 onEndContact other rigidBody linearSpeed(%f, %f) angularSpeed=%f", speedX, speedY, rigidBody.angularVelocity); 
+           // cc.log("0000 onEndContact other rigidBody linearSpeed(%f, %f) angularSpeed=%f", speedX, speedY, rigidBody.angularVelocity); 
             
             if( (speedX<=0.5 && speedX>=-0.5) && (speedY<=0.5 && speedY>=-0.5) ) {
                 cc.log("9999 onEndContact item is staticed");
-               // contact.disabled = true;
+                // contact.disabled = true;
             }else {
                 this.playerRigidBody.linearVelocity = cc.Vec2.ZERO;
             }
@@ -412,9 +431,9 @@ cc.Class({
 
     // 每次将要处理碰撞体接触逻辑时被调用
     onPreSolve: function (contact, selfCollider, otherCollider) {
-        cc.log("0000 onPreSolve selfCollider.tag=%d name=%s", selfCollider.tag, selfCollider.name);
-        cc.log("0000 onPreSolve otherCollider.tag=%d name=%s", otherCollider.tag, otherCollider.name);
-        cc.log("0000 onPreSolve contact: colliderA=%s colliderB=%s", contact.colliderA.node.name, contact.colliderB.node.name);
+        // cc.log("0000 onPreSolve selfCollider.tag=%d name=%s", selfCollider.tag, selfCollider.name);
+        // cc.log("0000 onPreSolve otherCollider.tag=%d name=%s", otherCollider.tag, otherCollider.name);
+        // cc.log("0000 onPreSolve contact: colliderA=%s colliderB=%s", contact.colliderA.node.name, contact.colliderB.node.name);
         if(otherCollider.tag == 999) {
             this.isCollideLand = true;
         }else if(otherCollider.node.name == "land_bg") {
@@ -423,47 +442,34 @@ cc.Class({
             var rigidBody = otherCollider.node.getComponent(cc.RigidBody);
             var speedX =  rigidBody.linearVelocity.x;
             var speedY =  rigidBody.linearVelocity.y;
-            cc.log("0000 onPreSolve other rigidBody linearSpeed(%f, %f) angularSpeed=%f", speedX, speedY, rigidBody.angularVelocity); 
+           //cc.log("0000 onPreSolve other rigidBody linearSpeed(%f, %f) angularSpeed=%f", speedX, speedY, rigidBody.angularVelocity); 
 
             if( (speedX<=0.5 && speedX>=-0.5) && (speedY<=0.5 && speedY>=-0.5) ) {
                 cc.log("9999 onPreSolve item is staticed");
                 contact.disabled = true;
-            }else {
-               // this.playerRigidBody.linearVelocity = cc.Vec2.ZERO;
             }
         }
     },
 
     // 每次处理完碰撞体接触逻辑时被调用
     onPostSolve: function (contact, selfCollider, otherCollider) {
-        cc.log("0000 onPostSolve selfCollider.tag=%d name=%s", selfCollider.tag, selfCollider.name);
-        cc.log("0000 onPostSolve otherCollider.tag=%d name=%s", otherCollider.tag, otherCollider.name);
-        cc.log("0000 onPostSolve contact: colliderA=%s colliderB=%s", contact.colliderA.node.name, contact.colliderB.node.name);
+        // cc.log("0000 onPostSolve selfCollider.tag=%d name=%s", selfCollider.tag, selfCollider.name);
+        // cc.log("0000 onPostSolve otherCollider.tag=%d name=%s", otherCollider.tag, otherCollider.name);
+        // cc.log("0000 onPostSolve contact: colliderA=%s colliderB=%s", contact.colliderA.node.name, contact.colliderB.node.name);
         if(otherCollider.tag == 999) {
             this.isCollideLand = true;
-        }
-        else if(otherCollider.node.name == "land_bg") {
-            contact.disabled = true;
-        }
-        else if(otherCollider.tag == 100) {
-            // var impulse = contact.getImpulse();
-            // var normalImpulses = impulse.normalImpulses;
-            // var tangentImpulses = impulse.tangentImpulses;
-            // cc.log("0000 normalImpulses len=%d normal0(%f)", normalImpulses.length, normalImpulses[0], normalImpulses[0]);
-            // cc.log("0000 tangentImpulses len=%d tangent0(%f)", tangentImpulses.length, tangentImpulses[0], tangentImpulses[0]);
-
+        }else if(otherCollider.tag == 100 ) {
             var rigidBody = otherCollider.node.getComponent(cc.RigidBody);
             var speedX =  rigidBody.linearVelocity.x;
             var speedY =  rigidBody.linearVelocity.y;
-            cc.log("0000 onPostSolve other rigidBody linearSpeed(%f, %f) angularSpeed=%f", speedX, speedY, rigidBody.angularVelocity); 
-
+           // cc.log("0000 onEndContact other rigidBody linearSpeed(%f, %f) angularSpeed=%f", speedX, speedY, rigidBody.angularVelocity); 
+            
             if( (speedX<=0.5 && speedX>=-0.5) && (speedY<=0.5 && speedY>=-0.5) ) {
-                cc.log("9999 onPostSolve item is staticed");
+                  cc.log("9999 onEndContact item is staticed");
                 // contact.disabled = true;
             }else {
-               // this.playerRigidBody.linearVelocity = cc.Vec2.ZERO;
+                this.playerRigidBody.linearVelocity = cc.Vec2.ZERO;
             }
-            
         }
     },
 
@@ -506,10 +512,10 @@ cc.Class({
                     this.addAxisX(-speedX);
                }
             }else {
-                if(this.node.x >= this.targetPosition.x) {
+               if(this.node.x >= this.targetPosition.x) {
                     this.addAxisX(-speedX);
-                }else {
-                    this.stopWalk();
+                 }else {
+                    // this.stopWalk();
                 }
             }
         } 
@@ -520,9 +526,9 @@ cc.Class({
                 }
             }else {
                 if(this.node.x <= this.targetPosition.x) {
-                    this.addAxisX(speedX);
+                        this.addAxisX(speedX);
                 }else {
-                    this.stopWalk();
+                    // this.stopWalk();
                 }
             }
         }  
@@ -546,10 +552,10 @@ cc.Class({
       // cc.log("0000 down rayCast Result Count=%d", results.length);
       // cc.log("0000 down rayCast: start(%f, %f)  end(%f, %f)", start.x, start.y, end.x, end.y);
 
-        this.ctx.clear();
-        this.ctx.moveTo(start.x, start.y);
-        this.ctx.lineTo(end.x, end.y);
-        this.ctx.stroke();
+        // this.ctx.clear();
+        // this.ctx.moveTo(start.x, start.y);
+        // this.ctx.lineTo(end.x, end.y);
+        // this.ctx.stroke();
 
         for (var i = 0; i < results.length; i++) {
             var result = results[i];

@@ -64,6 +64,7 @@ cc.Class({
         this.enablePhysicManager();
        // this.enablePhysicsDebugDraw();
         this.installEvents();
+        this.playerID = [];
     },
 
     enablePhysicManager: function () {
@@ -97,12 +98,15 @@ cc.Class({
 		KBEngine.Event.register("onEnterWorld", this, "onEnterWorld");
         KBEngine.Event.register("onLeaveWorld", this, "onLeaveWorld");
         KBEngine.Event.register("updatePosition", this, "updatePosition");
-        KBEngine.Event.register("otherAvatarOnJump", this, "otherAvatarOnJump");
+       
         KBEngine.Event.register("set_position", this, "set_position");
         KBEngine.Event.register("newTurn", this, "newTurn");
+
+        KBEngine.Event.register("otherAvatarOnJump", this, "otherAvatarOnJump");
         KBEngine.Event.register("otherAvatarOnPickUpItem", this, "otherAvatarOnPickUpItem");
         KBEngine.Event.register("otherAvatarThrowItem", this, "otherAvatarThrowItem");
         KBEngine.Event.register("otherAvatarOnStopWalk", this, "otherAvatarOnStopWalk");
+        KBEngine.Event.register("otherAvatarOnStartWalk", this, "otherAvatarOnStartWalk");
     },
 
     onKicked : function(failedcode){
@@ -155,7 +159,11 @@ cc.Class({
                 action.setModelID(entity.modelID);
                 action.setAnim(anim);
                 action.setEntityId(entity.id);
-                
+                if(entity.direction.z >= 1)  {
+                    ae.scaleX = 1;
+                }else if(entity.direction.z <= -1) {
+                    ae.scaleX = -1;
+                }
                 this.curPlayerCount++;
                
             }else if(entity.className == "Item") {
@@ -166,9 +174,10 @@ cc.Class({
                 action.setItemID(entity.id);
             }
             this.node.addChild(ae);
+            
             ae.setPosition(entity.position.x*SCALE,  entity.position.z*SCALE);
             this.entities[entity.id] = ae;
-            cc.log("other join room");
+            cc.log("other entity %d join room, dir=%f", entity.id, entity.direction.z);
         }
     },
 
@@ -223,14 +232,23 @@ cc.Class({
     updatePosition : function(entity)
 	{
         // 服务器同步到实体的新位置，我们需要将实体平滑移动到指定坐标点
+        if(entity.className == "Item")
+            return;
+
 		var ae = this.entities[entity.id];
 		if(ae == undefined)
-			return;
+            return;
+            
+        cc.log("8888 updatePosition, entityid=%d dir=%f", entity.id, entity.direction.z);
         ae.isOnGround = entity.isOnGround;
-        
-        var action = ae.getComponent("AvatarAction");
+        if(entity.direction.z >= 1)  {
+            ae.scaleX = 1;
+        }else if(entity.direction.z <= -1) {
+            ae.scaleX = -1;
+        }
         var position = cc.p(entity.position.x*SCALE, entity.position.z*SCALE);
-        action.setPosition(position);
+        var action = ae.getComponent("AvatarAction");
+        action.onStartMove(position);
     },	  
     
     set_position: function(entity) {
@@ -254,7 +272,7 @@ cc.Class({
     newTurn: function(avatarID){
         this.curAvatarID = avatarID;
         this.setCameraTarget(avatarID);
-        cc.log("0000 WorldScene::newTurn: eid=%d  playerID=%d", avatarID,  KBEngine.app.player().id);
+        cc.log("WorldScene::newTurn: eid=%d  playerID=%d", avatarID,  KBEngine.app.player().id);
         if(this.curAvatarID == KBEngine.app.player().id) {
             this.enableControlPlayer();
         }else {
@@ -263,7 +281,7 @@ cc.Class({
     },
 
     otherAvatarOnPickUpItem: function(avatarID, itemID) {
-        cc.log("0000 WorldScene_otherAvatarOnPickUpItem: avatarID=%d, itemID=%d ", avatarID, itemID);
+        cc.log("WorldScene_otherAvatarOnPickUpItem: avatarID=%d, itemID=%d ", avatarID, itemID);
         var player = this.entities[avatarID];
         var item = this.entities[itemID];
         if(player == undefined || item == undefined)
@@ -273,7 +291,7 @@ cc.Class({
     },
 
     otherAvatarThrowItem: function(avatarID, itemID, force){
-        cc.log("0000 WorldScene_otherAvatarThrowItem: avatarID=%d, itemID=%d ", avatarID, itemID);
+        cc.log("WorldScene_otherAvatarThrowItem: avatarID=%d, itemID=%d ", avatarID, itemID);
         var player = this.entities[avatarID];
         var item = this.entities[itemID];
         if(player == undefined || item == undefined)
@@ -285,14 +303,25 @@ cc.Class({
     },
 
     otherAvatarOnStopWalk: function(avatarID, pos){
-        cc.log("0000 WorldScene::otherAvatarOnStopWalk: avatarID=%d, pos(%f, %f) ", avatarID, pos.x, pos.y);
         var player = this.entities[avatarID];
         if(player == undefined)
             return;
 
+        cc.log("WorldScene::otherAvatarOnStopWalk: avatarID=%d, pos(%f, %f) ", avatarID, pos.x, pos.y);
         var action = player.getComponent("AvatarAction");
         action.onStopWalk(pos);
     },
+
+    otherAvatarOnStartWalk:function(avatarID){
+        var player = this.entities[avatarID];
+        if(player == undefined)
+            return;
+
+        cc.log("WorldScene::otherAvatarOnStartWalk: avatarID=%d, scale=%f ", avatarID);
+        var action = player.getComponent("AvatarAction");
+        action.playWalkAnim();
+    },
+
     
     enableControlPlayer: function() {
         this.player.getComponent("AvatarControl").enableEventListen();

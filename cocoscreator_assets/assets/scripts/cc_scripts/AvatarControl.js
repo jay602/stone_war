@@ -61,12 +61,12 @@ cc.Class({
     },
 
     enableEventListen: function() {
-        cc.log("666 enableEventListen");
+        cc.log("enableEventListen");
         this.enableEvent = true;
     },
 
     disEnableEventListen: function() {
-        cc.log("666 disEnableEventListen");
+        cc.log("disEnableEventListen");
         this.enableEvent = false;
     },
 
@@ -76,7 +76,7 @@ cc.Class({
 
 
     enableMouseEvent: function() {
-        cc.log("0000 AvatarControl::enableMouseEvent");
+        cc.log("AvatarControl::enableMouseEvent");
         cc.find("Canvas").on(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
         this.node.on(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
         this.node.on(cc.Node.EventType.MOUSE_UP , this.starThrowItem, this);
@@ -89,7 +89,7 @@ cc.Class({
     },
 
     disEnableMouseEvent: function() {
-        cc.log("0000 AvatarControl::disEnableMouseEvent");
+        cc.log("AvatarControl::disEnableMouseEvent");
         cc.find("Canvas").off(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
         this.node.off(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
         this.node.off(cc.Node.EventType.MOUSE_UP , this.starThrowItem, this);
@@ -238,6 +238,8 @@ cc.Class({
         player.position.y = 0;
         player.position.z = this.node.y/SCALE;
         player.isOnGround = this.player.isOnGround;
+        player.direction.z = this.player.node.scaleX;
+       
 
         if( this.item && this.item.getPosition().y<-100 ||
           this.itemBody && this.itemBody.linearVelocity.equals(cc.Vec2.ZERO)

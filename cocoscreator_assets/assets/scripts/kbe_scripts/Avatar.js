@@ -22,9 +22,21 @@ KBEngine.Avatar = KBEngine.Entity.extend(
             }		
         },
 
+        startWalk: function()
+        {
+            cc.log("8989 avatar %d start walk, scaleX=%d", this.id);
+            this.cellCall("startWalk");
+        },
+
+        onStartWalk: function()
+        {
+            cc.log("8989 other avatar %d start walk, scaleX=%d", this.id);
+            KBEngine.Event.fire("otherAvatarOnStartWalk", this.id);
+        },
+
         stopWalk: function(pos)
         {
-            cc.log("0000 avatar %d stop walk", this.id);
+            cc.log("8989 avatar %d stop walk, pos(%f, %f)", this.id, pos.x, pos.y);   
             var vec3 = new KBEngine.Vector3();
             vec3.x = pos.x;
             vec3.y = pos.y;
@@ -34,39 +46,37 @@ KBEngine.Avatar = KBEngine.Entity.extend(
 
         onStopWalk: function(pos)
         {
-            cc.log("0000 other avatar %d stop walk", this.id);
             var v2 = new cc.Vec2();
             v2.x = pos.x;
             v2.y = pos.y;
+            cc.log("8989 other avatar %d stop walk, pos(%f, %f)", this.id, v2.x, v2.y);   
             KBEngine.Event.fire("otherAvatarOnStopWalk", this.id, v2);
         },
 
         jump : function()
 	    {
+            cc.log("avatar %d cell jump", this.id);
 		    this.cellCall("jump");
         }, 
 
         onJump : function()
 	    {
-            cc.log("0000 avatar %d otherAvatarOnJump", this.id);
+            cc.log("other avatar %d onJump", this.id);
 		    KBEngine.Event.fire("otherAvatarOnJump", this);
         }, 
 
         onPickUpItem : function(itemID)
         {
-            cc.log("0000 other avatar %d pick up item=%d", this.id, itemID);
             KBEngine.Event.fire("otherAvatarOnPickUpItem", this.id, itemID);
         },
 
         pickUpItem : function(itemID)
 	    {
-            cc.log("0000 avatar %d pick up item=%d", this.id, itemID);
 		    this.cellCall("pickUpItem", itemID);
         }, 
           
         throwItem : function(itemID, force)
         {
-            cc.log("0000 avatar %d throw item=%d", this.id, itemID);
             var vec3 = new KBEngine.Vector3();
             vec3.x = force.x;
             vec3.y = force.y;
@@ -79,19 +89,16 @@ KBEngine.Avatar = KBEngine.Entity.extend(
             var v2 = new cc.Vec2();
             v2.x = force.x;
             v2.y = force.y;
-            cc.log("0000 other avatar %d throw item=%d", this.id, itemID);
 		    KBEngine.Event.fire("otherAvatarThrowItem", this.id, itemID, v2);
         },
 
         onNewTurn : function(eid)
 	    {
-            cc.log("0000 avatar %d newTurn", this.id);
 		    KBEngine.Event.fire("newTurn", eid);
         }, 
 
         newTurn : function()
 	    {
-            cc.log("0000 avatar %d newTurn", this.id);
             this.cellCall("newTurn");
         }, 
     });
