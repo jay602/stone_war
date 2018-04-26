@@ -249,21 +249,14 @@ cc.Class({
     setPlaceItem: function(item) {
         cc.log("AvatarAction::setPlaceItem");
         this.moveFlag = STATIC;
-        var factor = 1;
         var itemPoint = null;
 
         if(this.node.scaleX == this.rightDir) {
-            cc.log("player left hand pick up item ....");
-            //var leftHandPoint = this.leftHand.convertToWorldSpaceAR(cc.v2(0, 0));
-           // itemPoint = this.node.parent.convertToNodeSpace(leftHandPoint);
             this.arrow.scaleX = this.rightDir;
-            factor = 1;
+           // this.arrow.scaleX = -1;
         } else if(this.node.scaleX == this.leftDir) {
-            cc.log("player righ hand pick up item ....");
-          //  var rightHandPoint = this.rightHand.convertToWorldSpaceAR(cc.v2(0, 0));
-          //  itemPoint = this.node.parent.convertToNodeSpace(rightHandPoint);
             this.arrow.scaleX = this.leftDir;
-            factor = -1;
+            //this.arrow.scaleX = 1;
         }
 
         itemPoint = this.leftHand.convertToWorldSpaceAR(cc.v2(0, 0));
@@ -274,8 +267,6 @@ cc.Class({
         itemRigidbody.gravityScale = 0;
         itemRigidbody.linearVelocity = cc.v2(0, 0);
         item.setPosition(itemPoint);
-
-        return factor;
     },
 
     pickUpItem: function(item, itemID, pickPos) {
@@ -303,10 +294,13 @@ cc.Class({
         var factor = 1;
         if(this.node.scaleX == this.rightDir) {
             this.arrow.scaleX = this.rightDir;
-            factor = 1;
+            //this.arrow.scaleX = -1;
+            factor = this.modelID==0 ? 1 : -1;
         } else if(this.node.scaleX == this.leftDir) {
             this.arrow.scaleX = this.leftDir;
-            factor = -1;
+            //this.arrow.scaleX = 1;
+            //factor = -1;
+            factor = this.modelID==0 ? -1 : 1;
         }
 
         var angle = Math.atan2(dy, dx) * 180 / Math.PI;
@@ -346,8 +340,8 @@ cc.Class({
 
     throwItem: function(item, force) {
         cc.log("AvatarActio::thowItem : force(%f, %f)", force.x, force.y);
-        if(force.y >= 810)
-            force.y = 810;
+        if(force.y >= 800)
+            force.y = 800;
         var itemRigidbody = item.getComponent(cc.RigidBody);
         itemRigidbody.gravityScale = 1;
         var worldCenter = itemRigidbody.getWorldCenter();
@@ -467,7 +461,7 @@ cc.Class({
                 cc.log("9999 onPostSolve item is staticed");
                 // contact.disabled = true;
             }else {
-                this.playerRigidBody.linearVelocity = cc.Vec2.ZERO;
+               // this.playerRigidBody.linearVelocity = cc.Vec2.ZERO;
             }
             
         }

@@ -29,6 +29,11 @@ cc.Class({
             type: cc.Node,
         },
 
+        playerControl: {
+            default: null,
+            type: cc.Node,
+        },
+
         camera: {
             default: null,
             type: cc.Camera,
@@ -54,21 +59,21 @@ cc.Class({
     },
 
     onCollisionEnter: function (other, self) {
-        if(other.node.name === this.player.name) {
+        if(other.node.name === this.player.name && this.playerControl.isEnable()) {
             this.draw.drawPoly(this.chainCollider.points, cc.color(100, 0, 0, 50), 1, cc.color(0, 0, 0, 125));
             this.canPicked = true;
         }
     },
 
     onCollisionStay: function (other, self) {
-        if(other.node.name === this.player.name) {
+        if(other.node.name === this.player.name && this.playerControl.isEnable()) {
             this.draw.drawPoly(this.chainCollider.points, cc.color(100, 0, 0, 50), 1, cc.color(0, 0, 0, 125));
             this.canPicked = true;
         }
     },
 
     onCollisionExit: function (other, self) {
-        if(other.node.name === this.player.name) {
+        if(other.node.name === this.player.name && this.playerControl.isEnable()) {
             this.draw.clear();
             this.canPicked = false;
         }
@@ -100,6 +105,7 @@ cc.Class({
     setPlayer: function(player) {
         if(player) {
             this.player = player;
+            this.playerControl = this.player.getComponent("AvatarControl");
         }
     },
 

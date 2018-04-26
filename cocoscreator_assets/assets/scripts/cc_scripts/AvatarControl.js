@@ -47,7 +47,7 @@ cc.Class({
 
         itemID : 0,
 
-        enableEvent: true,
+        enableEvent: false,
     },
 
     onLoad () {
@@ -68,6 +68,10 @@ cc.Class({
     disEnableEventListen: function() {
         cc.log("666 disEnableEventListen");
         this.enableEvent = false;
+    },
+
+    isEnable: function() {
+        return this.enableEvent;
     },
 
 
@@ -235,13 +239,13 @@ cc.Class({
         player.position.z = this.node.y/SCALE;
         player.isOnGround = this.player.isOnGround;
 
-        if(this.itemBody) {
-            var velocity = this.itemBody.linearVelocity;
-            if(velocity.equals(cc.Vec2.ZERO)) {
+        if( this.item && this.item.getPosition().y<-100 ||
+          this.itemBody && this.itemBody.linearVelocity.equals(cc.Vec2.ZERO)
+          ) {
                 this.item = null;
                 this.itemBody = null;
-                //player.newTurn();
-            }
+                player.newTurn();
         }
+        
     },
 });

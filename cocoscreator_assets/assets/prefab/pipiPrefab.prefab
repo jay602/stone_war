@@ -628,7 +628,7 @@
     "tag": 0,
     "_density": 1,
     "_sensor": false,
-    "_friction": 0.5,
+    "_friction": 0.3,
     "_restitution": 1,
     "body": null,
     "_offset": {

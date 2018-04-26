@@ -162,11 +162,8 @@ cc.Class({
                 cc.log("Item:%s enter world", entity.name);
                 ae = cc.instantiate(ItemPrefabMap[entity.name]);
                 var action = ae.addComponent("ItemAction");
-                //var worldPoint = this.node.convertToWorldSpace(entity.position.x*SCALE,  entity.position.z*SCALE);
-               // ae.setPosition(worldPoint.x, worldPoint.y);
                 action.setPlayer(this.player);
                 action.setItemID(entity.id);
-               // this.camera.addTarget(ae);
             }
             this.node.addChild(ae);
             ae.setPosition(entity.position.x*SCALE,  entity.position.z*SCALE);
@@ -258,11 +255,11 @@ cc.Class({
         this.curAvatarID = avatarID;
         this.setCameraTarget(avatarID);
         cc.log("0000 WorldScene::newTurn: eid=%d  playerID=%d", avatarID,  KBEngine.app.player().id);
-        // if(this.curAvatarID == KBEngine.app.player().id) {
-        //     this.enableControlPlayer();
-        // }else {
-        //     this.disEnableControlPlayer();
-        // }
+        if(this.curAvatarID == KBEngine.app.player().id) {
+            this.enableControlPlayer();
+        }else {
+            this.disEnableControlPlayer();
+        }
     },
 
     otherAvatarOnPickUpItem: function(avatarID, itemID) {

@@ -77,7 +77,7 @@ class Room(KBEngine.Entity):
 		"""
 		if TIMER_TYPE_GAME_START == userArg:
 			self.startGame()
-			#self.newTurnTimer = self.addTimer(GameConfigs.PLAY_TIME_PER_TURN, GameConfigs.PLAY_TIME_PER_TURN, TIMER_TYPE_NEXT_PLAYER)
+			self.newTurnTimer = self.addTimer(GameConfigs.PLAY_TIME_PER_TURN, GameConfigs.PLAY_TIME_PER_TURN, TIMER_TYPE_NEXT_PLAYER)
 			DEBUG_MSG("Time to Game Start, newTurnTimer=%i" % (self.newTurnTimer))
 
 		if TIMER_TYPE_NEXT_PLAYER == userArg:
