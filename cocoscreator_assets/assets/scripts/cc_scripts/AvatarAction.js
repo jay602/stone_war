@@ -453,7 +453,7 @@ cc.Class({
         // cc.log("0000 onPreSolve otherCollider.tag=%d name=%s", otherCollider.tag, otherCollider.name);
         // cc.log("0000 onPreSolve contact: colliderA=%s colliderB=%s", contact.colliderA.node.name, contact.colliderB.node.name);
         if(otherCollider.tag == 999 || otherCollider.tag == 998) {
-            this.isCollideLand = true;
+            //this.isCollideLand = true;
         }else if(otherCollider.node.name == "land_bg") {
             contact.disabled = true;
         }else if(otherCollider.tag == 100) {
@@ -474,7 +474,7 @@ cc.Class({
         // cc.log("0000 onPostSolve otherCollider.tag=%d name=%s", otherCollider.tag, otherCollider.name);
         // cc.log("0000 onPostSolve contact: colliderA=%s colliderB=%s", contact.colliderA.node.name, contact.colliderB.node.name);
         if(otherCollider.tag == 999 || otherCollider.tag == 998) {
-            this.isCollideLand = true;
+            this.isCollideLand = false;
         }else if(otherCollider.tag == 100 ) {
             var rigidBody = otherCollider.node.getComponent(cc.RigidBody);
             var speedX =  rigidBody.linearVelocity.x;
@@ -524,7 +524,9 @@ cc.Class({
 
         if(this.moveFlag == MOVE_LEFT) {
             if(player.id == this.eid) {
+               cc.log("8888,  player move left, collider=%s", this.isCollideLand.toString());
                if(!this.isCollideLand) {
+                    cc.log("8888,  player move left 2222");
                     this.addAxisX(-speedX);
                }
             }else {
@@ -537,7 +539,9 @@ cc.Class({
         } 
         else if (this.moveFlag == MOVE_RIGHT ) {
             if(player.id == this.eid) {
+                cc.log("9090,  player move right isCollideLand=%s", this.isCollideLand.toString());
                 if(!this.isCollideLand) {
+                    cc.log("9191,  player move right 1111");
                     this.addAxisX(speedX);
                 }
             }else {

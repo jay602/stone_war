@@ -47,7 +47,7 @@ ITEMS = {
 SCALE = 10
 
 #每轮的时间
-PLAY_TIME_PER_TURN = 10
+PLAY_TIME_PER_TURN = 30
 
 
 

@@ -62,7 +62,7 @@ cc.Class({
         this.cameraControl =this.camera.getComponent("CameraControl");
 
         this.enablePhysicManager();
-       // this.enablePhysicsDebugDraw();
+        this.enablePhysicsDebugDraw();
         this.installEvents();
         this.playerID = [];
     },
