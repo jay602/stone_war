@@ -72,16 +72,17 @@ class Avatar(KBEngine.Entity, EntityCommon):
 		DEBUG_MSG("avatar %i start jump" % (self.id))
 		self.otherClients.onJump()
 
-	def pickUpItem(self, exposed, itemID):
+	def pickUpItem(self, exposed, itemID, position):
 		"""
 		defined.
-		玩家跳跃 我们广播这个行为
+		玩家捡石头 我们广播这个行为
 		"""
 		DEBUG_MSG("avavtar %i pickUpItem, selfID=%i" % (exposed, self.id))
 		if exposed != self.id:
 			return
 		DEBUG_MSG("avatar %i pick up item=%i" % (self.id, itemID))
-		self.otherClients.onPickUpItem(itemID)
+		DEBUG_MSG(position)
+		self.otherClients.onPickUpItem(itemID, position)
 
 
 	def throwItem(self, exposed, itemID, force):
@@ -117,4 +118,12 @@ class Avatar(KBEngine.Entity, EntityCommon):
 			return
 
 		self.otherClients.onStartWalk()
+
+	def resetItem(self, exposed, itemID):
+		DEBUG_MSG("avavtar %i reset item:%i, selfID=%i" % (exposed, itemID, self.id))
+		if exposed != self.id:
+			return
+
+		self.otherClients.onResetItem(itemID)
+
 

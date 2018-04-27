@@ -28,7 +28,7 @@ PLAYER_NAMES = ["pipi_player", "pop_player"]
 ITEM_COUNT_IN_ROOM = 4
 
 PLAYER_STRAT_POINT = { 
-        "map1":( (87.9, 0.0, 12.2), (-25.0, 0.0, 5.0) ),
+        "map1":( (78.6, 0.0, 8.4), (-25.0, 0.0, 5.0) ),
         "map2":((65.7,2.9,0), (44.7, 8.6, 0)),
         "map3":((65.7,2.9,0), (44.7, 8.6, 0))
     }
@@ -47,7 +47,7 @@ ITEMS = {
 SCALE = 10
 
 #每轮的时间
-PLAY_TIME_PER_TURN = 30
+PLAY_TIME_PER_TURN = 10
 
 
 

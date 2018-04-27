@@ -65,14 +65,18 @@ KBEngine.Avatar = KBEngine.Entity.extend(
 		    KBEngine.Event.fire("otherAvatarOnJump", this);
         }, 
 
-        onPickUpItem : function(itemID)
+        onPickUpItem : function(itemID, positon)
         {
             KBEngine.Event.fire("otherAvatarOnPickUpItem", this.id, itemID);
         },
 
-        pickUpItem : function(itemID)
+        pickUpItem : function(itemID, pickPos)
 	    {
-		    this.cellCall("pickUpItem", itemID);
+            var vec3 = new KBEngine.Vector3();
+            vec3.x = pickPos.x;
+            vec3.y = pickPos.y;
+            vec3.z = 0.0;
+		    this.cellCall("pickUpItem", itemID, vec3);
         }, 
           
         throwItem : function(itemID, force)
@@ -101,6 +105,17 @@ KBEngine.Avatar = KBEngine.Entity.extend(
 	    {
             this.cellCall("newTurn");
         }, 
+
+        resetItem: function(itemID)
+        {
+            this.cellCall("resetItem", itemID);
+        },
+
+        onResetItem: function(itemID)
+        {
+            cc.log("other avater=%d reset item=%d", this.id, itemID);
+            KBEngine.Event.fire("otherAvatarResetItem", this.id, itemID);
+        },
     });
     
     

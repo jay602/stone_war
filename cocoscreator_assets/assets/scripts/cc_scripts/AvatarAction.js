@@ -116,6 +116,24 @@ cc.Class({
         this.itemID = 0;
     },
 
+    reset: function() {
+        cc.log("Avatation Reset");
+        this.stopWalk();
+        this.arrow.active = false;
+        this.arrowAngle = 0.0;
+        if(this.item) {
+            this.item.getComponent("ItemAction").setPlacePrePosition();
+            var player = KBEngine.app.player();
+            if(this.eid==player.id && player != undefined && player.inWorld) {
+                player.resetItem(this.itemID);
+            }
+
+            this.item = null;
+            this.itemID = 0;
+        }
+        
+        this.hasPickUpItem = false;
+    },
 
     setEntityId: function(eid) {
         this.eid = eid;
@@ -283,6 +301,8 @@ cc.Class({
         itemPoint = this.node.parent.convertToNodeSpace(itemPoint);
 
         //改变石头的位置，放到手中
+        item.getComponent("ItemAction").recordPrePosition();
+        
         var itemRigidbody = item.getComponent(cc.RigidBody);
         itemRigidbody.gravityScale = 0;
         itemRigidbody.linearVelocity = cc.v2(0, 0);
@@ -297,7 +317,7 @@ cc.Class({
 
         var player = KBEngine.app.player();
         if(player != undefined && player.inWorld) {
-            player.pickUpItem(itemID);
+            player.pickUpItem(itemID, pickPos);
         }
 
         this.setPlaceItem(item);
@@ -353,6 +373,7 @@ cc.Class({
         this.hasPickUpItem = false;
         this.arrow.active = false;
         this.item = null;
+        this.itemAction = null;
     },
 
     throwItem: function(item, force) {
@@ -394,10 +415,8 @@ cc.Class({
             var rigidBody = otherCollider.node.getComponent(cc.RigidBody);
             var speedX =  rigidBody.linearVelocity.x;
             var speedY =  rigidBody.linearVelocity.y;
-            cc.log("0000 onBeginContact other rigidBody linearSpeed(%f, %f) angularSpeed=%f", speedX, speedY, rigidBody.angularVelocity); 
 
             if( (speedX<=0.5 && speedX>=-0.5) && (speedY<=0.5 && speedY>=-0.5)) {
-                cc.log("9999 onBeginContact item is staticed");
                 contact.disabled = true;
             }else {
                 this.playerRigidBody.linearVelocity = cc.Vec2.ZERO;
@@ -421,7 +440,6 @@ cc.Class({
            // cc.log("0000 onEndContact other rigidBody linearSpeed(%f, %f) angularSpeed=%f", speedX, speedY, rigidBody.angularVelocity); 
             
             if( (speedX<=0.5 && speedX>=-0.5) && (speedY<=0.5 && speedY>=-0.5) ) {
-                cc.log("9999 onEndContact item is staticed");
                 // contact.disabled = true;
             }else {
                 this.playerRigidBody.linearVelocity = cc.Vec2.ZERO;
@@ -445,7 +463,6 @@ cc.Class({
            //cc.log("0000 onPreSolve other rigidBody linearSpeed(%f, %f) angularSpeed=%f", speedX, speedY, rigidBody.angularVelocity); 
 
             if( (speedX<=0.5 && speedX>=-0.5) && (speedY<=0.5 && speedY>=-0.5) ) {
-                cc.log("9999 onPreSolve item is staticed");
                 contact.disabled = true;
             }
         }
@@ -465,7 +482,6 @@ cc.Class({
            // cc.log("0000 onEndContact other rigidBody linearSpeed(%f, %f) angularSpeed=%f", speedX, speedY, rigidBody.angularVelocity); 
             
             if( (speedX<=0.5 && speedX>=-0.5) && (speedY<=0.5 && speedY>=-0.5) ) {
-                  cc.log("9999 onEndContact item is staticed");
                 // contact.disabled = true;
             }else {
                 this.playerRigidBody.linearVelocity = cc.Vec2.ZERO;

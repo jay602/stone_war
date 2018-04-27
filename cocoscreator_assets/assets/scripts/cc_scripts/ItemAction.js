@@ -56,6 +56,7 @@ cc.Class({
         this.node._sgNode.addChild(this.draw);
 
         this.canPicked = false;
+        this.prePosition = null;
     },
 
     onCollisionEnter: function (other, self) {
@@ -81,6 +82,18 @@ cc.Class({
 
     setCamera: function(camera) {
         this.camera = camera;
+    },
+
+    setPlacePrePosition: function() {
+        if(this.prePosition) {
+            cc.log("item set prePosition");
+            this.node.setPosition(this.prePosition);
+            this.prePosition = null;
+        }
+    },
+
+    recordPrePosition: function() {
+        this.prePosition = this.node.getPosition();
     },
 
     pickUped: function(event) {

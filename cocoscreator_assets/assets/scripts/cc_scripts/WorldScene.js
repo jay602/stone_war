@@ -107,6 +107,7 @@ cc.Class({
         KBEngine.Event.register("otherAvatarThrowItem", this, "otherAvatarThrowItem");
         KBEngine.Event.register("otherAvatarOnStopWalk", this, "otherAvatarOnStopWalk");
         KBEngine.Event.register("otherAvatarOnStartWalk", this, "otherAvatarOnStartWalk");
+        KBEngine.Event.register("otherAvatarResetItem", this, "otherAvatarResetItem");
     },
 
     onKicked : function(failedcode){
@@ -312,7 +313,7 @@ cc.Class({
         action.onStopWalk(pos);
     },
 
-    otherAvatarOnStartWalk:function(avatarID){
+    otherAvatarOnStartWalk: function(avatarID){
         var player = this.entities[avatarID];
         if(player == undefined)
             return;
@@ -322,6 +323,16 @@ cc.Class({
         action.playWalkAnim();
     },
 
+    otherAvatarResetItem: function(avatarID, itemID) {
+        var player = this.entities[avatarID];
+        var item = this.entities[itemID];
+        if(player == undefined || item == undefined)
+            return;
+
+        player.getComponent("AvatarAction").reset();
+        item.getComponent("ItemAction").setPlacePrePosition();
+    },
+
     
     enableControlPlayer: function() {
         this.player.getComponent("AvatarControl").enableEventListen();
@@ -329,5 +340,6 @@ cc.Class({
 
     disEnableControlPlayer: function() {
         this.player.getComponent("AvatarControl").disEnableEventListen();
+        this.player.getComponent("AvatarAction").reset();
     },
 });
