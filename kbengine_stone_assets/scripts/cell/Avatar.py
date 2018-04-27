@@ -90,8 +90,15 @@ class Avatar(KBEngine.Entity, EntityCommon):
 		DEBUG_MSG(force)
 		if exposed != self.id:
 			return
+
+		room = self.getCurrRoom()
+		if room:
+			room.killNewTurnTimer()
+			
 		DEBUG_MSG("avatar %i pick up item=%i" % (self.id, itemID))
 		self.otherClients.onThrowItem(itemID, force)
+
+		
 
 	def newTurn(self, exposed):
 		DEBUG_MSG("avavtar %i newTurn, selfID=%i" % (exposed, self.id))

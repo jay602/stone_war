@@ -77,7 +77,7 @@ class Room(KBEngine.Entity):
 		"""
 		if TIMER_TYPE_GAME_START == userArg:
 			self.startGame()
-			self.newTurnTimer = self.addTimer(GameConfigs.PLAY_TIME_PER_TURN, GameConfigs.PLAY_TIME_PER_TURN, TIMER_TYPE_NEXT_PLAYER)
+			self.newTurnTimer = self.addTimer(GameConfigs.PLAY_TIME_PER_TURN, 0, TIMER_TYPE_NEXT_PLAYER)
 			DEBUG_MSG("Time to Game Start, newTurnTimer=%i" % (self.newTurnTimer))
 
 		if TIMER_TYPE_NEXT_PLAYER == userArg:
@@ -103,7 +103,6 @@ class Room(KBEngine.Entity):
 		if len(self.avatars) == 0 :
 			self.destroy()
 
-
 	def nextPlayer(self):
 		self.delTimer(self.newTurnTimer)
 		for eid, entity in self.avatars.items():
@@ -114,3 +113,8 @@ class Room(KBEngine.Entity):
 		self.newTurn(self.curEid)
 		self.newTurnTimer = self.addTimer(GameConfigs.PLAY_TIME_PER_TURN, 0, TIMER_TYPE_NEXT_PLAYER)
 		DEBUG_MSG('Room::nextPlayer: eid=%i  newTurnTimer=%i' % (self.curEid, self.newTurnTimer))
+
+
+	def killNewTurnTimer(self):
+		DEBUG_MSG('Room::killNewTurnTimer: newTurnTimer=%i' % (self.newTurnTimer))
+		self.delTimer(self.newTurnTimer)
