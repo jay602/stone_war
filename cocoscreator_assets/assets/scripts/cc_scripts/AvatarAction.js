@@ -407,7 +407,7 @@ cc.Class({
         // cc.log("0000 onBeginContact selfCollider: tag=%d  name=%s", selfCollider.tag, selfCollider.name);
         // cc.log("0000 onBeginContact otherCollider: tag=%d name=%s", otherCollider.tag, otherCollider.name);
         // cc.log("0000 onBeginContact contact: colliderA=%s colliderB=%s", contact.colliderA.node.name, contact.colliderB.node.name);
-        if(otherCollider.tag == 999) {
+        if(otherCollider.tag == 999 || otherCollider.tag == 998) {
             this.isCollideLand = true;
         }else if(otherCollider.node.name == "land_bg") {
             contact.disabled = true;
@@ -429,7 +429,7 @@ cc.Class({
     //    cc.log("0000 onEndContact selfCollider: tag=%d name=%s", selfCollider.tag, selfCollider.name);
     //    cc.log("0000 onEndContact otherCollider: tag=%d name=%s", otherCollider.tag, otherCollider.name);
     //    cc.log("0000 onEndContact contact: colliderA=%s colliderB=%s", contact.colliderA.node.name, contact.colliderB.node.name);
-       if(otherCollider.tag == 999) {
+       if(otherCollider.tag == 999 || otherCollider.tag == 998) {
             this.isCollideLand = false;
         }else if(otherCollider.node.name == "land_bg") {
             // this.isCollideLand = false;
@@ -452,7 +452,7 @@ cc.Class({
         // cc.log("0000 onPreSolve selfCollider.tag=%d name=%s", selfCollider.tag, selfCollider.name);
         // cc.log("0000 onPreSolve otherCollider.tag=%d name=%s", otherCollider.tag, otherCollider.name);
         // cc.log("0000 onPreSolve contact: colliderA=%s colliderB=%s", contact.colliderA.node.name, contact.colliderB.node.name);
-        if(otherCollider.tag == 999) {
+        if(otherCollider.tag == 999 || otherCollider.tag == 998) {
             this.isCollideLand = true;
         }else if(otherCollider.node.name == "land_bg") {
             contact.disabled = true;
@@ -473,7 +473,7 @@ cc.Class({
         // cc.log("0000 onPostSolve selfCollider.tag=%d name=%s", selfCollider.tag, selfCollider.name);
         // cc.log("0000 onPostSolve otherCollider.tag=%d name=%s", otherCollider.tag, otherCollider.name);
         // cc.log("0000 onPostSolve contact: colliderA=%s colliderB=%s", contact.colliderA.node.name, contact.colliderB.node.name);
-        if(otherCollider.tag == 999) {
+        if(otherCollider.tag == 999 || otherCollider.tag == 998) {
             this.isCollideLand = true;
         }else if(otherCollider.tag == 100 ) {
             var rigidBody = otherCollider.node.getComponent(cc.RigidBody);
