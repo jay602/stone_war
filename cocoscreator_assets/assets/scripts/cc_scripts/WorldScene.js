@@ -62,7 +62,7 @@ cc.Class({
         this.cameraControl =this.camera.getComponent("CameraControl");
 
         this.enablePhysicManager();
-        this.enablePhysicsDebugDraw();
+        //this.enablePhysicsDebugDraw();
         this.installEvents();
         this.playerID = [];
     },
@@ -240,7 +240,7 @@ cc.Class({
 		if(ae == undefined)
             return;
             
-        cc.log("8888 updatePosition, entityid=%d dir=%f", entity.id, entity.direction.z);
+       // cc.log("8888 updatePosition, entityid=%d dir=%f", entity.id, entity.direction.z);
         ae.isOnGround = entity.isOnGround;
         if(entity.direction.z >= 1)  {
             ae.scaleX = 1;
@@ -282,7 +282,7 @@ cc.Class({
     },
 
     otherAvatarOnPickUpItem: function(avatarID, itemID) {
-        cc.log("WorldScene_otherAvatarOnPickUpItem: avatarID=%d, itemID=%d ", avatarID, itemID);
+        cc.log("WorldScene::otherAvatarOnPickUpItem: avatarID=%d, itemID=%d ", avatarID, itemID);
         var player = this.entities[avatarID];
         var item = this.entities[itemID];
         if(player == undefined || item == undefined)
@@ -292,7 +292,7 @@ cc.Class({
     },
 
     otherAvatarThrowItem: function(avatarID, itemID, force){
-        cc.log("WorldScene_otherAvatarThrowItem: avatarID=%d, itemID=%d ", avatarID, itemID);
+        cc.log("WorldScene::sotherAvatarThrowItem: avatarID=%d, itemID=%d ", avatarID, itemID);
         var player = this.entities[avatarID];
         var item = this.entities[itemID];
         if(player == undefined || item == undefined)

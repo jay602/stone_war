@@ -15,7 +15,7 @@ cc.Class({
     properties: {
         gravity: -1000,
 
-        jumpSpeed: cc.v2(300, 500),
+        jumpSpeed: cc.v2(300, 550),
         maxSpeed: cc.v2(400, 600),
         walkspeed: cc.v2(110, 50),
         jumpSpeedY : 0,
@@ -325,7 +325,7 @@ cc.Class({
     },
 
     adjustArrowDir: function(pos) {
-        cc.log("player adjustArrowDir: pos(%f, %f)", pos.x, pos.y);
+        //cc.log("player adjustArrowDir: pos(%f, %f)", pos.x, pos.y);
         this.arrow.active = true;
         var arrowWorldPoint = this.arrow.convertToWorldSpaceAR(cc.v2(0, 0));
         var dx = pos.x - arrowWorldPoint.x;
@@ -384,23 +384,24 @@ cc.Class({
         itemRigidbody.gravityScale = 1;
         var worldCenter = itemRigidbody.getWorldCenter();
         itemRigidbody.applyLinearImpulse(force, worldCenter, true);
+        item.getComponent("ItemAction").setThrowed(true);
     },
 
     onStartMove: function(position) {
         this.targetPosition = position;
         var dx = position.x - this.node.x;
-        cc.log("7878 AvatarAction::onStartMove, dx=%f", dx);
-        if (dx > 0.3) // 右
+        //cc.log("AvatarAction::onStartMove, dx=%f", dx);
+        if (dx > 0.5) // 右
         {
             this.moveFlag = MOVE_RIGHT;
         }
-        else if (dx < -0.3) //左
+        else if (dx < -0.5) //左
         {
             this.moveFlag = MOVE_LEFT;
         }else {
-            //this.moveFlag = STATIC;
+            this.moveFlag = STATIC;
         }
-        cc.log("7878 AvatarAction::onStartMove, dx=%f, move=%f", dx, this.moveFlag);
+       //cc.log("AvatarAction::onStartMove, dx=%f, move=%f", dx, this.moveFlag);
     },
 
     onBeginContact: function (contact, selfCollider, otherCollider) {
@@ -416,7 +417,7 @@ cc.Class({
             var speedX =  rigidBody.linearVelocity.x;
             var speedY =  rigidBody.linearVelocity.y;
 
-            if( (speedX<=0.5 && speedX>=-0.5) && (speedY<=0.5 && speedY>=-0.5)) {
+            if( (speedX<=0.5 && speedX>=-0.5) && (speedY<=0.5 && speedY>=-0.5) || this.hasPickUpItem) {
                 contact.disabled = true;
             }else {
                 this.playerRigidBody.linearVelocity = cc.Vec2.ZERO;
@@ -440,7 +441,7 @@ cc.Class({
            // cc.log("0000 onEndContact other rigidBody linearSpeed(%f, %f) angularSpeed=%f", speedX, speedY, rigidBody.angularVelocity); 
             
             if( (speedX<=0.5 && speedX>=-0.5) && (speedY<=0.5 && speedY>=-0.5) ) {
-                // contact.disabled = true;
+                 //contact.disabled = true;
             }else {
                 this.playerRigidBody.linearVelocity = cc.Vec2.ZERO;
             }
@@ -462,7 +463,7 @@ cc.Class({
             var speedY =  rigidBody.linearVelocity.y;
            //cc.log("0000 onPreSolve other rigidBody linearSpeed(%f, %f) angularSpeed=%f", speedX, speedY, rigidBody.angularVelocity); 
 
-            if( (speedX<=0.5 && speedX>=-0.5) && (speedY<=0.5 && speedY>=-0.5) ) {
+            if( (speedX<=0.5 && speedX>=-0.5) && (speedY<=0.5 && speedY>=-0.5) || this.hasPickUpItem ) {
                 contact.disabled = true;
             }
         }
@@ -524,9 +525,7 @@ cc.Class({
 
         if(this.moveFlag == MOVE_LEFT) {
             if(player.id == this.eid) {
-               cc.log("8888,  player move left, collider=%s", this.isCollideLand.toString());
                if(!this.isCollideLand) {
-                    cc.log("8888,  player move left 2222");
                     this.addAxisX(-speedX);
                }
             }else {
@@ -539,9 +538,7 @@ cc.Class({
         } 
         else if (this.moveFlag == MOVE_RIGHT ) {
             if(player.id == this.eid) {
-                cc.log("9090,  player move right isCollideLand=%s", this.isCollideLand.toString());
                 if(!this.isCollideLand) {
-                    cc.log("9191,  player move right 1111");
                     this.addAxisX(speedX);
                 }
             }else {

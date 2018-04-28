@@ -376,7 +376,7 @@
     "_enabled": true,
     "_type": 0,
     "_allowSleep": true,
-    "_gravityScale": 0,
+    "_gravityScale": 3,
     "_linearDamping": 0,
     "_angularDamping": 0,
     "_linearVelocity": {
@@ -398,10 +398,10 @@
     },
     "_enabled": true,
     "tag": 888,
-    "_density": 1,
+    "_density": 2,
     "_sensor": false,
     "_friction": 0.2,
-    "_restitution": 0.3,
+    "_restitution": 0.6,
     "body": null,
     "_offset": {
       "__type__": "cc.Vec2",
@@ -486,8 +486,13 @@
       },
       {
         "__type__": "cc.Vec2",
-        "x": 507,
+        "x": 513,
         "y": 79
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 491,
+        "y": 61
       },
       {
         "__type__": "cc.Vec2",
@@ -496,8 +501,8 @@
       },
       {
         "__type__": "cc.Vec2",
-        "x": 417,
-        "y": 72
+        "x": 416,
+        "y": 70
       },
       {
         "__type__": "cc.Vec2",
@@ -951,8 +956,8 @@
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": 656.9,
-      "y": 36
+      "x": 219,
+      "y": 192
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -999,8 +1004,8 @@
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": 760,
-      "y": 97
+      "x": -2240,
+      "y": 900
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -1028,7 +1033,8 @@
       "__id__": 17
     },
     "cameraControl": null,
-    "maxPlayerCount": 2
+    "maxPlayerCount": 2,
+    "skySprite": null
   },
   {
     "__type__": "cc.Camera",

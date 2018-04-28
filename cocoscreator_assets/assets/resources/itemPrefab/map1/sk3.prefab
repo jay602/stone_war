@@ -109,8 +109,8 @@
     "_type": 2,
     "_allowSleep": true,
     "_gravityScale": 1,
-    "_linearDamping": 0,
-    "_angularDamping": 0,
+    "_linearDamping": 0.3,
+    "_angularDamping": 0.3,
     "_linearVelocity": {
       "__type__": "cc.Vec2",
       "x": 0,
@@ -130,10 +130,10 @@
     },
     "_enabled": true,
     "tag": 100,
-    "_density": 1,
+    "_density": 2,
     "_sensor": false,
     "_friction": 0.2,
-    "_restitution": 0,
+    "_restitution": 0.5,
     "body": null,
     "loop": true,
     "points": [

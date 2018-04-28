@@ -140,7 +140,7 @@ cc.Class({
 
     onKeyPressed: function (keyCode, event) {
         if(!this.enableEvent) return;
-        cc.log("789 press key: ", keyCode);
+       // cc.log("789 press key: ", keyCode);
         switch(keyCode) {
             case cc.KEY.a:
             case cc.KEY.left:
@@ -240,10 +240,10 @@ cc.Class({
         player.isOnGround = this.player.isOnGround;
         player.direction.z = this.player.node.scaleX;
        
-
         if( this.item && this.item.getPosition().y<-100 ||
           this.itemBody && this.itemBody.linearVelocity.equals(cc.Vec2.ZERO)
           ) {
+                this.item.getComponent("ItemAction").setThrowed(false);
                 this.item = null;
                 this.itemBody = null;
                 player.newTurn();

@@ -8,6 +8,8 @@
 //  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
 
+var KBEngine = require("kbengine");
+
 cc.Class({
     extends: cc.Component,
 
@@ -40,11 +42,17 @@ cc.Class({
         },
 
         itemID : 0,
+
+        rigidBody: {
+            default: null,
+            type: cc.RigidBody,
+        },
     },
 
     onLoad () {
         this.chainCollider = this.node.getComponent(cc.PhysicsChainCollider );
         this.polyCollider = this.node.getComponent(cc.PolygonCollider);
+        this.rigidBody = this.node.getComponent(cc.RigidBody);
         
         this.testNode1 = cc.find("testNode1");
         this.camera = cc.find("Camera").getComponent(cc.Camera);
@@ -57,6 +65,8 @@ cc.Class({
 
         this.canPicked = false;
         this.prePosition = null;
+        this.isThrowed = false;
+        this.touchPlayerCount = 0;
     },
 
     onCollisionEnter: function (other, self) {
@@ -80,6 +90,33 @@ cc.Class({
         }
     },
 
+    
+
+    // 每次将要处理碰撞体接触逻辑时被调用
+    onPreSolve: function (contact, selfCollider, otherCollider) {
+        if( (otherCollider.node.name == "pipiPrefab" || otherCollider.node.name == "popPrefab") && this.isThrowed) {
+            this.touchPlayerCount++;
+            var linearVelocity = this.rigidBody.linearVelocity;
+           
+           // cc.log("3333 ItemAction::onPreSolve touch player  count=%d", this.touchPlayerCount);
+           // cc.log("3333 item speed(%f, %f)", linearVelocity.x, linearVelocity.y);
+
+            if(this.touchPlayerCount > 100 && !linearVelocity.equals(cc.Vec2.ZERO)) {
+                this.isThrowed = false;
+                this.touchPlayerCount = 0;
+                this.rigidBody.linearVelocity = cc.Vec2.ZERO;
+                this.rigidBody.gravityScale = 0;
+            }
+
+        }
+    },
+
+
+    setThrowed: function(throwed) {
+        this.isThrowed = throwed;
+        this.touchPlayerCount = 0;
+    },
+
     setCamera: function(camera) {
         this.camera = camera;
     },
@@ -94,6 +131,7 @@ cc.Class({
 
     recordPrePosition: function() {
         this.prePosition = this.node.getPosition();
+        cc.log("pre position(%f, %f)", this.prePosition.x, this.prePosition.y);
     },
 
     pickUped: function(event) {

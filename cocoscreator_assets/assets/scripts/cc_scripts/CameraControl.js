@@ -35,7 +35,7 @@ cc.Class({
         
         let targetPos = this.target.convertToWorldSpaceAR(cc.Vec2.ZERO);
         var point = this.node.parent.convertToNodeSpaceAR(targetPos);
-        point.y += 200;
+        point.y += 160;
         this.node.position = point;
         let ratio = targetPos.y / cc.winSize.height;
         this.camera.zoomRatio = 1 + (0.5 - ratio) * 0.5 ;
