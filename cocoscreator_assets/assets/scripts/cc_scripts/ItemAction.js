@@ -90,10 +90,21 @@ cc.Class({
         }
     },
 
-    
+    // 只在两个碰撞体开始接触时被调用一次
+    onBeginContact: function (contact, selfCollider, otherCollider) {
+    },
+
+    // 只在两个碰撞体结束接触时被调用一次
+    onEndContact: function (contact, selfCollider, otherCollider) {
+    },
+
+    // 每次处理完碰撞体接触逻辑时被调用
+    onPostSolve: function (contact, selfCollider, otherCollider) {
+    },
 
     // 每次将要处理碰撞体接触逻辑时被调用
     onPreSolve: function (contact, selfCollider, otherCollider) {
+      
         if( (otherCollider.node.name == "pipiPrefab" || otherCollider.node.name == "popPrefab") && this.isThrowed) {
             this.touchPlayerCount++;
             var linearVelocity = this.rigidBody.linearVelocity;
@@ -101,7 +112,7 @@ cc.Class({
            // cc.log("3333 ItemAction::onPreSolve touch player  count=%d", this.touchPlayerCount);
            // cc.log("3333 item speed(%f, %f)", linearVelocity.x, linearVelocity.y);
 
-            if(this.touchPlayerCount > 100 && !linearVelocity.equals(cc.Vec2.ZERO)) {
+            if(this.touchPlayerCount > 180 && !linearVelocity.equals(cc.Vec2.ZERO)) {
                 this.isThrowed = false;
                 this.touchPlayerCount = 0;
                 this.rigidBody.linearVelocity = cc.Vec2.ZERO;
@@ -113,6 +124,7 @@ cc.Class({
 
 
     setThrowed: function(throwed) {
+        cc.log("3333 item is throwed");
         this.isThrowed = throwed;
         this.touchPlayerCount = 0;
     },

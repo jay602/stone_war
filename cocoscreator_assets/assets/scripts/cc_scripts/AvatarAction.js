@@ -15,8 +15,8 @@ cc.Class({
     properties: {
         gravity: -1000,
 
-        jumpSpeed: cc.v2(300, 550),
-        maxSpeed: cc.v2(400, 600),
+        jumpSpeed: cc.v2(300, 505),
+        maxSpeed: cc.v2(400, 550),
         walkspeed: cc.v2(110, 50),
         jumpSpeedY : 0,
         maxThrowSpeed: cc.v2(800, 800),
@@ -377,12 +377,13 @@ cc.Class({
     },
 
     throwItem: function(item, force) {
-        cc.log("AvatarActio::thowItem : force(%f, %f)", force.x, force.y);
+       
         if(force.y >= 800)
             force.y = 800;
         var itemRigidbody = item.getComponent(cc.RigidBody);
         itemRigidbody.gravityScale = 1;
         var worldCenter = itemRigidbody.getWorldCenter();
+        cc.log("AvatarActio::thowItem : force(%f, %f), worldCenter(%f, %f)", force.x, force.y, worldCenter.x, worldCenter.y);
         itemRigidbody.applyLinearImpulse(force, worldCenter, true);
         item.getComponent("ItemAction").setThrowed(true);
     },
@@ -390,18 +391,17 @@ cc.Class({
     onStartMove: function(position) {
         this.targetPosition = position;
         var dx = position.x - this.node.x;
-        //cc.log("AvatarAction::onStartMove, dx=%f", dx);
-        if (dx > 0.5) // 右
+        if (dx > 1) // 右
         {
             this.moveFlag = MOVE_RIGHT;
         }
-        else if (dx < -0.5) //左
+        else if (dx < -1) //左
         {
             this.moveFlag = MOVE_LEFT;
         }else {
             this.moveFlag = STATIC;
         }
-       //cc.log("AvatarAction::onStartMove, dx=%f, move=%f", dx, this.moveFlag);
+        //cc.log("AvatarAction::onStartMove, dx=%f, move=%f, prePosition(%f, %f)", dx, this.moveFlag, this.node.x, this.node.y);
     },
 
     onBeginContact: function (contact, selfCollider, otherCollider) {
@@ -427,9 +427,6 @@ cc.Class({
 
     // 只在两个碰撞体结束接触时被调用一次
     onEndContact: function (contact, selfCollider, otherCollider) {
-    //    cc.log("0000 onEndContact selfCollider: tag=%d name=%s", selfCollider.tag, selfCollider.name);
-    //    cc.log("0000 onEndContact otherCollider: tag=%d name=%s", otherCollider.tag, otherCollider.name);
-    //    cc.log("0000 onEndContact contact: colliderA=%s colliderB=%s", contact.colliderA.node.name, contact.colliderB.node.name);
        if(otherCollider.tag == 999 || otherCollider.tag == 998) {
             this.isCollideLand = false;
         }else if(otherCollider.node.name == "land_bg") {
@@ -441,7 +438,7 @@ cc.Class({
            // cc.log("0000 onEndContact other rigidBody linearSpeed(%f, %f) angularSpeed=%f", speedX, speedY, rigidBody.angularVelocity); 
             
             if( (speedX<=0.5 && speedX>=-0.5) && (speedY<=0.5 && speedY>=-0.5) ) {
-                 //contact.disabled = true;
+                 contact.disabled = true;
             }else {
                 this.playerRigidBody.linearVelocity = cc.Vec2.ZERO;
             }
@@ -450,9 +447,6 @@ cc.Class({
 
     // 每次将要处理碰撞体接触逻辑时被调用
     onPreSolve: function (contact, selfCollider, otherCollider) {
-        // cc.log("0000 onPreSolve selfCollider.tag=%d name=%s", selfCollider.tag, selfCollider.name);
-        // cc.log("0000 onPreSolve otherCollider.tag=%d name=%s", otherCollider.tag, otherCollider.name);
-        // cc.log("0000 onPreSolve contact: colliderA=%s colliderB=%s", contact.colliderA.node.name, contact.colliderB.node.name);
         if(otherCollider.tag == 999 || otherCollider.tag == 998) {
             //this.isCollideLand = true;
         }else if(otherCollider.node.name == "land_bg") {
@@ -483,7 +477,7 @@ cc.Class({
            // cc.log("0000 onEndContact other rigidBody linearSpeed(%f, %f) angularSpeed=%f", speedX, speedY, rigidBody.angularVelocity); 
             
             if( (speedX<=0.5 && speedX>=-0.5) && (speedY<=0.5 && speedY>=-0.5) ) {
-                // contact.disabled = true;
+                 contact.disabled = true;
             }else {
                 this.playerRigidBody.linearVelocity = cc.Vec2.ZERO;
             }
@@ -531,8 +525,6 @@ cc.Class({
             }else {
                if(this.node.x >= this.targetPosition.x) {
                     this.addAxisX(-speedX);
-                 }else {
-                    // this.stopWalk();
                 }
             }
         } 
@@ -543,9 +535,7 @@ cc.Class({
                 }
             }else {
                 if(this.node.x <= this.targetPosition.x) {
-                        this.addAxisX(speedX);
-                }else {
-                    // this.stopWalk();
+                    this.addAxisX(speedX);
                 }
             }
         }  

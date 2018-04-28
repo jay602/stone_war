@@ -239,8 +239,12 @@ cc.Class({
 		var ae = this.entities[entity.id];
 		if(ae == undefined)
             return;
-            
-       // cc.log("8888 updatePosition, entityid=%d dir=%f", entity.id, entity.direction.z);
+    
+        var player = KBEngine.app.player();
+        if(player && player.inWorld && player.id == entity.id)
+            return;
+        
+       
         ae.isOnGround = entity.isOnGround;
         if(entity.direction.z >= 1)  {
             ae.scaleX = 1;
@@ -248,6 +252,7 @@ cc.Class({
             ae.scaleX = -1;
         }
         var position = cc.p(entity.position.x*SCALE, entity.position.z*SCALE);
+       // cc.log("8888 updatePosition, entityid=%d dir=%f position(%f, %f)", entity.id, entity.direction.z, position.x, position.y);
         var action = ae.getComponent("AvatarAction");
         action.onStartMove(position);
     },	  
