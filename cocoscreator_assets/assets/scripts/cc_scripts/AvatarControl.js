@@ -53,9 +53,8 @@ cc.Class({
     onLoad () {
         //cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyPressed, this);
         //cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP, this.onKeyReleased, this);
-
+        this.canvas = cc.find("Canvas");
         this.createEventListener();
-
         this.camera = cc.find("Camera").getComponent(cc.Camera);
         this.cameraControl = cc.find("Camera").getComponent("CameraControl");
     },
@@ -77,7 +76,8 @@ cc.Class({
 
     enableMouseEvent: function() {
         cc.log("AvatarControl::enableMouseEvent");
-        cc.find("Canvas").on(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
+        this.canvas.on(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
+        this.canvas.on(cc.Node.EventType.MOUSE_UP, this.starThrowItem, this);
         this.node.on(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
         this.node.on(cc.Node.EventType.MOUSE_UP , this.starThrowItem, this);
 
@@ -90,7 +90,8 @@ cc.Class({
 
     disEnableMouseEvent: function() {
         cc.log("AvatarControl::disEnableMouseEvent");
-        cc.find("Canvas").off(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
+        this.canvas.off(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
+        this.canvas.off(cc.Node.EventType.MOUSE_UP, this.starThrowItem, this);
         this.node.off(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
         this.node.off(cc.Node.EventType.MOUSE_UP , this.starThrowItem, this);
 
