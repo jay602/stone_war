@@ -92,6 +92,11 @@ cc.Class({
 
     // 只在两个碰撞体开始接触时被调用一次
     onBeginContact: function (contact, selfCollider, otherCollider) {
+        if( (otherCollider.node.name == "pipiPrefab" || otherCollider.node.name == "popPrefab") && this.isThrowed) { //扣血
+            var player = KBEngine.app.player();
+            if(player == undefined || !player.inWorld)
+                return;
+        }
     },
 
     // 只在两个碰撞体结束接触时被调用一次

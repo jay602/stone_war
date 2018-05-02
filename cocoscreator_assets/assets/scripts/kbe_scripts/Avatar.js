@@ -96,9 +96,9 @@ KBEngine.Avatar = KBEngine.Entity.extend(
 		    KBEngine.Event.fire("otherAvatarThrowItem", this.id, itemID, v2);
         },
 
-        onNewTurn : function(eid)
+        onNewTurn : function(eid, second)
 	    {
-		    KBEngine.Event.fire("newTurn", eid);
+		    KBEngine.Event.fire("newTurn", eid, second);
         }, 
 
         newTurn : function()

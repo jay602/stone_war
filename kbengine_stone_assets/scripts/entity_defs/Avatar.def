@@ -43,6 +43,7 @@
 
 		<onNewTurn>
 				<Arg>		ENTITY_ID		</Arg>
+				<Arg>		INT32		    </Arg>
 		</onNewTurn>
 
 		<onPickUpItem>

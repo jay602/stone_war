@@ -139,6 +139,10 @@ cc.Class({
         this.eid = eid;
     },
 
+    getEntityID: function() {
+        return this.eid;
+    },
+
     getSelfWorldPointAR: function() {
         return this.node.convertToWorldSpaceAR(cc.Vec2.ZERO);
     },
@@ -503,7 +507,6 @@ cc.Class({
         // var basePoint = this.basePoint.convertToWorldSpaceAR(cc.v2(0, 0));
         // this.ctx.rect(basePoint.x, basePoint.y, 256, 256);
 
-        this.ctx.stroke();
     },
    
     update: function(dt) {

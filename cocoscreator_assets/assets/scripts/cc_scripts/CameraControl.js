@@ -10,9 +10,16 @@ cc.Class({
 
     // use this for initialization
     onLoad: function () {
-        cc.log("9999 CameraControl OnLoad");
         this.camera = this.getComponent(cc.Camera);
+        this.sky = cc.find("World/sky_bg");
+        this.skyBox = this.sky.getBoundingBoxToWorld();
+
         this.onEnable();
+
+        // cc.log("9999 Camera onLoad: skyBox.Rect(%f, %f, %f, %f)", this.skyBox.x, this.skyBox.y, this.skyBox.width, this.skyBox.height);
+        // cc.log("9999 Camera onLoad: skyBox : xMin=%f, yXmin=%f, xMax=%f, yMax=%f)", this.skyBox.xMin, this.skyBox.yMin, this.skyBox.xMax, this.skyBox.yMax);
+        // cc.log("9999 Camera onLoad: skyBox.center(%f, %f)", this.skyBox.center.x, this.skyBox.center.y);
+        // cc.log("9999 Camera onLoad: skyBox.origin(%f, %f)", this.skyBox.origin.x, this.skyBox.origin.y);
     },
 
     onEnable: function () {
@@ -29,11 +36,16 @@ cc.Class({
         this.target = target;
     },
 
+    getTarget: function() {
+        return this.target;
+    },
+
     // called every frame, uncomment this function to activate update callback
     lateUpdate: function (dt) {
         if(this.target==null) return;
         
         let targetPos = this.target.convertToWorldSpaceAR(cc.Vec2.ZERO);
+
         var point = this.node.parent.convertToNodeSpaceAR(targetPos);
         point.y += 160;
         this.node.position = point;

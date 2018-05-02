@@ -47,7 +47,10 @@ cc.Class({
             type: cc.Node,
         },
 
-        maxPlayerCount: 2,
+        gameState: {
+            default: null,
+            type: cc.Node,
+        },
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -59,12 +62,14 @@ cc.Class({
         this.entities = {};
         this.playerControl = null;
         this.curAvatarID = 0;
-        this.cameraControl =this.camera.getComponent("CameraControl");
+        this.cameraControl = this.camera.getComponent("CameraControl");
 
         this.enablePhysicManager();
         //this.enablePhysicsDebugDraw();
         this.installEvents();
         this.playerID = [];
+
+       this.gameState = this.node.getComponent("GameState");
     },
 
     enablePhysicManager: function () {
@@ -275,12 +280,19 @@ cc.Class({
         this.cameraControl.setTarget(ae);
     },
 
-    newTurn: function(avatarID){
+    newTurn: function(avatarID, second){
         this.curAvatarID = avatarID;
         this.setCameraTarget(avatarID);
-        cc.log("WorldScene::newTurn: eid=%d  playerID=%d", avatarID,  KBEngine.app.player().id);
+        cc.log("WorldScene::newTurn: eid=%d  playerID=%d second=%d", avatarID,  KBEngine.app.player().id, second);
+       
+        this.gameState.newTurn(second);
+        if(!this.gameState.isGameStart()) {
+            this.gameState.setGameStart(true);
+        }
+
         if(this.curAvatarID == KBEngine.app.player().id) {
             this.enableControlPlayer();
+           
         }else {
             this.disEnableControlPlayer();
         }

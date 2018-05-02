@@ -88,7 +88,7 @@ class Room(KBEngine.Entity):
 	
 	def newTurn(self, eid):
 		for entity in self.avatars.values():
-			entity.client.onNewTurn(eid)
+			entity.client.onNewTurn(eid, GameConfigs.PLAY_TIME_PER_TURN)
 
 	def onLeave(self, entityID):
 		"""
