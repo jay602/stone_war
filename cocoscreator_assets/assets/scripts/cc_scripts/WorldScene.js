@@ -113,6 +113,7 @@ cc.Class({
         KBEngine.Event.register("otherAvatarOnStopWalk", this, "otherAvatarOnStopWalk");
         KBEngine.Event.register("otherAvatarOnStartWalk", this, "otherAvatarOnStartWalk");
         KBEngine.Event.register("otherAvatarResetItem", this, "otherAvatarResetItem");
+        KBEngine.Event.register("onRecvDamage", this, "onRecvDamage");
     },
 
     onKicked : function(failedcode){
@@ -178,6 +179,7 @@ cc.Class({
                 var action = ae.addComponent("ItemAction");
                 action.setPlayer(this.player);
                 action.setItemID(entity.id);
+                action.setHarm(entity.harm);
             }
             this.node.addChild(ae);
             
@@ -220,6 +222,8 @@ cc.Class({
             this.player.setPosition(avatar.position.x*SCALE, avatar.position.z*SCALE);
 
             this.entities[avatar.id] = this.player;
+
+            this.gameState.setPlayerHP(avatar.HP);
         }
     },
 
@@ -293,7 +297,6 @@ cc.Class({
 
         if(this.curAvatarID == KBEngine.app.player().id) {
             this.enableControlPlayer();
-           
         }else {
             this.disEnableControlPlayer();
         }
@@ -351,7 +354,16 @@ cc.Class({
         item.getComponent("ItemAction").setPlacePrePosition();
     },
 
-    
+    onRecvDamage: function(avatarID, harm, hp) {
+        cc.log("WorldScene::otherAvatarRecvDamage: avatarID=%d, harm=%d, hp=%d ", avatarID, harm, hp);
+        var player = this.entities[avatarID];
+        if(player == undefined)
+            return;
+
+        var action = player.getComponent("AvatarAction");
+        action.recvDamage(harm, hp);
+    },
+
     enableControlPlayer: function() {
         this.player.getComponent("AvatarControl").enableEventListen();
     },

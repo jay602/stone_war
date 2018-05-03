@@ -15,6 +15,8 @@ class Avatar(KBEngine.Proxy):
 		self.cellData["modelID" ] = 0
 		self.cellData["name"] = None
 		self.cellData["position"] =  None
+		self.cellData["HP"] = GameConfigs.PLAYER_HP
+		self.cellData["harmCount"] = 0
 
 	def createCell(self, space):
 		"""

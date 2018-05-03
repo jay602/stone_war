@@ -32,11 +32,14 @@ cc.Class({
             type: cc.Label,
        },
 
+       HP: {
+            default: null,
+            type: cc.Label,
+       },
+
        second: 30,
 
        isStart: false,
-
-
     },
 
     onLoad () {
@@ -45,14 +48,11 @@ cc.Class({
        this.camera = cc.find("Camera").getComponent("CameraControl");
        this.ctx = cc.find("World/drawNode").getComponent(cc.Graphics);
 
-       this.node1 = cc.find("World/node1");
-       this.node2 = cc.find("World/node2");
-
        this.forceLayout =  cc.find("forceLayout");
        this.forceLayout.active = false;
-    //    this.forceX = cc.find("forceLayout/showX/valueX");
-    //    this.forceY = cc.find("forceLayout/showY/valueY");
-    //    this.force = cc.find("forceLayout/showForce/valueForce");
+
+       this.hpLayout =  cc.find("hpLayout");
+       this.hpLayout.active = false;
     },
 
     isGameStart: function() {
@@ -94,6 +94,14 @@ cc.Class({
         this.forceX.string = force.x.toFixed(1);
         this.forceY.string = force.y.toFixed(1);
         this.force.string = force.mag().toFixed(1);
+    },
+
+    setPlayerHP: function(hp) {
+        this.hpLayout.active = true;
+        if(this.HP) {
+            if(hp<0) hp = 0;
+            this.HP.string = hp
+        }
     },
 
 });

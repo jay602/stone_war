@@ -116,6 +116,17 @@ KBEngine.Avatar = KBEngine.Entity.extend(
             cc.log("other avater=%d reset item=%d", this.id, itemID);
             KBEngine.Event.fire("otherAvatarResetItem", this.id, itemID);
         },
+
+        recvDamage: function(itemID)
+        {
+            this.cellCall("recvDamage", itemID);
+        },
+
+        onRecvDamage: function(avatarID, harm, hp)
+        {
+            cc.log("avatar %d recv harm=%d, hp=%d", avatarID, harm, hp);
+            KBEngine.Event.fire("onRecvDamage", avatarID, harm, hp);
+        },
     });
     
     

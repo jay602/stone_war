@@ -94,6 +94,16 @@ cc.Class({
             default: null,
             type: cc.Node,
         },
+
+        hp: {
+            default: null,
+            type: cc.Label,
+        },
+
+        harm: {
+            default: null,
+            type: cc.Label,
+        },
     },
 
     onLoad () {
@@ -108,6 +118,9 @@ cc.Class({
         this.leftHand = this.node.getChildByName("leftHand");
         this.rightHand = this.node.getChildByName("rightHand");
 
+        this.harm = this.node.getChildByName("harm");
+        this.hp = this.node.getChildByName("hp");
+
         this.testNode1 = cc.find("testNode1");
         this.testNode2 = cc.find("testNode2");
         this.ctx = cc.find("worldDraw").getComponent(cc.Graphics);
@@ -119,6 +132,21 @@ cc.Class({
         this.hasPickUpItem = false;
         this.arrowAngle = 0.0;
         this.itemID = 0;
+        this.hpValue = 100;
+    },
+
+    recvDamage: function(harm, hp) {
+        var harmStr = "-" + harm;
+        this.hpValue = hp;
+        this.harm.getComponent(cc.Label).string = harmStr;
+        cc.log("avatar recvDamage: harm=%d, hp=%d", harm, hp);
+        if(this.eid == KBEngine.app.player().id) {
+            cc.log("self harm");
+            this.gameState.setPlayerHP(hp);
+        }else {
+            cc.log("other harm");
+            this.hp.getComponent(cc.Label).string = hp;
+        }
     },
 
     setGameState: function(gameState) {

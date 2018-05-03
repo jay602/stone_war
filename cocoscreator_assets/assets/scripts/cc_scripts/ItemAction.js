@@ -47,6 +47,8 @@ cc.Class({
             default: null,
             type: cc.RigidBody,
         },
+
+        harm: 10,
     },
 
     onLoad () {
@@ -93,9 +95,14 @@ cc.Class({
     // 只在两个碰撞体开始接触时被调用一次
     onBeginContact: function (contact, selfCollider, otherCollider) {
         if( (otherCollider.node.name == "pipiPrefab" || otherCollider.node.name == "popPrefab") && this.isThrowed) { //扣血
-            var player = KBEngine.app.player();
+            let avatarID = otherCollider.node.getComponent("AvatarAction").getEntityID();
+            var player = KBEngine.app.findEntity(avatarID);
+            
+            cc.log("item hit player(%d", avatarID);
             if(player == undefined || !player.inWorld)
                 return;
+
+            player.recvDamage(this.itemID);
         }
     },
 
@@ -109,7 +116,6 @@ cc.Class({
 
     // 每次将要处理碰撞体接触逻辑时被调用
     onPreSolve: function (contact, selfCollider, otherCollider) {
-      
         if( (otherCollider.node.name == "pipiPrefab" || otherCollider.node.name == "popPrefab") && this.isThrowed) {
             this.touchPlayerCount++;
             var linearVelocity = this.rigidBody.linearVelocity;
@@ -127,6 +133,9 @@ cc.Class({
         }
     },
 
+    setHarm: function(num) {
+        this.harm = num;
+    },
 
     setThrowed: function(throwed) {
         cc.log("3333 item is throwed");

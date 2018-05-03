@@ -59,6 +59,16 @@
 		<onResetItem>
 			<Arg>		ENTITY_ID	</Arg>
 		</onResetItem>
+
+		<setHp>
+			<Arg>		INT32		</Arg>
+		</setHp>
+
+		<onRecvDamage>
+			<Arg>		ENTITY_ID	</Arg>
+			<Arg>		INT32		</Arg>
+			<Arg>		INT32		</Arg>
+		</onRecvDamage>
 	</ClientMethods>
 
 	<BaseMethods>
@@ -101,6 +111,11 @@
 			<Exposed/>
 			<Arg>		ENTITY_ID	</Arg>
 		</resetItem>
+
+		<recvDamage>
+			<Exposed/>
+			<Arg>		ENTITY_ID	</Arg>
+		</recvDamage>
 	</CellMethods>
 
 </root>

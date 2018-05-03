@@ -22,7 +22,7 @@ class Room(KBEngine.Entity):
 
 		# 这个房间中所有的玩家
 		self.avatars = {}	
-		self.items = []
+		self.items = {}
 		self.curEid = 0
 		self.newTurnTimer = 0
 		DEBUG_MSG('created space[%d] entityID = %i.' % (self.roomKeyC, self.id))
@@ -43,7 +43,7 @@ class Room(KBEngine.Entity):
 			DEBUG_MSG(pos)
 			dir = (0.0, 0.0, 0.0)
 			entity = KBEngine.createEntity("Item", self.spaceID, pos, dir, {"name" : name, "harm" : harm})
-			self.items.append(entity.id)
+			self.items[entity.id] = entity
 		
 	def onDestroy(self):
 		"""
@@ -88,6 +88,7 @@ class Room(KBEngine.Entity):
 	
 	def newTurn(self, eid):
 		for entity in self.avatars.values():
+			entity.reset()
 			entity.client.onNewTurn(eid, GameConfigs.PLAY_TIME_PER_TURN)
 
 	def onLeave(self, entityID):
@@ -118,3 +119,6 @@ class Room(KBEngine.Entity):
 	def killNewTurnTimer(self):
 		DEBUG_MSG('Room::killNewTurnTimer: newTurnTimer=%i' % (self.newTurnTimer))
 		self.delTimer(self.newTurnTimer)
+
+	def findItemByID(self, itemID):
+		return self.items[itemID]

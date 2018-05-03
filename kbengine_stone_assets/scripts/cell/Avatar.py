@@ -26,16 +26,6 @@ class Avatar(KBEngine.Entity, EntityCommon):
 	def onTimer(self, tid, userArg):
 		pass
 
-
-	def onUpgrade(self):
-		pass
-		
-	def onEnterTrap(self, entityEntering, range_xz, range_y, controllerID, userarg):
-		pass
-
-	def onLeaveTrap(self, entityLeaving, range_xz, range_y, controllerID, userarg):
-		pass
-
 	def onGetWitness(self):
 		"""
 		KBEngine method.
@@ -98,8 +88,6 @@ class Avatar(KBEngine.Entity, EntityCommon):
 		DEBUG_MSG("avatar %i pick up item=%i" % (self.id, itemID))
 		self.otherClients.onThrowItem(itemID, force)
 
-		
-
 	def newTurn(self, exposed):
 		DEBUG_MSG("avavtar %i newTurn, selfID=%i" % (exposed, self.id))
 		if exposed != self.id:
@@ -109,7 +97,6 @@ class Avatar(KBEngine.Entity, EntityCommon):
 		
 		if room:
 			room.nextPlayer()
-
 
 	def stopWalk(self, exposed, pos):
 		DEBUG_MSG("avavtar %i stopWalk, selfID=%i" % (exposed, self.id))
@@ -132,5 +119,37 @@ class Avatar(KBEngine.Entity, EntityCommon):
 			return
 
 		self.otherClients.onResetItem(itemID)
+
+	def reset(self):
+		self.harmCount = 0
+		DEBUG_MSG("avatar %i reset: harmCount=%i" % (self.id, self.harmCount))
+
+	def recvDamage(self, exposed, itemID):
+		DEBUG_MSG("avavtar %i recvDamage: itemID=%i, selfID=%i, harmCount=%i" % (exposed, itemID, self.id, self.harmCount))
+		if exposed != self.id:
+			return
+		self.harmCount += 1
+		if self.harmCount > 3:
+			return
+
+		room = self.getCurrRoom()
+		item = None
+		harm = 0
+		if room:
+			item = room.findItemByID(itemID)
+
+		if item:
+			harm = item.harm
+
+		self.HP = self.HP - harm
+		DEBUG_MSG("avatar %i recv harm=%i hp=%i harmCount=%i" % (self.id, harm, self.HP, self.harmCount))
+
+		#HP小于等于0，则游戏结束
+		if self.HP <= 0:
+			self.HP = 0
+			DEBUG_MSG("Game is over, avatar %i is defeated !!!")
+
+		self.client.onRecvDamage(self.id, harm, self.HP)
+		self.otherClients.onRecvDamage(self.id, harm, self.HP)
 
 
