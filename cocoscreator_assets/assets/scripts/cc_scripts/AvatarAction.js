@@ -88,7 +88,12 @@ cc.Class({
         playerRigidBody: {
             default: null,
             type: cc.RigidBody,
-        }
+        },
+
+        gameState: {
+            default: null,
+            type: cc.Node,
+        },
     },
 
     onLoad () {
@@ -114,6 +119,10 @@ cc.Class({
         this.hasPickUpItem = false;
         this.arrowAngle = 0.0;
         this.itemID = 0;
+    },
+
+    setGameState: function(gameState) {
+        this.gameState = gameState;
     },
 
     reset: function() {
@@ -347,6 +356,8 @@ cc.Class({
         var angle = Math.atan2(dy, dx) * 180 / Math.PI;
         this.arrowAngle = angle*factor;
 
+        this.calculateForce(pos);
+
         this.testNode1.setPosition(arrowWorldPoint);
         this.testNode2.setPosition(pos);
     },
@@ -357,14 +368,24 @@ cc.Class({
         this.adjustArrowDir(pos);
     },
 
-    throw: function(pos) {
-        if(!this.hasPickUpItem) return;
-
-        cc.log("AvatarAction: throw item");
+    calculateForce: function(pos) {
         var arrowWorldPoint = this.arrow.convertToWorldSpaceAR(cc.v2(0, 0));
         
         var force = arrowWorldPoint.sub(pos);
         force.mulSelf(MULTIPLE);
+        if(force.y > 800) 
+            force.y = 800; 
+
+        if(this.gameState) {
+            this.gameState.showForce(force);
+        }
+        return force;
+    },
+
+    throw: function(pos) {
+        if(!this.hasPickUpItem) return;
+
+        var force = this.calculateForce(pos);
         cc.log("AvatarAction throwItem: force(%f, %f)", force.x, force.y);
 
         var player = KBEngine.app.player();
@@ -373,7 +394,11 @@ cc.Class({
         }
 
         this.throwItem(this.item, force);
-       
+
+        if(this.gameState) {
+            this.gameState.forceLayout.active = false;
+        }
+        
         this.hasPickUpItem = false;
         this.arrow.active = false;
         this.item = null;
@@ -381,9 +406,6 @@ cc.Class({
     },
 
     throwItem: function(item, force) {
-       
-        if(force.y >= 800)
-            force.y = 800;
         var itemRigidbody = item.getComponent(cc.RigidBody);
         itemRigidbody.gravityScale = 1;
         var worldCenter = itemRigidbody.getWorldCenter();
@@ -543,7 +565,6 @@ cc.Class({
             }
         }  
 
-        
         if(this.jumping) {
             this.jumpSpeedY +=  this.gravity * dt;
 

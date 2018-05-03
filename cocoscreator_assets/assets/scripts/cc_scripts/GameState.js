@@ -17,9 +17,26 @@ cc.Class({
            type: cc.Label,
        },
 
+       forceX: {
+            default: null,
+            type: cc.Label,
+       },
+
+       forceY: {
+            default: null,
+            type: cc.Label,
+       },
+
+       force: {
+            default: null,
+            type: cc.Label,
+       },
+
        second: 30,
 
        isStart: false,
+
+
     },
 
     onLoad () {
@@ -30,6 +47,12 @@ cc.Class({
 
        this.node1 = cc.find("World/node1");
        this.node2 = cc.find("World/node2");
+
+       this.forceLayout =  cc.find("forceLayout");
+       this.forceLayout.active = false;
+    //    this.forceX = cc.find("forceLayout/showX/valueX");
+    //    this.forceY = cc.find("forceLayout/showY/valueY");
+    //    this.force = cc.find("forceLayout/showForce/valueForce");
     },
 
     isGameStart: function() {
@@ -63,6 +86,14 @@ cc.Class({
             this.labelTime.string = this.second;
             cc.log("count down second: %d %s", this.second, this.labelTime.string);
         }
+    },
+
+    showForce: function(force) {
+        cc.log("game statez: show force: x=%f, y=%f, force=%f", force.x, force.y, force.mag());
+        this.forceLayout.active = true;
+        this.forceX.string = force.x.toFixed(1);
+        this.forceY.string = force.y.toFixed(1);
+        this.force.string = force.mag().toFixed(1);
     },
 
 });

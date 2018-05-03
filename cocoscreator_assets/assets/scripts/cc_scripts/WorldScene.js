@@ -211,6 +211,7 @@ cc.Class({
             action.setAnim(anim);
             action.setModelID(avatar.modelID);
             action.setEntityId(avatar.id);
+            action.setGameState(this.gameState);
 
             ctrl.setPlayer(this.player);
 

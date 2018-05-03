@@ -108,7 +108,7 @@
     "_enabled": true,
     "_type": 2,
     "_allowSleep": true,
-    "_gravityScale": 1,
+    "_gravityScale": 2,
     "_linearDamping": 0.3,
     "_angularDamping": 0.3,
     "_linearVelocity": {
