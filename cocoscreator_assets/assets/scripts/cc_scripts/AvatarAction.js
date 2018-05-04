@@ -119,7 +119,11 @@ cc.Class({
         this.rightHand = this.node.getChildByName("rightHand");
 
         this.harm = this.node.getChildByName("harm");
-        this.hp = this.node.getChildByName("hp");
+
+        this.hpProcessBar = this.node.getChildByName("hpProcessBar");
+        this.hpProcessBar.active = false;
+
+        this.hp = this.hpProcessBar.getChildByName("hp");
 
         this.testNode1 = cc.find("testNode1");
         this.testNode2 = cc.find("testNode2");
@@ -135,15 +139,34 @@ cc.Class({
         this.hpValue = 100;
     },
 
+    setHP: function(hp){
+        this.hpValue = hp;
+    },
+
+    start () {
+        this.showOtherHp();
+    },
+
     showHarm: function(harmStr) {
         var flyNode = new cc.Node();
         var flyWord = flyNode.addComponent("FlyWord");
         this.harm.addChild(flyNode);
-        flyWord.create(harmStr, cc.p(0, 0));
+        //var scaleX = this.modelID==0 ? 1 : -1;
+        flyWord.showHarm(harmStr, cc.p(0, 0), this.node.scaleX);
+    },
+
+    hideOtherHp: function() {
+        this.hpProcessBar.active = false;
     },
 
     showOtherHp: function() {
-
+        cc.log("9191 show other avatar hp: eid=%d  playerid=%d hp=%d", this.eid, KBEngine.app.player().id, this.hpValue);
+        if(this.eid != KBEngine.app.player().id) {
+            this.hpProcessBar.active = true;
+            this.hp.active = true;
+            this.hp.getComponent(cc.Label).string = this.hpValue;
+            this.hpProcessBar.getComponent(cc.ProgressBar).progress = (100-this.hpValue)/100;
+        }
     },
 
     recvDamage: function(harm, hp) {
@@ -158,7 +181,7 @@ cc.Class({
             this.gameState.setPlayerHP(hp);
         }else {
             cc.log("other harm");
-           // this.hp.getComponent(cc.Label).string = hp;
+           this.showOtherHp();
         }
     },
 
@@ -171,6 +194,7 @@ cc.Class({
         this.stopWalk();
         this.arrow.active = false;
         this.arrowAngle = 0.0;
+        this.hpProcessBar.active = false;
         if(this.item) {
             this.item.getComponent("ItemAction").setPlacePrePosition();
             var player = KBEngine.app.player();
@@ -461,13 +485,15 @@ cc.Class({
         if (dx > 1) // 右
         {
             this.moveFlag = MOVE_RIGHT;
-        }
-        else if (dx < -1) //左
+           
+        } else if (dx < -1) //左
         {
             this.moveFlag = MOVE_LEFT;
-        }else {
+        } else 
+        {
             this.moveFlag = STATIC;
         }
+        this.hpProcessBar.scaleX = this.node.scaleX;
         //cc.log("AvatarAction::onStartMove, dx=%f, move=%f, prePosition(%f, %f)", dx, this.moveFlag, this.node.x, this.node.y);
     },
 

@@ -133,7 +133,7 @@
     "_density": 10,
     "_sensor": false,
     "_friction": 0.2,
-    "_restitution": 0.8,
+    "_restitution": 0.7,
     "body": null,
     "loop": true,
     "points": [

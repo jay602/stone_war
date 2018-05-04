@@ -27,19 +27,43 @@ cc.Class({
         cc.log("FlyWord Load");
     },
 
-    create: function(word, begin) {
+    showHarm: function(word, begin, scaleX) {
         this.word = word;
         this.beginPoint = begin;
 
         this.label = this.node.addComponent(cc.Label);
+        this.label.node.scaleX = scaleX;
         this.label.string = word;
         this.node.setPosition(this.beginPoint);
 
         this.flying();
     },
 
+    showHP: function(hp, pos, scaleX) {
+        cc.log("9191 FlyWord::showHP: hp=%d", hp);
+        this.word = hp;
+        this.beginPoint = pos;
+
+        this.label = this.node.addComponent(cc.Label);
+        this.label.string = this.word;
+        this.label.node.scaleX = scaleX;
+        this.node.setPosition(this.beginPoint);
+
+        this.fadeOut();
+    },
+
+    fadeOut: function() {
+        var finished = cc.callFunc(this.actionEnd, this);
+
+        var fade = cc.fadeOut(1.0);
+        var delay = cc.delayTime(0.25);
+        var fadeBack = fade.reverse();
+        var action = cc.sequence(fade, delay.clone(), fadeBack, finished);
+        this.node.runAction(action);
+    },
+
     flying: function() {
-        var finished = cc.callFunc(this.flyEnd, this);
+        var finished = cc.callFunc(this.actionEnd, this);
         var y = 100;
         var upperValue = 135;
         var lowerValue = 45;
@@ -60,7 +84,7 @@ cc.Class({
         this.node.runAction(action);
     },
 
-    flyEnd: function() {
+    actionEnd: function() {
         this.node.removeAllChildren();
         this.node.removeFromParent();
     },

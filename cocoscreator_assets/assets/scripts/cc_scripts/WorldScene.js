@@ -216,6 +216,7 @@ cc.Class({
             action.setModelID(avatar.modelID);
             action.setEntityId(avatar.id);
             action.setGameState(this.gameState);
+            action.setHP(avatar.HP);
 
             ctrl.setPlayer(this.player);
 
