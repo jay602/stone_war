@@ -46,7 +46,7 @@ cc.Class({
             this.walkAnim = "pop_walk";
             this.jumpAnim = "pop_jump";
             this.idleAnim = "pop_idle";
-            this.dieAnim = "ppo_die";
+            this.dieAnim = "pop_die";
          }
     },
 
