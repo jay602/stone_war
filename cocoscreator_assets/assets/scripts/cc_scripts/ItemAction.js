@@ -94,11 +94,11 @@ cc.Class({
 
     // 只在两个碰撞体开始接触时被调用一次
     onBeginContact: function (contact, selfCollider, otherCollider) {
-        if( (otherCollider.node.name == "pipiPrefab" || otherCollider.node.name == "popPrefab") && this.isThrowed) { //扣血
+        if( (otherCollider.node.name == "pipiPrefab" || otherCollider.node.name == "pop_player") && this.isThrowed) { //扣血
             let avatarID = otherCollider.node.getComponent("AvatarAction").getEntityID();
             var player = KBEngine.app.findEntity(avatarID);
             
-            cc.log("item hit player(%d", avatarID);
+            cc.log("9090 item(%d) hit player(%d, %s)", this.itemID, avatarID, otherCollider.node.name);
             if(player == undefined || !player.inWorld)
                 return;
 

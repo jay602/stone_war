@@ -102,7 +102,7 @@ cc.Class({
 
         harm: {
             default: null,
-            type: cc.Label,
+            type: cc.Node,
         },
     },
 
@@ -135,17 +135,30 @@ cc.Class({
         this.hpValue = 100;
     },
 
+    showHarm: function(harmStr) {
+        var flyNode = new cc.Node();
+        var flyWord = flyNode.addComponent("FlyWord");
+        this.harm.addChild(flyNode);
+        flyWord.create(harmStr, cc.p(0, 0));
+    },
+
+    showOtherHp: function() {
+
+    },
+
     recvDamage: function(harm, hp) {
         var harmStr = "-" + harm;
         this.hpValue = hp;
-        this.harm.getComponent(cc.Label).string = harmStr;
-        cc.log("avatar recvDamage: harm=%d, hp=%d", harm, hp);
+
+        this.showHarm(harmStr);
+
+        cc.log("999 avatar %d recvDamage: harm=%d, hp=%d", this.eid, harm, hp);
         if(this.eid == KBEngine.app.player().id) {
             cc.log("self harm");
             this.gameState.setPlayerHP(hp);
         }else {
             cc.log("other harm");
-            this.hp.getComponent(cc.Label).string = hp;
+           // this.hp.getComponent(cc.Label).string = hp;
         }
     },
 

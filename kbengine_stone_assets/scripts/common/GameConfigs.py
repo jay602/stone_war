@@ -49,7 +49,7 @@ ITEMS = {
 SCALE = 10
 
 #每轮的时间
-PLAY_TIME_PER_TURN = 20
+PLAY_TIME_PER_TURN = 30
 
 #人物HP的初始值
 PLAYER_HP = 100

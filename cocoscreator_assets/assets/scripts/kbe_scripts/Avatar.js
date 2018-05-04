@@ -120,6 +120,7 @@ KBEngine.Avatar = KBEngine.Entity.extend(
         recvDamage: function(itemID)
         {
             this.cellCall("recvDamage", itemID);
+            cc.log(" 9090 avatar id=%d recvDamage from item=%d", this.id, itemID);
         },
 
         onRecvDamage: function(avatarID, harm, hp)

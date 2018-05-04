@@ -43,6 +43,9 @@
     "_active": true,
     "_components": [
       {
+        "__id__": 21
+      },
+      {
         "__id__": 22
       },
       {
@@ -53,13 +56,10 @@
       },
       {
         "__id__": 25
-      },
-      {
-        "__id__": 26
       }
     ],
     "_prefab": {
-      "__id__": 27
+      "__id__": 26
     },
     "_id": "",
     "_opacity": 255,
@@ -138,7 +138,7 @@
     "_position": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": -8
+      "y": -8.5
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -568,8 +568,8 @@
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": -22,
-      "y": 234
+      "x": 61,
+      "y": 168
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -621,13 +621,9 @@
     "_children": [],
     "_tag": -1,
     "_active": true,
-    "_components": [
-      {
-        "__id__": 20
-      }
-    ],
+    "_components": [],
     "_prefab": {
-      "__id__": 21
+      "__id__": 20
     },
     "_id": "",
     "_opacity": 255,
@@ -646,7 +642,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 0,
+      "width": 97.87,
       "height": 40
     },
     "_rotationX": 0,
@@ -655,8 +651,8 @@
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": -103,
-      "y": 162
+      "x": -21,
+      "y": 202
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -664,28 +660,6 @@
     "_globalZOrder": 0,
     "_opacityModifyRGB": false,
     "groupIndex": 0
-  },
-  {
-    "__type__": "cc.Label",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 19
-    },
-    "_enabled": true,
-    "_useOriginalSize": false,
-    "_actualFontSize": 40,
-    "_fontSize": 40,
-    "_lineHeight": 40,
-    "_enableWrapText": true,
-    "_N$file": null,
-    "_isSystemFontUsed": true,
-    "_spacingX": 0,
-    "_N$string": "",
-    "_N$horizontalAlign": 0,
-    "_N$verticalAlign": 0,
-    "_N$fontFamily": "Arial",
-    "_N$overflow": 0
   },
   {
     "__type__": "cc.PrefabInfo",
@@ -764,7 +738,7 @@
     "_enabled": true,
     "_type": 2,
     "_allowSleep": false,
-    "_gravityScale": 0.1,
+    "_gravityScale": 0,
     "_linearDamping": 0,
     "_angularDamping": 0,
     "_linearVelocity": {
