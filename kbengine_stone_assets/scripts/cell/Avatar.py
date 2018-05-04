@@ -127,7 +127,7 @@ class Avatar(KBEngine.Entity, EntityCommon):
 	def recvDamage(self, exposed, itemID):
 		DEBUG_MSG("avavtar %i recvDamage: itemID=%i, selfID=%i, harmCount=%i" % (exposed, itemID, self.id, self.harmCount))
 		self.harmCount += 1
-		if self.harmCount > 3:
+		if self.harmCount > 1:
 			return
 
 		room = self.getCurrRoom()

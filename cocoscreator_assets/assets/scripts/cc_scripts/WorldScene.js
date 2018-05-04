@@ -67,9 +67,9 @@ cc.Class({
         this.enablePhysicManager();
         //this.enablePhysicsDebugDraw();
         this.installEvents();
-        this.playerID = [];
+        this.items = new Array();
 
-       this.gameState = this.node.getComponent("GameState");
+        this.gameState = this.node.getComponent("GameState");
     },
 
     enablePhysicManager: function () {
@@ -180,6 +180,8 @@ cc.Class({
                 action.setPlayer(this.player);
                 action.setItemID(entity.id);
                 action.setHarm(entity.harm);
+
+                this.items.push(ae);
             }
             this.node.addChild(ae);
             
@@ -290,6 +292,7 @@ cc.Class({
         this.setCameraTarget(avatarID);
         cc.log("WorldScene::newTurn: eid=%d  playerID=%d second=%d", avatarID,  KBEngine.app.player().id, second);
        
+        this.resetItem();
         this.gameState.newTurn(second);
         if(!this.gameState.isGameStart()) {
             this.gameState.setGameStart(true);
@@ -299,6 +302,14 @@ cc.Class({
             this.enableControlPlayer();
         }else {
             this.disEnableControlPlayer();
+        }
+    },
+
+
+    resetItem: function() {
+        for(var i in this.items) {
+            var item = this.items[i];
+            item.getComponent("ItemAction").setThrowed(false);
         }
     },
 
