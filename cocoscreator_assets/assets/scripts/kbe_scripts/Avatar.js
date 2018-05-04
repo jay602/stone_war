@@ -128,6 +128,12 @@ KBEngine.Avatar = KBEngine.Entity.extend(
             cc.log("avatar %d recv harm=%d, hp=%d", avatarID, harm, hp);
             KBEngine.Event.fire("onRecvDamage", avatarID, harm, hp);
         },
+
+        onDie: function(avatarID)
+        {
+            cc.log("avatar %d die", avatarID);
+            KBEngine.Event.fire("onAvatarDie", avatarID);
+        },
     });
     
     

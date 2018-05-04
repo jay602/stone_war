@@ -69,6 +69,10 @@
 			<Arg>		INT32		</Arg>
 			<Arg>		INT32		</Arg>
 		</onRecvDamage>
+
+		<onDie>
+			<Arg>		ENTITY_ID	</Arg>
+		</onDie>
 	</ClientMethods>
 
 	<BaseMethods>

@@ -16,6 +16,8 @@ cc.Class({
         walkAnim : "",
         jumpAnim : "",
         idleAnim : "",
+        dieAnim : "",
+
         modelID : 0,
         anim: {
             default: null,
@@ -26,7 +28,7 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
-        //this.anim = this.getComponent(cc.Animation);
+        this.anim = this.node.getComponent(cc.Animation);
     },
 
     setAnim: function(anim) {
@@ -39,10 +41,12 @@ cc.Class({
             this.walkAnim = "pipi_walk";
             this.jumpAnim = "pipi_jump";
             this.idleAnim = "pipi_idle";
+            this.dieAnim = "pipi_die";
          }else if(this.modelID == 1){
             this.walkAnim = "pop_walk";
             this.jumpAnim = "pop_jump";
             this.idleAnim = "pop_idle";
+            this.dieAnim = "ppo_die";
          }
     },
 
@@ -51,34 +55,35 @@ cc.Class({
             var animState = this.anim.play(this.walkAnim);
             animState.wrapMode = cc.WrapMode.Loop;
             animState.repeatCount = Infinity;
-            cc.log("AvatarAnim::playWalkAnim %s", this.walkAnim);
+            cc.log("AvatarAnim::play WalkAnim %s", this.walkAnim);
         }
     },
 
     stopPlayAnim: function() {
         if(this.anim) {
-            cc.log("AvatarAnim::stopPlayAnim",);
+            cc.log("AvatarAnim::stop PlayAnim",);
             this.anim.stop();
         }
     },
 
     playJumpAnim: function(){
         if(this.anim) {
-            cc.log("AvatarAnim::playJumpAnim %s", this.jumpAnim);
+            cc.log("AvatarAnim::play Jump Anim %s", this.jumpAnim);
             this.anim.play(this.jumpAnim);
         }
     },
 
     playIdleAnim: function() {
         if(this.anim) {
-            cc.log("AvatarAnim::playIdleAnim %s", this.idleAnim);
+            cc.log("AvatarAnim::play Idle Anim %s", this.idleAnim);
             this.anim.play(this.idleAnim);
         }
     },
 
-    start () {
-
-    },
-
-    update: function(dt) {},
+    playDieAnim: function() {
+        if(this.anim) {
+            cc.log("AvatarAnim::play die anim %s", this.dieAnim);
+            this.anim.play(this.dieAnim);
+        }
+    }
 });

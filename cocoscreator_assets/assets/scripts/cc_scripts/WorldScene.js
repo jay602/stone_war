@@ -92,7 +92,6 @@ cc.Class({
 
     installEvents : function() {
 		// common
-		KBEngine.Event.register("onKicked", this, "onKicked");
 		KBEngine.Event.register("onDisconnected", this, "onDisconnected");
 		KBEngine.Event.register("onConnectionState", this, "onConnectionState");
 		KBEngine.Event.register("onReloginBaseappFailed", this, "onReloginBaseappFailed");
@@ -114,10 +113,7 @@ cc.Class({
         KBEngine.Event.register("otherAvatarOnStartWalk", this, "otherAvatarOnStartWalk");
         KBEngine.Event.register("otherAvatarResetItem", this, "otherAvatarResetItem");
         KBEngine.Event.register("onRecvDamage", this, "onRecvDamage");
-    },
-
-    onKicked : function(failedcode){
-        
+        KBEngine.Event.register("onAvatarDie", this, "onAvatarDie");
     },
 
     onDisconnected : function() {
@@ -374,6 +370,16 @@ cc.Class({
 
         var action = player.getComponent("AvatarAction");
         action.recvDamage(harm, hp);
+    },
+
+    onAvatarDie: function(avatarID) {
+        cc.log("WorldScene::onAvatarDie, avatarid=%d", avatarID)
+        var player = this.entities[avatarID];
+        if(player == undefined)
+            return;
+        
+        var anim = player.getComponent("AvatarAnim");
+        anim.playDieAnim();
     },
 
     enableControlPlayer: function() {

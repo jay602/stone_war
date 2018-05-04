@@ -147,11 +147,11 @@ cc.Class({
         this.showOtherHp();
     },
 
+    
     showHarm: function(harmStr) {
         var flyNode = new cc.Node();
         var flyWord = flyNode.addComponent("FlyWord");
         this.harm.addChild(flyNode);
-        //var scaleX = this.modelID==0 ? 1 : -1;
         flyWord.showHarm(harmStr, cc.p(0, 0), this.node.scaleX);
     },
 

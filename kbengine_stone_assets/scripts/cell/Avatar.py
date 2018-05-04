@@ -126,6 +126,9 @@ class Avatar(KBEngine.Entity, EntityCommon):
 
 	def recvDamage(self, exposed, itemID):
 		DEBUG_MSG("avavtar %i recvDamage: itemID=%i, selfID=%i, harmCount=%i" % (exposed, itemID, self.id, self.harmCount))
+		if exposed != self.id:
+			return
+
 		self.harmCount += 1
 		if self.harmCount > 1:
 			return
@@ -140,14 +143,17 @@ class Avatar(KBEngine.Entity, EntityCommon):
 			harm = item.harm
 
 		self.HP = self.HP - harm
-		DEBUG_MSG("avatar %i recv harm=%i hp=%i harmCount=%i" % (exposed, harm, self.HP, self.harmCount))
-
-		#HP小于等于0，则通知播放死亡动画，然后结束当局游戏
 		if self.HP <= 0:
 			self.HP = 0
-			DEBUG_MSG("Game is over, avatar %i is defeated !!!")
+		DEBUG_MSG("avatar %i recv harm=%i hp=%i harmCount=%i" % (exposed, harm, self.HP, self.harmCount))
 
 		self.client.onRecvDamage(self.id, harm, self.HP)
 		self.otherClients.onRecvDamage(self.id, harm, self.HP)
+
+		#HP小于等于0，则通知播放死亡动画，然后结束当局游戏
+		if self.HP <= 0:
+			DEBUG_MSG("Game is over, avatar %i is defeated !!!", self.id)
+			self.client.onDie(self.id)
+			self.otherClients.onDie(self.id)
 
 
