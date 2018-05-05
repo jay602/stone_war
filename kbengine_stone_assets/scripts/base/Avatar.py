@@ -13,10 +13,12 @@ class Avatar(KBEngine.Proxy):
 		self.cellData["dbid"] = self.databaseID
 
 		self.cellData["modelID" ] = 0
-		self.cellData["name"] = None
+		self.cellData["accountName"] = self.__ACCOUNT_NAME__
 		self.cellData["position"] =  None
 		self.cellData["HP"] = GameConfigs.PLAYER_HP
 		self.cellData["harmCount"] = 0
+
+		DEBUG_MSG("new avatar: accountName=%s, %s" % (self.__ACCOUNT_NAME__), self.cellData["accountName"])
 
 	def createCell(self, space):
 		"""

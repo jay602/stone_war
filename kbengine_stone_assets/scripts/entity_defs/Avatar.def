@@ -17,6 +17,11 @@
 			<DetailLevel>		MEDIUM			</DetailLevel>
 		</name>
 
+		<accountName>
+			<Type>		UNICODE			</Type>
+			<Flags>		ALL_CLIENTS			</Flags>
+		</accountName>
+
 		<dbid>
 			<Type>		DBID				</Type>
 			<Flags>		CELL_PUBLIC			</Flags>

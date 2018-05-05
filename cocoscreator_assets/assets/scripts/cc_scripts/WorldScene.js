@@ -155,7 +155,7 @@ cc.Class({
                 }
                 var action = ae.addComponent("AvatarAction");
                 var anim = ae.addComponent("AvatarAnim");
-                cc.log("another avatar %d enter world", entity.id);
+                cc.log("another avatar(id=%d, accountName=%s) enter world", entity.id, entity.accountName);
                 //注意顺序： anim ---> action
                 anim.setModelID(entity.modelID);
                 anim.setAnim(ae.getComponent(cc.Animation));
@@ -163,6 +163,7 @@ cc.Class({
                 action.setModelID(entity.modelID);
                 action.setAnim(anim);
                 action.setEntityId(entity.id);
+                action.setAccountName(entity.accountName);
                 if(entity.direction.z >= 1)  {
                     ae.scaleX = 1;
                 }else if(entity.direction.z <= -1) {
@@ -194,7 +195,7 @@ cc.Class({
 
     onAvatarEnterWorld : function(rndUUID, eid, avatar){
         if(!this.player) {
-            cc.log("player id=%d onAvatarEnterWorld", avatar.id);
+            cc.log("player id=%d name=%s onAvatarEnterWorld", avatar.id, avatar.accountName);
             if(avatar.modelID == 0) {
                 this.player = cc.instantiate(this.pipiPrefab);
             }else if(avatar.modelID == 1) {

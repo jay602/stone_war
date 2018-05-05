@@ -75,7 +75,7 @@ cc.Class({
 
 
     enableMouseEvent: function() {
-        cc.log("AvatarControl::enableMouseEvent");
+        //cc.log("AvatarControl::enableMouseEvent");
         this.canvas.on(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
         this.canvas.on(cc.Node.EventType.MOUSE_UP, this.starThrowItem, this);
         this.node.on(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
@@ -89,7 +89,7 @@ cc.Class({
     },
 
     disEnableMouseEvent: function() {
-        cc.log("AvatarControl::disEnableMouseEvent");
+       // cc.log("AvatarControl::disEnableMouseEvent");
         this.canvas.off(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
         this.canvas.off(cc.Node.EventType.MOUSE_UP, this.starThrowItem, this);
         this.node.off(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
@@ -108,7 +108,7 @@ cc.Class({
                 event: cc.EventListener.KEYBOARD,
                 onKeyPressed: function(keyCode, event){
                     if(!self.enableEvent) return;
-                    cc.log("AvatarControl press key=%d", keyCode);
+                    //cc.log("AvatarControl press key=%d", keyCode);
                     switch(keyCode) {
                         case cc.KEY.a: 
                             self.player.leftWalk();
@@ -125,7 +125,7 @@ cc.Class({
                 },
                 onKeyReleased: function(keyCode, event){
                     if(!self.enableEvent) return;
-                    cc.log("AvatarControl release key=%d", keyCode);
+                   // cc.log("AvatarControl release key=%d", keyCode);
                     switch(keyCode) {
                         case cc.KEY.a: 
                         case cc.KEY.d:

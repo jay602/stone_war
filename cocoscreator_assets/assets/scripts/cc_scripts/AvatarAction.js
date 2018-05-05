@@ -29,6 +29,12 @@ cc.Class({
         leftDir: 1,
         rightDir: -1,
         eid:0,
+        accountName: "",
+
+        labelName: {
+            default: null,
+            type: cc.Node,
+        },
 
         anim: {
             default: null,
@@ -111,6 +117,7 @@ cc.Class({
         this.end_point = this.node.getChildByName("end_point");
         this.item_point = this.node.getChildByName("item_point");
         this.basePoint = this.node.getChildByName("basePoint");
+        this.labelName = this.node.getChildByName("name");
         
         this.arrow = this.node.getChildByName("arrow");
         this.arrow.active = false;
@@ -139,12 +146,17 @@ cc.Class({
         this.hpValue = 100;
     },
 
+    setAccountName: function(name) {
+        this.accountName = name;
+    },
+
     setHP: function(hp){
         this.hpValue = hp;
     },
 
     start () {
         this.showOtherHp();
+        this.labelName.getComponent(cc.Label).string = this.accountName;
     },
 
     isDead: function() {
@@ -497,6 +509,7 @@ cc.Class({
             this.moveFlag = STATIC;
         }
         this.hpProcessBar.scaleX = this.node.scaleX;
+        this.labelName.scaleX = this.node.scaleX;
         //cc.log("AvatarAction::onStartMove, dx=%f, move=%f, prePosition(%f, %f)", dx, this.moveFlag, this.node.x, this.node.y);
     },
 
