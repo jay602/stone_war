@@ -134,6 +134,12 @@ KBEngine.Avatar = KBEngine.Entity.extend(
             cc.log("avatar %d die", avatarID);
             KBEngine.Event.fire("onAvatarDie", avatarID);
         },
+
+        onGameOver: function(isWin)
+        {
+            cc.log("avatar %d win=%s", this.id, isWin.toString());
+            KBEngine.Event.fire("onGameOver", this.id, isWin);
+        },
     });
     
     

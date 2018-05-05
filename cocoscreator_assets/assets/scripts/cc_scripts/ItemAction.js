@@ -73,6 +73,9 @@ cc.Class({
 
     onCollisionEnter: function (other, self) {
         if(other.node.name === this.player.name && this.playerControl.isEnable()) {
+            if(other.node.getComponent("AvatarAction").isDead())
+                return;
+
             this.draw.drawPoly(this.chainCollider.points, cc.color(100, 0, 0, 50), 1, cc.color(0, 0, 0, 125));
             this.canPicked = true;
         }
@@ -80,6 +83,9 @@ cc.Class({
 
     onCollisionStay: function (other, self) {
         if(other.node.name === this.player.name && this.playerControl.isEnable()) {
+            if(other.node.getComponent("AvatarAction").isDead())
+                return;
+
             this.draw.drawPoly(this.chainCollider.points, cc.color(100, 0, 0, 50), 1, cc.color(0, 0, 0, 125));
             this.canPicked = true;
         }

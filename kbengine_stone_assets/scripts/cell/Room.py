@@ -9,6 +9,7 @@ TIMER_TYPE_DESTROY = 1
 TIMER_TYPE_BALANCE_MASS = 2
 TIMER_TYPE_GAME_START = 3
 TIMER_TYPE_NEXT_PLAYER = 4
+TIMER_TYPE_GAME_OVER = 5
 
 class Room(KBEngine.Entity):
 	"""
@@ -83,6 +84,16 @@ class Room(KBEngine.Entity):
 		if TIMER_TYPE_NEXT_PLAYER == userArg:
 			self.nextPlayer()
 
+		if TIMER_TYPE_GAME_OVER == userArg:
+			DEBUG_MSG("Game is Over !!!")
+			for entity in self.avatars.values():
+				win = not entity.isDead()
+				result = "lose"
+				if win:
+					result = "win"
+				DEBUG_MSG("entity id=%i is %s" % (entity.id, result))
+				entity.client.onGameOver(win)
+
 	def startGame(self):
 		self.newTurn(self.curEid)
 	
@@ -122,3 +133,6 @@ class Room(KBEngine.Entity):
 
 	def findItemByID(self, itemID):
 		return self.items[itemID]
+
+	def gameOver(self):
+		self.addTimer(1, 0, TIMER_TYPE_GAME_OVER)

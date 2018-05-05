@@ -114,6 +114,7 @@ cc.Class({
         KBEngine.Event.register("otherAvatarResetItem", this, "otherAvatarResetItem");
         KBEngine.Event.register("onRecvDamage", this, "onRecvDamage");
         KBEngine.Event.register("onAvatarDie", this, "onAvatarDie");
+        KBEngine.Event.register("onGameOver", this, "onGameOver");
     },
 
     onDisconnected : function() {
@@ -379,7 +380,26 @@ cc.Class({
             return;
         
         var anim = player.getComponent("AvatarAnim");
+        var collider = player.getComponent(cc.PhysicsPolygonCollider);
+        collider.sensor = true;
         anim.playDieAnim();
+    },
+
+    onGameOver: function(avatarID, isWin) {
+        cc.log("WorldScene::onGameOver: avatarID=%d, win=%s, hp=%d ", avatarID, isWin.toString());
+        if(avatarID == KBEngine.app.player().id) {
+            if(this.player.name == PIPI_NAME) {
+                GAME_RESULT = isWin ? PIPI_WIN : PIPI_LOSE;
+            } else {
+                GAME_RESULT = isWin ? POP_WIN : POP_LOSE;
+            }
+
+            if(isWin) {
+                cc.director.loadScene("WinScene");
+            } else {
+                cc.director.loadScene("LoseScene");
+            }
+        }
     },
 
     enableControlPlayer: function() {

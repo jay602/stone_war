@@ -147,7 +147,10 @@ cc.Class({
         this.showOtherHp();
     },
 
-    
+    isDead: function() {
+        return this.hpValue <= 0;
+    },
+
     showHarm: function(harmStr) {
         var flyNode = new cc.Node();
         var flyWord = flyNode.addComponent("FlyWord");
@@ -509,6 +512,10 @@ cc.Class({
             var rigidBody = otherCollider.node.getComponent(cc.RigidBody);
             var speedX =  rigidBody.linearVelocity.x;
             var speedY =  rigidBody.linearVelocity.y;
+            if(this.hpValue <= 0) {
+                contact.disabled = true;
+                return;
+            }
 
             if( (speedX<=0.5 && speedX>=-0.5) && (speedY<=0.5 && speedY>=-0.5) || this.hasPickUpItem) {
                 contact.disabled = true;
@@ -548,6 +555,11 @@ cc.Class({
             var rigidBody = otherCollider.node.getComponent(cc.RigidBody);
             var speedX =  rigidBody.linearVelocity.x;
             var speedY =  rigidBody.linearVelocity.y;
+
+            if(this.hpValue <= 0) {
+                contact.disabled = true;
+                return;
+            }
            //cc.log("0000 onPreSolve other rigidBody linearSpeed(%f, %f) angularSpeed=%f", speedX, speedY, rigidBody.angularVelocity); 
 
             if( (speedX<=0.5 && speedX>=-0.5) && (speedY<=0.5 && speedY>=-0.5) || this.hasPickUpItem ) {

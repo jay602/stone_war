@@ -18,5 +18,15 @@ window.ItemPrefabUrl = {
 
 window.ItemPrefabMap = {};
 
+window.GAME_RESULT = -1;
+window.PIPI_WIN = 0;
+window.PIPI_LOSE = 1;
+window.POP_WIN = 2;
+window.POP_LOSE = 3;
+
+
+window.PIPI_NAME = "pipiPrefab";
+window.POP_NAME = "pop_player";
+
 
 

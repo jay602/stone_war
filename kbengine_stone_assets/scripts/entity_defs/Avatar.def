@@ -73,6 +73,10 @@
 		<onDie>
 			<Arg>		ENTITY_ID	</Arg>
 		</onDie>
+
+		<onGameOver>
+			<Arg>		BOOL	</Arg>
+		</onGameOver>
 	</ClientMethods>
 
 	<BaseMethods>

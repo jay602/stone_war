@@ -5,7 +5,6 @@ import GameUtils
 import GameConfigs
 from interfaces.EntityCommon import EntityCommon
 
-TIMER_TYPE_ADD_TRAP = 1
 
 class Avatar(KBEngine.Entity, EntityCommon):
 	def __init__(self):
@@ -155,5 +154,8 @@ class Avatar(KBEngine.Entity, EntityCommon):
 			DEBUG_MSG("Game is over, avatar %i is defeated !!!", self.id)
 			self.client.onDie(self.id)
 			self.otherClients.onDie(self.id)
+			room.gameOver()
 
 
+	def isDead(self):
+		return self.HP <= 0
