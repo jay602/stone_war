@@ -110,6 +110,10 @@ cc.Class({
 
             player.recvDamage(this.itemID);
         }
+
+        if( otherCollider.tag == 998 ) {
+            contact.disabled = true;
+        }
     },
 
     // 只在两个碰撞体结束接触时被调用一次
@@ -118,6 +122,9 @@ cc.Class({
 
     // 每次处理完碰撞体接触逻辑时被调用
     onPostSolve: function (contact, selfCollider, otherCollider) {
+        if( otherCollider.tag == 998 ) {
+            contact.disabled = true;
+        }
     },
 
     // 每次将要处理碰撞体接触逻辑时被调用
