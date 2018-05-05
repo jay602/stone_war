@@ -55,34 +55,34 @@ cc.Class({
             var animState = this.anim.play(this.walkAnim);
             animState.wrapMode = cc.WrapMode.Loop;
             animState.repeatCount = Infinity;
-            cc.log("AvatarAnim::play WalkAnim %s", this.walkAnim);
+           // cc.log("AvatarAnim::play WalkAnim %s", this.walkAnim);
         }
     },
 
     stopPlayAnim: function() {
         if(this.anim) {
-            cc.log("AvatarAnim::stop PlayAnim",);
+           // cc.log("AvatarAnim::stop PlayAnim",);
             this.anim.stop();
         }
     },
 
     playJumpAnim: function(){
         if(this.anim) {
-            cc.log("AvatarAnim::play Jump Anim %s", this.jumpAnim);
+           // cc.log("AvatarAnim::play Jump Anim %s", this.jumpAnim);
             this.anim.play(this.jumpAnim);
         }
     },
 
     playIdleAnim: function() {
         if(this.anim) {
-            cc.log("AvatarAnim::play Idle Anim %s", this.idleAnim);
+          //  cc.log("AvatarAnim::play Idle Anim %s", this.idleAnim);
             this.anim.play(this.idleAnim);
         }
     },
 
     playDieAnim: function() {
         if(this.anim) {
-            cc.log("AvatarAnim::play die anim %s", this.dieAnim);
+           // cc.log("AvatarAnim::play die anim %s", this.dieAnim);
             this.anim.play(this.dieAnim);
         }
     }

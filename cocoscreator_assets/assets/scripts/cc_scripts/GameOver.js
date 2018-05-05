@@ -41,7 +41,6 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
-        cc.log("Game is Over, result=%d", GAME_RESULT);
         var result = null;
         switch(GAME_RESULT)
         {

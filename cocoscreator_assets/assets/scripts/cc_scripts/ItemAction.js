@@ -104,7 +104,7 @@ cc.Class({
             let avatarID = otherCollider.node.getComponent("AvatarAction").getEntityID();
             var player = KBEngine.app.findEntity(avatarID);
             
-            cc.log("9090 item(%d) hit player(%d, %s)", this.itemID, avatarID, otherCollider.node.name);
+           // cc.log("9090 item(%d) hit player(%d, %s)", this.itemID, avatarID, otherCollider.node.name);
             if(player == undefined || !player.inWorld)
                 return;
 

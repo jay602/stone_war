@@ -312,18 +312,18 @@ cc.Class({
         }
     },
 
-    otherAvatarOnPickUpItem: function(avatarID, itemID) {
+    otherAvatarOnPickUpItem: function(avatarID, itemID, position) {
         cc.log("WorldScene::otherAvatarOnPickUpItem: avatarID=%d, itemID=%d ", avatarID, itemID);
         var player = this.entities[avatarID];
         var item = this.entities[itemID];
         if(player == undefined || item == undefined)
             return;
         var action = player.getComponent("AvatarAction");
-        action.setPlaceItem(item);
+        action.setPlaceItem(item, position);
     },
 
     otherAvatarThrowItem: function(avatarID, itemID, force){
-        cc.log("WorldScene::sotherAvatarThrowItem: avatarID=%d, itemID=%d ", avatarID, itemID);
+        cc.log("WorldScene::otherAvatarThrowItem: avatarID=%d, itemID=%d force(%f, %f)", avatarID, itemID, force.x, force.y);
         var player = this.entities[avatarID];
         var item = this.entities[itemID];
         if(player == undefined || item == undefined)

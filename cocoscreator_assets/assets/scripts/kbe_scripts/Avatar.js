@@ -67,14 +67,17 @@ KBEngine.Avatar = KBEngine.Entity.extend(
 
         onPickUpItem : function(itemID, positon)
         {
-            KBEngine.Event.fire("otherAvatarOnPickUpItem", this.id, itemID);
+            var v2 = new cc.Vec2();
+            v2.x = positon.x;
+            v2.y = positon.y;
+            KBEngine.Event.fire("otherAvatarOnPickUpItem", this.id, itemID, v2);
         },
 
-        pickUpItem : function(itemID, pickPos)
+        pickUpItem : function(itemID, pos)
 	    {
             var vec3 = new KBEngine.Vector3();
-            vec3.x = pickPos.x;
-            vec3.y = pickPos.y;
+            vec3.x = pos.x;
+            vec3.y = pos.y;
             vec3.z = 0.0;
 		    this.cellCall("pickUpItem", itemID, vec3);
         }, 

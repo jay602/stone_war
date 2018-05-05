@@ -144,6 +144,7 @@ cc.Class({
         this.arrowAngle = 0.0;
         this.itemID = 0;
         this.hpValue = 100;
+        this.itemPoint = null;
     },
 
     setAccountName: function(name) {
@@ -175,7 +176,7 @@ cc.Class({
     },
 
     showOtherHp: function() {
-        cc.log("9191 show other avatar hp: eid=%d  playerid=%d hp=%d", this.eid, KBEngine.app.player().id, this.hpValue);
+        //cc.log("show other avatar hp: eid=%d  playerid=%d hp=%d", this.eid, KBEngine.app.player().id, this.hpValue);
         if(this.eid != KBEngine.app.player().id) {
             this.hpProcessBar.active = true;
             this.hp.active = true;
@@ -190,7 +191,7 @@ cc.Class({
 
         this.showHarm(harmStr);
 
-        cc.log("999 avatar %d recvDamage: harm=%d, hp=%d", this.eid, harm, hp);
+        cc.log("avatar %d recvDamage: harm=%d, hp=%d", this.eid, harm, hp);
         if(this.eid == KBEngine.app.player().id) {
             cc.log("self harm");
             this.gameState.setPlayerHP(hp);
@@ -379,10 +380,15 @@ cc.Class({
         this.anim = anim;
     },
 
-    setPlaceItem: function(item) {
+    getItemPoint: function() {
+        this.itemPoint = this.leftHand.convertToWorldSpaceAR(cc.v2(0, 0));
+        this.itemPoint = this.node.parent.convertToNodeSpace(this.itemPoint);
+        return this.itemPoint;
+    },
+
+    setPlaceItem: function(item, position) {
         cc.log("AvatarAction::setPlaceItem");
         this.moveFlag = STATIC;
-        var itemPoint = null;
 
         if(this.node.scaleX == this.rightDir) {
             this.arrow.scaleX = this.rightDir;
@@ -390,16 +396,13 @@ cc.Class({
             this.arrow.scaleX = this.leftDir;
         }
 
-        itemPoint = this.leftHand.convertToWorldSpaceAR(cc.v2(0, 0));
-        itemPoint = this.node.parent.convertToNodeSpace(itemPoint);
-
         //改变石头的位置，放到手中
         item.getComponent("ItemAction").recordPrePosition();
         
         var itemRigidbody = item.getComponent(cc.RigidBody);
         itemRigidbody.gravityScale = 0;
         itemRigidbody.linearVelocity = cc.v2(0, 0);
-        item.setPosition(itemPoint);
+        item.setPosition(position);
     },
 
     pickUpItem: function(item, itemID, pickPos) {
@@ -410,10 +413,10 @@ cc.Class({
 
         var player = KBEngine.app.player();
         if(player != undefined && player.inWorld) {
-            player.pickUpItem(itemID, pickPos);
+            player.pickUpItem(itemID, this.getItemPoint());
         }
 
-        this.setPlaceItem(item);
+        this.setPlaceItem(item, this.getItemPoint());
         this.adjustArrowDir(pickPos);
     },
 
@@ -489,7 +492,8 @@ cc.Class({
         var itemRigidbody = item.getComponent(cc.RigidBody);
         itemRigidbody.gravityScale = 1;
         var worldCenter = itemRigidbody.getWorldCenter();
-        cc.log("AvatarActio::thowItem : force(%f, %f), worldCenter(%f, %f)", force.x, force.y, worldCenter.x, worldCenter.y);
+        cc.log("1234 AvatarActio::thowItem : force(%f, %f), worldCenter(%f, %f) pos(%f, %f)", force.x, force.y, worldCenter.x, worldCenter.y
+            , item.position.x, item.position.y);
         itemRigidbody.applyLinearImpulse(force, worldCenter, true);
         item.getComponent("ItemAction").setThrowed(true);
     },

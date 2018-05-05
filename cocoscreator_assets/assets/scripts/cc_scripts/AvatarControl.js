@@ -166,7 +166,7 @@ cc.Class({
     
     onKeyReleased: function (keyCode, event) {
         if(!this.enableEvent) return;
-        cc.log("789 release key: ", keyCode);
+       // cc.log("release key: ", keyCode);
         switch(keyCode) {
             case cc.KEY.a:
             case cc.KEY.left:

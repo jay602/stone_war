@@ -40,7 +40,6 @@ cc.Class({
     },
 
     showHP: function(hp, pos, scaleX) {
-        cc.log("9191 FlyWord::showHP: hp=%d", hp);
         this.word = hp;
         this.beginPoint = pos;
 
