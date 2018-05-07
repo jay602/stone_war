@@ -391,7 +391,7 @@
     "_enabled": true,
     "_type": 0,
     "_allowSleep": true,
-    "_gravityScale": 3,
+    "_gravityScale": 1,
     "_linearDamping": 0,
     "_angularDamping": 0,
     "_linearVelocity": {
@@ -413,10 +413,10 @@
     },
     "_enabled": true,
     "tag": 888,
-    "_density": 2,
+    "_density": 1,
     "_sensor": false,
     "_friction": 0.2,
-    "_restitution": 0.6,
+    "_restitution": 0.2,
     "body": null,
     "_offset": {
       "__type__": "cc.Vec2",
@@ -777,8 +777,8 @@
     "tag": 999,
     "_density": 1,
     "_sensor": false,
-    "_friction": 0,
-    "_restitution": 1,
+    "_friction": 0.2,
+    "_restitution": 0,
     "body": null,
     "_offset": {
       "__type__": "cc.Vec2",

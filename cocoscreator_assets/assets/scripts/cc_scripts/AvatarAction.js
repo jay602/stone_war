@@ -308,7 +308,6 @@ cc.Class({
 
     playWalkAnim: function() {
         if(!this.jumping && this.anim) {
-            cc.log("playWalkAnim 8888");
             this.anim.playWalkAnim();
         }
     },
@@ -316,10 +315,11 @@ cc.Class({
     _stopWalk: function() {
         var canStop = false;
         if(!this.jumping && this.moveFlag!=STATIC) {
-            cc.log("8989 stop stalk");
+            cc.log("stop stalk");
             this.moveFlag = STATIC;
             if(this.anim){
                 this.anim.stopPlayAnim();
+                this.anim.playIdleAnim();
             }
             canStop = true;
         }
@@ -331,21 +331,22 @@ cc.Class({
         var canStop = this._stopWalk();
 
         if(canStop) {
+            var pos = this.node.getPosition();
+            cc.log("4567 avatar %s stop walk, last position(%f, %f)", this.node.name, pos.x, pos.y);
             var player = KBEngine.app.player();
             if(player != undefined && player.inWorld) {
-                player.stopWalk(this.node.getPosition());
+                player.stopWalk(pos);
             }
         }
     },
 
     onStopWalk: function(pos) {
         cc.log("Avatar onStopWalk");
-        //this._stopWalk();
         this.moveFlag = STATIC;
         if(this.anim){
             this.anim.stopPlayAnim();
+            this.anim.playIdleAnim();
         }
-        //this.node.setPosition(pos.x, pos.y);
     },
 
     jump: function() {
@@ -469,6 +470,7 @@ cc.Class({
         if(!this.hasPickUpItem) return;
 
         var force = this.calculateForce(pos);
+      
         cc.log("AvatarAction throwItem: force(%f, %f)", force.x, force.y);
 
         var player = KBEngine.app.player();
@@ -492,8 +494,10 @@ cc.Class({
         var itemRigidbody = item.getComponent(cc.RigidBody);
         itemRigidbody.gravityScale = 1;
         var worldCenter = itemRigidbody.getWorldCenter();
-        cc.log("1234 AvatarActio::thowItem : force(%f, %f), worldCenter(%f, %f) pos(%f, %f)", force.x, force.y, worldCenter.x, worldCenter.y
+        
+        cc.log("AvatarActio::thowItem : force(%f, %f), worldCenter(%f, %f) pos(%f, %f)", force.x, force.y, worldCenter.x, worldCenter.y
             , item.position.x, item.position.y);
+           
         itemRigidbody.applyLinearImpulse(force, worldCenter, true);
         item.getComponent("ItemAction").setThrowed(true);
     },
@@ -501,11 +505,11 @@ cc.Class({
     onStartMove: function(position) {
         this.targetPosition = position;
         var dx = position.x - this.node.x;
-        if (dx > 1) // 右
+        if (dx > 0.8) // 右
         {
             this.moveFlag = MOVE_RIGHT;
            
-        } else if (dx < -1) //左
+        } else if (dx < -0.8) //左
         {
             this.moveFlag = MOVE_LEFT;
         } else 
@@ -646,7 +650,7 @@ cc.Class({
             }else {
                if(this.node.x >= this.targetPosition.x) {
                     this.addAxisX(-speedX);
-                }
+                 } 
             }
         } 
         else if (this.moveFlag == MOVE_RIGHT ) {
@@ -657,7 +661,7 @@ cc.Class({
             }else {
                 if(this.node.x <= this.targetPosition.x) {
                     this.addAxisX(speedX);
-                }
+                } 
             }
         }  
 

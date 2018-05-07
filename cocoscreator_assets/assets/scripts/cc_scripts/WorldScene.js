@@ -401,6 +401,8 @@ cc.Class({
                 cc.director.loadScene("LoseScene");
             }
         }
+
+        this.disEnableControlPlayer();
     },
 
     enableControlPlayer: function() {

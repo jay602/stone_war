@@ -1091,7 +1091,7 @@
     "_density": 100,
     "_sensor": false,
     "_friction": 0,
-    "_restitution": 0.8,
+    "_restitution": 0.4,
     "body": null,
     "_offset": {
       "__type__": "cc.Vec2",
@@ -1156,18 +1156,8 @@
       },
       {
         "__type__": "cc.Vec2",
-        "x": 44,
-        "y": 31
-      },
-      {
-        "__type__": "cc.Vec2",
-        "x": 39,
-        "y": 43
-      },
-      {
-        "__type__": "cc.Vec2",
-        "x": 22,
-        "y": 47
+        "x": 36,
+        "y": 35
       },
       {
         "__type__": "cc.Vec2",
@@ -1176,33 +1166,8 @@
       },
       {
         "__type__": "cc.Vec2",
-        "x": -14,
-        "y": 51
-      },
-      {
-        "__type__": "cc.Vec2",
         "x": -28,
         "y": 43
-      },
-      {
-        "__type__": "cc.Vec2",
-        "x": -39,
-        "y": 47
-      },
-      {
-        "__type__": "cc.Vec2",
-        "x": -50,
-        "y": 43
-      },
-      {
-        "__type__": "cc.Vec2",
-        "x": -59,
-        "y": 29
-      },
-      {
-        "__type__": "cc.Vec2",
-        "x": -53,
-        "y": 21
       },
       {
         "__type__": "cc.Vec2",

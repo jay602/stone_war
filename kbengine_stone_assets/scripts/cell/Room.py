@@ -76,6 +76,7 @@ class Room(KBEngine.Entity):
 		@param id		: addTimer 的返回值ID
 		@param userArg	: addTimer 最后一个参数所给入的数据
 		"""
+		DEBUG_MSG("Room::onTimer: timeID=%i, userArg=%i" % (id, userArg))
 		if TIMER_TYPE_GAME_START == userArg:
 			self.startGame()
 			self.newTurnTimer = self.addTimer(GameConfigs.PLAY_TIME_PER_TURN, 0, TIMER_TYPE_NEXT_PLAYER)
@@ -135,4 +136,5 @@ class Room(KBEngine.Entity):
 		return self.items[itemID]
 
 	def gameOver(self):
-		self.addTimer(1, 0, TIMER_TYPE_GAME_OVER)
+		timer = self.addTimer(1, 0, TIMER_TYPE_GAME_OVER)
+		DEBUG_MSG("add timer %i: game over" % (timer))

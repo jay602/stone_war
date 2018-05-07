@@ -52,10 +52,7 @@ cc.Class({
 
    playWalkAnim: function(){
         if(this.anim) {
-            var animState = this.anim.play(this.walkAnim);
-            animState.wrapMode = cc.WrapMode.Loop;
-            animState.repeatCount = Infinity;
-           // cc.log("AvatarAnim::play WalkAnim %s", this.walkAnim);
+            this.anim.play(this.walkAnim);
         }
     },
 

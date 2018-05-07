@@ -1080,7 +1080,7 @@
     "_density": 100,
     "_sensor": false,
     "_friction": 0,
-    "_restitution": 0.8,
+    "_restitution": 0.4,
     "body": null,
     "_offset": {
       "__type__": "cc.Vec2",
