@@ -398,11 +398,10 @@ cc.Class({
         }
 
         //改变石头的位置，放到手中
-        item.getComponent("ItemAction").recordPrePosition();
+        var itemAction = item.getComponent("ItemAction");
+        itemAction.recordPrePosition();
+        itemAction.setZeroRigidBody();
         
-        var itemRigidbody = item.getComponent(cc.RigidBody);
-        itemRigidbody.gravityScale = 0;
-        itemRigidbody.linearVelocity = cc.v2(0, 0);
         item.setPosition(position);
     },
 
@@ -457,8 +456,8 @@ cc.Class({
         
         var force = arrowWorldPoint.sub(pos);
         force.mulSelf(MULTIPLE);
-        // if(force.y > MAX_THROW_FORCE_Y) 
-        //    force.y = MAX_THROW_FORCE_Y; 
+        if(force.y > MAX_THROW_FORCE_Y) 
+            force.y = MAX_THROW_FORCE_Y; 
 
         if(this.gameState) {
             this.gameState.showForce(force);
@@ -469,16 +468,16 @@ cc.Class({
     throw: function(pos) {
         if(!this.hasPickUpItem) return;
 
-        var force = this.calculateForce(pos);
+        var impulse = this.calculateForce(pos);
       
-        cc.log("AvatarAction throwItem: force(%f, %f)", force.x, force.y);
+        cc.log("AvatarAction throwItem: force(%f, %f)", impulse.x, impulse.y);
 
         var player = KBEngine.app.player();
         if(player != undefined && player.inWorld) {
-            player.throwItem(this.itemID, force);
+            player.throwItem(this.itemID, impulse);
         }
 
-        this.throwItem(this.item, force);
+        this.throwItem(this.item, impulse);
 
         if(this.gameState) {
             this.gameState.forceLayout.active = false;
@@ -490,16 +489,8 @@ cc.Class({
         this.itemAction = null;
     },
 
-    throwItem: function(item, force) {
-        var itemRigidbody = item.getComponent(cc.RigidBody);
-        itemRigidbody.gravityScale = 1;
-        var worldCenter = itemRigidbody.getWorldCenter();
-        
-        cc.log("AvatarActio::thowItem : force(%f, %f), worldCenter(%f, %f) pos(%f, %f)", force.x, force.y, worldCenter.x, worldCenter.y
-            , item.position.x, item.position.y);
-           
-        itemRigidbody.applyLinearImpulse(force, worldCenter, true);
-        item.getComponent("ItemAction").setThrowed(true);
+    throwItem: function(item, impulse) {
+        item.getComponent("ItemAction").throw(impulse);
     },
 
     onStartMove: function(position) {
@@ -522,9 +513,6 @@ cc.Class({
     },
 
     onBeginContact: function (contact, selfCollider, otherCollider) {
-        // cc.log("0000 onBeginContact selfCollider: tag=%d  name=%s", selfCollider.tag, selfCollider.name);
-        // cc.log("0000 onBeginContact otherCollider: tag=%d name=%s", otherCollider.tag, otherCollider.name);
-        // cc.log("0000 onBeginContact contact: colliderA=%s colliderB=%s", contact.colliderA.node.name, contact.colliderB.node.name);
         if(otherCollider.tag == 999 || otherCollider.tag == 998) {
             this.isCollideLand = true;
         }else if(otherCollider.node.name == "land_bg") {
@@ -556,7 +544,6 @@ cc.Class({
             var rigidBody = otherCollider.node.getComponent(cc.RigidBody);
             var speedX =  rigidBody.linearVelocity.x;
             var speedY =  rigidBody.linearVelocity.y;
-           // cc.log("0000 onEndContact other rigidBody linearSpeed(%f, %f) angularSpeed=%f", speedX, speedY, rigidBody.angularVelocity); 
             
             if( (speedX<=0.5 && speedX>=-0.5) && (speedY<=0.5 && speedY>=-0.5) ) {
                  contact.disabled = true;
@@ -581,7 +568,6 @@ cc.Class({
                 contact.disabled = true;
                 return;
             }
-           //cc.log("0000 onPreSolve other rigidBody linearSpeed(%f, %f) angularSpeed=%f", speedX, speedY, rigidBody.angularVelocity); 
 
             if( (speedX<=0.5 && speedX>=-0.5) && (speedY<=0.5 && speedY>=-0.5) || this.hasPickUpItem ) {
                 contact.disabled = true;
@@ -591,16 +577,13 @@ cc.Class({
 
     // 每次处理完碰撞体接触逻辑时被调用
     onPostSolve: function (contact, selfCollider, otherCollider) {
-        // cc.log("0000 onPostSolve selfCollider.tag=%d name=%s", selfCollider.tag, selfCollider.name);
-        // cc.log("0000 onPostSolve otherCollider.tag=%d name=%s", otherCollider.tag, otherCollider.name);
-        // cc.log("0000 onPostSolve contact: colliderA=%s colliderB=%s", contact.colliderA.node.name, contact.colliderB.node.name);
+      
         if(otherCollider.tag == 999 || otherCollider.tag == 998) {
             this.isCollideLand = false;
         }else if(otherCollider.tag == 100 ) {
             var rigidBody = otherCollider.node.getComponent(cc.RigidBody);
             var speedX =  rigidBody.linearVelocity.x;
             var speedY =  rigidBody.linearVelocity.y;
-           // cc.log("0000 onEndContact other rigidBody linearSpeed(%f, %f) angularSpeed=%f", speedX, speedY, rigidBody.angularVelocity); 
             
             if( (speedX<=0.5 && speedX>=-0.5) && (speedY<=0.5 && speedY>=-0.5) ) {
                  contact.disabled = true;

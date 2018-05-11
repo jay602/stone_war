@@ -242,11 +242,7 @@ cc.Class({
             this.skyBox = this.sky.getBoundingBoxToWorld();
             this.itemBox = this.item.getBoundingBoxToWorld();
 
-            cc.log("9999 xMin1=%f, xMin2=%f", this.itemBox.xMin, this.itemBox.xMin);
-            cc.log("9999 xMax1=%f, xMax2=%f", this.itemBox.xMax, this.itemBox.xMax);
-            cc.log("9999 yMin1=%f, yMin2=%f", this.itemBox.yMin, this.itemBox.xMin);
-
-            if(this.itemBox.xMin < this.skyBox.xMin || this.itemBox.xMax > this.skyBox.xMax || this.itemBox.yMin < this.skyBox.yMin) {
+            if(this.itemBox.xMax < this.skyBox.xMin || this.itemBox.xMin > this.skyBox.xMax || this.itemBox.yMin < this.skyBox.yMin) {
                 ret = true;
             } 
         }
@@ -270,9 +266,7 @@ cc.Class({
             var isOutRange = this.checkItemOutRange();
             var isThrowed = itemAction.isThrowed;
             var itemSpeed = this.item.getComponent(cc.RigidBody).linearVelocity.mag();
-            cc.log("9999 isOutRange=%s  isThrowed=%s", isOutRange.toString(), isThrowed.toString());
             if( isThrowed && (isOutRange ||itemSpeed == 0) ) {
-                cc.log("9999 item is out rang : %s", isOutRange.toString());
                 itemAction.setThrowed(false);
                 this.item = null;
                 this.itemBody = null;

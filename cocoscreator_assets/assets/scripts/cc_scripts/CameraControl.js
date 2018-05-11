@@ -185,12 +185,4 @@ cc.Class({
             this.limitRightX = self.node.x;
         }
     },
-
-    onCollisionStay: function (other, self) {
-       
-    },
-
-    onCollisionExit: function (other, self) {
-
-    }
 });

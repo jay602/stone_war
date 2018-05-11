@@ -58,8 +58,6 @@ cc.Class({
         
         this.testNode1 = cc.find("testNode1");
         this.sky = cc.find("World/sky_bg");
-        this.skyBox = this.sky.getBoundingBoxToWorld();
-        this.itemBox = this.node.getBoundingBoxToWorld();
 
         this.camera = cc.find("Camera").getComponent(cc.Camera);
         this.ctx = cc.find("worldDraw").getComponent(cc.Graphics);
@@ -75,7 +73,6 @@ cc.Class({
         this.isOutRange = false;
         this.touchPlayerCount = 0;
     },
-
 
     onCollisionEnter: function (other, self) {
         if(self.tag == 110 && other.node.name === this.player.name && this.playerControl.isEnable()) {
@@ -110,7 +107,6 @@ cc.Class({
             let avatarID = otherCollider.node.getComponent("AvatarAction").getEntityID();
             var player = KBEngine.app.findEntity(avatarID);
             
-           // cc.log("9090 item(%d) hit player(%d, %s)", this.itemID, avatarID, otherCollider.node.name);
             if(player == undefined || !player.inWorld)
                 return;
 
@@ -143,9 +139,6 @@ cc.Class({
             this.touchPlayerCount++;
             var linearVelocity = this.rigidBody.linearVelocity;
            
-           // cc.log("3333 ItemAction::onPreSolve touch player  count=%d", this.touchPlayerCount);
-           // cc.log("3333 item speed(%f, %f)", linearVelocity.x, linearVelocity.y);
-
             if(this.touchPlayerCount > 180 && !linearVelocity.equals(cc.Vec2.ZERO)) {
                 this.isThrowed = false;
                 this.touchPlayerCount = 0;
@@ -216,9 +209,21 @@ cc.Class({
         this.itemID = itemID;
     },
 
-    getPlayerDistance: function () {
-        var playerPos = this.player.getPosition();
-        var dist = cc.pDistance(this.node.getPosition(), playerPos);
-        return dist;
+    throw: function(impulse) {
+        var itemRigidbody = this.node.getComponent(cc.RigidBody);
+        itemRigidbody.gravityScale = 1;
+        var worldCenter = itemRigidbody.getWorldCenter();
+        itemRigidbody.applyLinearImpulse(impulse, worldCenter, true);
+
+        cc.log("AvatarActio::thowItem : force(%f, %f), worldCenter(%f, %f) pos(%f, %f)", impulse.x, impulse.y, worldCenter.x, worldCenter.y
+        , this.node.x, this.node.y);
+        
+        this.isThrowed = true;
     },
+
+    setZeroRigidBody: function() {
+        var itemRigidbody = this.node.getComponent(cc.RigidBody);;
+        itemRigidbody.gravityScale = 0;
+        itemRigidbody.linearVelocity = cc.v2(0, 0);
+    }
 });
