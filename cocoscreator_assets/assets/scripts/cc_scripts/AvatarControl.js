@@ -267,6 +267,7 @@ cc.Class({
             var isThrowed = itemAction.isThrowed;
             var itemSpeed = this.item.getComponent(cc.RigidBody).linearVelocity.mag();
             if( isThrowed && (isOutRange ||itemSpeed == 0) ) {
+                cc.log("new turn");
                 itemAction.setThrowed(false);
                 this.item = null;
                 this.itemBody = null;
