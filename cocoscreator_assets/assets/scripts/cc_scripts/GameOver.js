@@ -62,9 +62,4 @@ cc.Class({
         result.setPosition(0, 0);
     },
 
-    start () {
-
-    },
-
-    // update (dt) {},
 });

@@ -57,6 +57,10 @@ cc.Class({
         this.rigidBody = this.node.getComponent(cc.RigidBody);
         
         this.testNode1 = cc.find("testNode1");
+        this.sky = cc.find("World/sky_bg");
+        this.skyBox = this.sky.getBoundingBoxToWorld();
+        this.itemBox = this.node.getBoundingBoxToWorld();
+
         this.camera = cc.find("Camera").getComponent(cc.Camera);
         this.ctx = cc.find("worldDraw").getComponent(cc.Graphics);
 
@@ -68,11 +72,13 @@ cc.Class({
         this.canPicked = false;
         this.prePosition = null;
         this.isThrowed = false;
+        this.isOutRange = false;
         this.touchPlayerCount = 0;
     },
 
+
     onCollisionEnter: function (other, self) {
-        if(other.node.name === this.player.name && this.playerControl.isEnable()) {
+        if(self.tag == 110 && other.node.name === this.player.name && this.playerControl.isEnable()) {
             if(other.node.getComponent("AvatarAction").isDead())
                 return;
 
@@ -82,7 +88,7 @@ cc.Class({
     },
 
     onCollisionStay: function (other, self) {
-        if(other.node.name === this.player.name && this.playerControl.isEnable()) {
+        if(self.tag == 110 && other.node.name === this.player.name && this.playerControl.isEnable()) {
             if(other.node.getComponent("AvatarAction").isDead())
                 return;
 
@@ -92,7 +98,7 @@ cc.Class({
     },
 
     onCollisionExit: function (other, self) {
-        if(other.node.name === this.player.name && this.playerControl.isEnable()) {
+        if(self.tag == 110 && other.node.name === this.player.name && this.playerControl.isEnable()) {
             this.draw.clear();
             this.canPicked = false;
         }
@@ -100,7 +106,7 @@ cc.Class({
 
     // 只在两个碰撞体开始接触时被调用一次
     onBeginContact: function (contact, selfCollider, otherCollider) {
-        if( (otherCollider.node.name == "pipiPrefab" || otherCollider.node.name == "pop_player") && this.isThrowed) { //扣血
+        if( (otherCollider.node.name == PIPI_NAME || otherCollider.node.name == POP_NAME) && this.isThrowed) { //扣血
             let avatarID = otherCollider.node.getComponent("AvatarAction").getEntityID();
             var player = KBEngine.app.findEntity(avatarID);
             
@@ -112,6 +118,10 @@ cc.Class({
         }
 
         if( otherCollider.tag == 998 ) {
+            contact.disabled = true;
+        }
+
+        if( otherCollider.tag == 100 && this.isThrowed) {
             contact.disabled = true;
         }
     },
@@ -129,7 +139,7 @@ cc.Class({
 
     // 每次将要处理碰撞体接触逻辑时被调用
     onPreSolve: function (contact, selfCollider, otherCollider) {
-        if( (otherCollider.node.name == "pipiPrefab" || otherCollider.node.name == "popPrefab") && this.isThrowed) {
+        if( (otherCollider.node.name == PIPI_NAME || otherCollider.node.name == POP_NAME) && this.isThrowed) {
             this.touchPlayerCount++;
             var linearVelocity = this.rigidBody.linearVelocity;
            
@@ -142,7 +152,10 @@ cc.Class({
                 this.rigidBody.linearVelocity = cc.Vec2.ZERO;
                 this.rigidBody.gravityScale = 0;
             }
+        }
 
+        if( otherCollider.tag == 100 && this.isThrowed) {
+            contact.disabled = true;
         }
     },
 
@@ -151,7 +164,7 @@ cc.Class({
     },
 
     setThrowed: function(throwed) {
-        cc.log("3333 item is throwed");
+        cc.log("item is throwed");
         this.isThrowed = throwed;
         this.touchPlayerCount = 0;
     },
@@ -207,28 +220,5 @@ cc.Class({
         var playerPos = this.player.getPosition();
         var dist = cc.pDistance(this.node.getPosition(), playerPos);
         return dist;
-    },
-
-    update (dt) {
-        // var centerPoint = this.node.convertToWorldSpaceAR(cc.v2(0, 0));
-        // var worldPoint = this.worldNode.convertToWorldSpaceAR(cc.v2(0, 0));
-
-        // this.ctx.clear();
-
-        // this.ctx.circle(centerPoint.x, centerPoint.y, 30);
-        // this.ctx.fillColor = cc.Color.RED;
-        // this.ctx.fill();
-
-        // this.ctx.circle(worldPoint.x, worldPoint.y, 5);
-        // this.ctx.fillColor = cc.Color.GREEN;
-        // this.ctx.fill();
-
-        // this.ctx.stroke();
-
-        // this.draw.clear();
-        // if (this.getPlayerDistance() < this.pickRadius) {
-        //     cc.log("0000 Item:%s show red", this.node.name);
-        //    this.draw.drawPoly(this.collider.points, cc.color(200, 0, 0, 100), 1, cc.color(0, 0, 0, 125));
-        // }
     },
 });

@@ -457,8 +457,8 @@ cc.Class({
         
         var force = arrowWorldPoint.sub(pos);
         force.mulSelf(MULTIPLE);
-        if(force.y > 800) 
-            force.y = 800; 
+        // if(force.y > MAX_THROW_FORCE_Y) 
+        //    force.y = MAX_THROW_FORCE_Y; 
 
         if(this.gameState) {
             this.gameState.showForce(force);

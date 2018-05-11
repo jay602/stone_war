@@ -53,10 +53,16 @@ cc.Class({
     onLoad () {
         //cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyPressed, this);
         //cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP, this.onKeyReleased, this);
+
         this.canvas = cc.find("Canvas");
         this.createEventListener();
         this.camera = cc.find("Camera").getComponent(cc.Camera);
         this.cameraControl = cc.find("Camera").getComponent("CameraControl");
+
+        this.sky = cc.find("World/sky_bg");
+        this.skyBox = this.sky.getBoundingBoxToWorld();
+
+        this.itemBox = null;
     },
 
     enableEventListen: function() {
@@ -75,7 +81,6 @@ cc.Class({
 
 
     enableMouseEvent: function() {
-        //cc.log("AvatarControl::enableMouseEvent");
         this.canvas.on(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
         this.canvas.on(cc.Node.EventType.MOUSE_UP, this.starThrowItem, this);
         this.node.on(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
@@ -89,7 +94,6 @@ cc.Class({
     },
 
     disEnableMouseEvent: function() {
-       // cc.log("AvatarControl::disEnableMouseEvent");
         this.canvas.off(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
         this.canvas.off(cc.Node.EventType.MOUSE_UP, this.starThrowItem, this);
         this.node.off(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
@@ -216,6 +220,8 @@ cc.Class({
         }
         
         this.player.throw(v2);
+
+        
         this.itemBody = this.item.getComponent(cc.RigidBody);
         this.disEnableMouseEvent();
     },
@@ -230,6 +236,24 @@ cc.Class({
         this.enableMouseEvent();
     },
 
+    checkItemOutRange: function() {
+        var ret = false;
+        if(this.item) {
+            this.skyBox = this.sky.getBoundingBoxToWorld();
+            this.itemBox = this.item.getBoundingBoxToWorld();
+
+            cc.log("9999 xMin1=%f, xMin2=%f", this.itemBox.xMin, this.itemBox.xMin);
+            cc.log("9999 xMax1=%f, xMax2=%f", this.itemBox.xMax, this.itemBox.xMax);
+            cc.log("9999 yMin1=%f, yMin2=%f", this.itemBox.yMin, this.itemBox.xMin);
+
+            if(this.itemBox.xMin < this.skyBox.xMin || this.itemBox.xMax > this.skyBox.xMax || this.itemBox.yMin < this.skyBox.yMin) {
+                ret = true;
+            } 
+        }
+
+        return ret;
+    },
+
     update: function (dt) {
         var player = KBEngine.app.player();
         if(player == undefined || !player.inWorld)
@@ -240,15 +264,20 @@ cc.Class({
         player.position.z = this.node.y/SCALE;
         player.isOnGround = this.player.isOnGround;
         player.direction.z = this.player.node.scaleX;
-       
-        if( this.item && this.item.getPosition().y<-100 ||
-          this.itemBody && this.itemBody.linearVelocity.equals(cc.Vec2.ZERO)
-          ) {
-                this.item.getComponent("ItemAction").setThrowed(false);
+
+        if(this.item) {
+            var itemAction = this.item.getComponent("ItemAction");
+            var isOutRange = this.checkItemOutRange();
+            var isThrowed = itemAction.isThrowed;
+            var itemSpeed = this.item.getComponent(cc.RigidBody).linearVelocity.mag();
+            cc.log("9999 isOutRange=%s  isThrowed=%s", isOutRange.toString(), isThrowed.toString());
+            if( isThrowed && (isOutRange ||itemSpeed == 0) ) {
+                cc.log("9999 item is out rang : %s", isOutRange.toString());
+                itemAction.setThrowed(false);
                 this.item = null;
                 this.itemBody = null;
                 player.newTurn();
+            }
         }
-        
     },
 });
