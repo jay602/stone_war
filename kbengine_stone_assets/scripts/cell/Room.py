@@ -122,9 +122,9 @@ class Room(KBEngine.Entity):
 				self.gameOver()
 				return
 				
-		if self.newTurnTimer > 0:
-			self.delTimer(self.newTurnTimer)
-			self.newTurnTimer = 0
+		
+		self.delTimer(self.newTurnTimer)
+		self.newTurnTimer = 0
 
 		for eid, entity in self.avatars.items():
 			if self.curEid != eid:
@@ -138,9 +138,8 @@ class Room(KBEngine.Entity):
 
 	def killNewTurnTimer(self):
 		DEBUG_MSG('Room::killNewTurnTimer: newTurnTimer=%i' % (self.newTurnTimer))
-		if self.newTurnTimer > 0:
-			self.delTimer(self.newTurnTimer)
-			self.newTurnTimer = 0
+		self.delTimer(self.newTurnTimer)
+		self.newTurnTimer = 0
 
 	def findItemByID(self, itemID):
 		return self.items[itemID]

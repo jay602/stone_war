@@ -138,9 +138,10 @@ cc.Class({
         if( (otherCollider.node.name == PIPI_NAME || otherCollider.node.name == POP_NAME) && this.isThrowed) {
             this.touchPlayerCount++;
             var linearVelocity = this.rigidBody.linearVelocity;
-           
-            if(this.touchPlayerCount > 180 && !linearVelocity.equals(cc.Vec2.ZERO)) {
-                this.isThrowed = false;
+            
+            if(this.touchPlayerCount>100 && linearVelocity.mag()<= 8) {
+                cc.log("item touch player too much");
+                //this.isThrowed = false;
                 this.touchPlayerCount = 0;
                 this.rigidBody.linearVelocity = cc.Vec2.ZERO;
                 this.rigidBody.gravityScale = 0;
