@@ -65,10 +65,6 @@
 			<Arg>		ENTITY_ID	</Arg>
 		</onResetItem>
 
-		<setHp>
-			<Arg>		INT32		</Arg>
-		</setHp>
-
 		<onRecvDamage>
 			<Arg>		ENTITY_ID	</Arg>
 			<Arg>		INT32		</Arg>

@@ -406,11 +406,16 @@ cc.Class({
     },
 
     enableControlPlayer: function() {
-        this.player.getComponent("AvatarControl").enableEventListen();
+        if(this.player) {
+            this.player.getComponent("AvatarControl").enableEventListen();
+        }
+       
     },
 
     disEnableControlPlayer: function() {
-        this.player.getComponent("AvatarControl").disEnableEventListen();
-        this.player.getComponent("AvatarAction").reset();
+        if(this.player) {
+            this.player.getComponent("AvatarControl").disEnableEventListen();
+            this.player.getComponent("AvatarAction").reset();
+        }
     },
 });

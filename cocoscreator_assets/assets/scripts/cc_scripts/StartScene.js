@@ -69,7 +69,7 @@ cc.Class({
         var args = new KBEngine.KBEngineArgs();
 	
 	    // 设置登录ip地址
-	    args.ip = "127.0.0.1";
+	    args.ip = "192.168.0.106";
 	    args.port = 20013;
 	    KBEngine.create(args);
      },

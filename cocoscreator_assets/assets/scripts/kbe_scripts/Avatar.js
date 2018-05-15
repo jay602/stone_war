@@ -22,6 +22,7 @@ KBEngine.Avatar = KBEngine.Entity.extend(
             }		
         },
 
+
         startWalk: function()
         {
             cc.log("8989 avatar %d start walk, scaleX=%d", this.id);

@@ -2,7 +2,13 @@
   "appKey": "",
   "appSecret": "",
   "encryptJs": true,
-  "excludeScenes": [],
+  "excludeScenes": [
+    "5c0528e3-ecef-4313-b383-4a269d3bdf8a",
+    "226e2d0d-7345-4aae-9a30-471043c8e100",
+    "71d947c1-4e83-4c09-919e-7df22e152d06",
+    "e817ca9a-cc84-4452-8b91-2114e858467f"
+  ],
+  "fb-instant-games": {},
   "includeAnySDK": false,
   "includeSDKBox": false,
   "inlineSpriteFrames": true,
@@ -20,13 +26,19 @@
   },
   "packageName": "org.cocos2d.stone_demo",
   "privateKey": "",
+  "qqplay": {
+    "REMOTE_SERVER_ROOT": "",
+    "orientation": "portrait"
+  },
   "renderMode": "0",
   "startScene": "31875285-63b7-4d31-8073-d2e1919f1df4",
-  "title": "stone_demo",
+  "title": "stone_war",
   "webOrientation": "auto",
   "wechatgame": {
+    "REMOTE_SERVER_ROOT": "http://192.168.0.106:8080/stone_war/",
     "appid": "wx6ac3f5090a6b99c5",
-    "orientation": "portrait"
+    "isSubdomain": false,
+    "orientation": "landscape"
   },
   "xxteaKey": "f97f5c48-5bcf-45",
   "zipCompressJs": true
