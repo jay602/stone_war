@@ -132,23 +132,22 @@ cc.Class({
     },
 
     onDisconnected : function() {
-       cc.log("disconnect! will try to reconnect...");
+        KBEngine.INFO_MSG("disconnect! will try to reconnect...");
     },
     
     onReloginBaseappTimer : function(self) {
-       cc.log("will try to reconnect(" + this.reloginCount + ")...");
+        KBEngine.INFO_MSG("will try to reconnect(" + this.reloginCount + ")...");
     },
     
-    onReloginBaseappFailed : function(failedcode)
-    {
+    onReloginBaseappFailed : function(failedcode) {
         KBEngine.INFO_MSG("reogin is failed(断线重连失败), err=" + KBEngine.app.serverErr(failedcode));   
     },
         
     onReloginBaseappSuccessfully : function(){
-        cc.log("reogin is successfully!(断线重连成功!)");	
+        KBEngine.INFO_MSG("reogin is successfully!(断线重连成功!)");	
     },
         
-    onConnectionState : function(success){
+    onConnectionState : function(success) {
         if(!success) {
             KBEngine.ERROR_MSG("Connect(" + KBEngine.app.ip + ":" + KBEngine.app.port + ") is error! (连接错误)");
         }
@@ -207,7 +206,7 @@ cc.Class({
         
     },
 
-    onAvatarEnterWorld : function(rndUUID, eid, avatar){
+    onAvatarEnterWorld : function(rndUUID, eid, avatar) {
         var ret = this.player==null;
         console.log("player is null = %s", ret.toString());
         if(!this.player) {
@@ -241,7 +240,6 @@ cc.Class({
             this.entities[avatar.id] = this.player;
 
             this.gameState.setPlayerHP(avatar.HP);
-
         }
     },
 
@@ -258,8 +256,7 @@ cc.Class({
         action.onJump();
     },
 
-    updatePosition : function(entity)
-	{
+    updatePosition : function(entity) {
         // 服务器同步到实体的新位置，我们需要将实体平滑移动到指定坐标点
         if(entity.className == "Item")
             return;

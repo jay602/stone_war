@@ -113,12 +113,14 @@ cc.Class({
     onBeginContact: function (contact, selfCollider, otherCollider) {
         if( (otherCollider.node.name == PIPI_NAME || otherCollider.node.name == POP_NAME) && this.isThrowed) { //扣血
             let avatarID = otherCollider.node.getComponent("AvatarAction").getEntityID();
+            let hp = otherCollider.node.getComponent("AvatarAction").hpValue;
             var player = KBEngine.app.findEntity(avatarID);
             
             if(player == undefined || !player.inWorld)
                 return;
-
-            player.recvDamage(this.itemID);
+            if(hp > 0) {
+                player.recvDamage(this.itemID);
+            }
         }
 
         if( otherCollider.tag == 998 ) {

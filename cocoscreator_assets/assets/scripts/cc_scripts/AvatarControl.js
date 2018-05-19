@@ -10,7 +10,6 @@
 
 var KBEngine = require("kbengine");
 
-
 cc.Class({
     extends: cc.Component,
 
@@ -167,34 +166,34 @@ cc.Class({
 
     touchControlPlayer: function(point) {
         var angle =  Math.atan2(point.y, point.x) * (180/Math.PI); 
-        console.log("angle = %f", angle);
+       // KBEngine.INFO_MSG("angle = " + angle);
         //向右走
         if( (angle > -90 && angle < 0 || angle > 0 && angle < 30)  && this.player)  
         {  
-            console.log("right walk");
+           // KBEngine.INFO_MSG("right walk");
             this.player.rightWalk();
         } 
         else if( (angle < -90 && angle >= -180 || angle <= 180 && angle > 150) && this.player)  
         {
-            console.log("left walk");
+          //  KBEngine.INFO_MSG("left walk");
             this.player.leftWalk();
             
         }
         else if(angle >= 30 && angle <= 60 && this.player)  
         {
-            console.log("right walk");
+          //  KBEngine.INFO_MSG("right walk");
             this.player.rightWalk();
             this.player.jump();
         }
         else if(angle >= 120 && angle <= 150 && this.player)  
         {
-            console.log("left jump");
+           // KBEngine.INFO_MSG("left jump");
             this.player.leftWalk();
             this.player.jump();
         }
         else if(angle > 60 && angle < 120 && this.player)  
         {
-            console.log("jump");
+          //  KBEngine.INFO_MSG("jump");
             this.player.jump();
         }
     },
@@ -205,7 +204,7 @@ cc.Class({
         var touchPos = this.touchControl.convertToNodeSpaceAR(event.getLocation());
         var len = cc.pDistance(touchPos, cc.v2(0, 0));
 
-        console.log("onTouchBegan: pos(%f, %f) radius=%d", touchPos.x, touchPos.y, this.radius);
+      KBEngine.INFO_MSG("onTouchBegan: pos(" + touchPos.x + ", " + touchPos.y + "," + "  Radius = " + this.touchRadius);
         
         if(len < this.touchRadius) {
             var normal = touchPos.normalize();
@@ -221,7 +220,7 @@ cc.Class({
         var touchPos = this.touchControl.convertToNodeSpaceAR( event.getLocation());
         var len = cc.pDistance(touchPos, cc.v2(0, 0));
 
-        console.log("onTouchMoved: pos(%f, %f) radius=%s", touchPos.x, touchPos.y, this.radius);
+       // console.log("onTouchMoved: pos(%f, %f) radius=%s", touchPos.x, touchPos.y, this.touchRadius);
         
         if(len < this.touchRadius) {
             var normal = touchPos.normalize();
@@ -234,7 +233,7 @@ cc.Class({
     onTouchEnded: function(event) {
         if(!this.enableEvent) return;
 
-        console.log("onTouchEnded");
+       // console.log("onTouchEnded");
         this.stick.setPosition(cc.v2(0, 0));
         if(this.player) {
             this.player.stopWalk();

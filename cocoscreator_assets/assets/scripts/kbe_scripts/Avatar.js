@@ -21,7 +21,6 @@ KBEngine.Avatar = KBEngine.Entity.extend(
             if(this.isPlayer()) {
                 KBEngine.Event.fire("onAvatarEnterWorld", KBEngine.app.entity_uuid, this.id, this);
                 console.log("Fire onAvatarEnterWorld 111");
-                console.log(KBEngine.Event);
                 console.log("-----------------------");
             }		
         },
@@ -119,31 +118,30 @@ KBEngine.Avatar = KBEngine.Entity.extend(
 
         onResetItem: function(itemID)
         {
-            cc.log("other avater=%d reset item=%d", this.id, itemID);
             KBEngine.Event.fire("otherAvatarResetItem", this.id, itemID);
         },
 
         recvDamage: function(itemID)
         {
             this.cellCall("recvDamage", itemID);
-            cc.log("avatar id=%d recvDamage from item=%d", this.id, itemID);
+            KBEngine.INFO_MSG("avatar " + this.id + " recvDamage from item=" + itemID);
         },
 
         onRecvDamage: function(avatarID, harm, hp)
         {
-            cc.log("avatar %d recv harm=%d, hp=%d", avatarID, harm, hp);
+            KBEngine.INFO_MSG("avatar " + avatarID + " recv harm=" + harm + " hp=" + hp);
             KBEngine.Event.fire("onRecvDamage", avatarID, harm, hp);
         },
 
         onDie: function(avatarID)
         {
-            cc.log("avatar %d die", avatarID);
+            KBEngine.INFO_MSG("avatar " + avatarID + " die");
             KBEngine.Event.fire("onAvatarDie", avatarID);
         },
 
         onGameOver: function(isWin)
         {
-            cc.log("avatar %d win=%s", this.id, isWin.toString());
+            KBEngine.INFO_MSG("Game is over: avatar " + this.id + "win= " + isWin.toString());
             KBEngine.Event.fire("onGameOver", this.id, isWin);
         },
     });
