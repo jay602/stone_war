@@ -78,7 +78,10 @@ cc.Class({
        
         var self = this;
         cc.game.on(cc.game.EVENT_HIDE, function() {
-
+            var player = KBEngine.app.player();
+            if(player == undefined || !player.inWorld)
+                return;
+            player.leaveRoom();
         });
 
         cc.game.on(cc.game.EVENT_SHOW, function() {

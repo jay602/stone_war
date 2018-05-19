@@ -1497,9 +1497,7 @@
     "popPrefab": {
       "__uuid__": "bcd53629-e087-44df-95ac-f64afa4f886c"
     },
-    "joyStickPrefab": {
-      "__uuid__": "9b0ea829-3146-45e3-b443-f862e84d7923"
-    },
+    "joyStickPrefab": null,
     "camera": {
       "__id__": 29
     },
@@ -2932,7 +2930,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 360,
-      "height": 360
+      "height": 1100
     },
     "_rotationX": 0,
     "_rotationY": 0,
@@ -3112,9 +3110,7 @@
     "root": {
       "__id__": 64
     },
-    "asset": {
-      "__uuid__": "9b0ea829-3146-45e3-b443-f862e84d7923"
-    },
+    "asset": null,
     "fileId": "76AkGdNkdMiK+EFYRlBmK9",
     "sync": false
   },
@@ -3149,9 +3145,7 @@
     "root": {
       "__id__": 64
     },
-    "asset": {
-      "__uuid__": "9b0ea829-3146-45e3-b443-f862e84d7923"
-    },
+    "asset": null,
     "fileId": "c9qetuSV9E0pVfDYc6XqmX",
     "sync": false
   },
@@ -3160,9 +3154,7 @@
     "root": {
       "__id__": 64
     },
-    "asset": {
-      "__uuid__": "9b0ea829-3146-45e3-b443-f862e84d7923"
-    },
+    "asset": null,
     "fileId": "5684rLD5pMkqAcGttWFctO",
     "sync": false
   }

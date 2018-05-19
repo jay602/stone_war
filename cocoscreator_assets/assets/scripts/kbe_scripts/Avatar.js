@@ -144,6 +144,7 @@ KBEngine.Avatar = KBEngine.Entity.extend(
             KBEngine.INFO_MSG("Game is over: avatar " + this.id + "win= " + isWin.toString());
             KBEngine.Event.fire("onGameOver", this.id, isWin);
         },
+
     });
     
     

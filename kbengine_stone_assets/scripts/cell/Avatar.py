@@ -158,3 +158,6 @@ class Avatar(KBEngine.Entity, EntityCommon):
 
 	def isDead(self):
 		return self.HP <= 0
+
+	def leaveRoom(self, exposed):
+		pass

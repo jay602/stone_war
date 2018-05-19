@@ -346,7 +346,6 @@ cc.Class({
 
         if(canStop) {
             var pos = this.node.getPosition();
-            cc.log("4567 avatar %s stop walk, last position(%f, %f)", this.node.name, pos.x, pos.y);
             var player = KBEngine.app.player();
             if(player != undefined && player.inWorld) {
                 player.stopWalk(pos);

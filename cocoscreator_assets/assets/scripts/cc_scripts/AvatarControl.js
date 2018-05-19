@@ -55,6 +55,7 @@ cc.Class({
         this.touchControl = cc.find("touchControl");
         this.pickTouchRange = cc.find("touchRange");
         this.stickBg = this.touchControl.getChildByName("joyStickBg");
+        this.oriStickPos = this.stickBg.position;
         this.stick = this.stickBg.getChildByName("joyStick");
         this.touchRadius = this.touchControl.getBoundingBoxToWorld().width/2;
         this.stickBgRadius = this.stickBg.getBoundingBoxToWorld().width/2;
@@ -77,6 +78,7 @@ cc.Class({
         this.touchControl.on(cc.Node.EventType.TOUCH_START, this.onTouchBegan, this);
         this.touchControl.on(cc.Node.EventType.TOUCH_MOVE, this.onTouchMoved, this);
         this.touchControl.on(cc.Node.EventType.TOUCH_END, this.onTouchEnded, this);
+        this.touchControl.on(cc.Node.EventType.TOUCH_CANCEL, this.onTouchEnded, this);
 
         this.pickTouchRange.on(cc.Node.EventType.TOUCH_START, this.touchPickIem, this);
         this.pickTouchRange.on(cc.Node.EventType.TOUCH_MOVE, this.touchAdjustThrow, this);
@@ -204,21 +206,18 @@ cc.Class({
         var touchPos = this.touchControl.convertToNodeSpaceAR(event.getLocation());
         var len = cc.pDistance(touchPos, cc.v2(0, 0));
 
-      KBEngine.INFO_MSG("onTouchBegan: pos(" + touchPos.x + ", " + touchPos.y + "," + "  Radius = " + this.touchRadius);
+       KBEngine.INFO_MSG("onTouchBegan: pos(" + touchPos.x + ", " + touchPos.y + "," + "  Radius = " + this.touchRadius);
         
         if(len < this.touchRadius) {
-            var normal = touchPos.normalize();
-            var point = normal.mul(this.stickBgRadius);
-            this.stick.setPosition(point);
-            this.touchControlPlayer(point);
+            this.stickBg.setPosition(touchPos);
         }
     } ,
 
     onTouchMoved: function(event) {
         if(!this.enableEvent) return;
 
-        var touchPos = this.touchControl.convertToNodeSpaceAR( event.getLocation());
-        var len = cc.pDistance(touchPos, cc.v2(0, 0));
+        var touchPos = this.stickBg.convertToNodeSpaceAR( event.getLocation());
+        var len = cc.pDistance(touchPos, this.stickBg.position);
 
        // console.log("onTouchMoved: pos(%f, %f) radius=%s", touchPos.x, touchPos.y, this.touchRadius);
         
@@ -234,7 +233,8 @@ cc.Class({
         if(!this.enableEvent) return;
 
        // console.log("onTouchEnded");
-        this.stick.setPosition(cc.v2(0, 0));
+        this.stickBg.setPosition(this.oriStickPos);
+        this.stick.setPosition(0, 0);
         if(this.player) {
             this.player.stopWalk();
         }
