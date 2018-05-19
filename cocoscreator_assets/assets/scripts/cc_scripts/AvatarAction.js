@@ -145,6 +145,20 @@ cc.Class({
         this.itemID = 0;
         this.hpValue = 100;
         this.itemPoint = null;
+        this.items = [];
+    },
+
+    addItem: function(item){
+        this.items.push(item);
+    },
+
+    removeItem: function(item){
+        for(var i = 0; i < this.items.length; i++) {
+            if(item.name == this.items[i].name) {
+                this.items.splice(i, 1);
+                break;
+            }
+        }
     },
 
     setAccountName: function(name) {
@@ -317,7 +331,7 @@ cc.Class({
         if(!this.jumping && this.moveFlag!=STATIC) {
             cc.log("stop stalk");
             this.moveFlag = STATIC;
-            if(this.anim){
+            if(this.anim) {
                 this.anim.stopPlayAnim();
                 this.anim.playIdleAnim();
             }
@@ -407,17 +421,19 @@ cc.Class({
 
     pickUpItem: function(item, itemID, pickPos) {
         cc.log("player start pick up item ....");
-        this.hasPickUpItem = true;
-        this.item = item;
-        this.itemID = itemID;
+        if(!this.item) {
+            this.hasPickUpItem = true;
+            this.item = item;
+            this.itemID = itemID;
 
-        var player = KBEngine.app.player();
-        if(player != undefined && player.inWorld) {
-            player.pickUpItem(itemID, this.getItemPoint());
+            var player = KBEngine.app.player();
+            if(player != undefined && player.inWorld) {
+                player.pickUpItem(itemID, this.getItemPoint());
+            }
+
+            this.setPlaceItem(item, this.getItemPoint());
+            this.adjustArrowDir(pickPos);
         }
-
-        this.setPlaceItem(item, this.getItemPoint());
-        this.adjustArrowDir(pickPos);
     },
 
     adjustArrowDir: function(pos) {
@@ -491,6 +507,25 @@ cc.Class({
 
     throwItem: function(item, impulse) {
         item.getComponent("ItemAction").throw(impulse);
+    },
+
+    touchPickItem: function(touchPos) {
+        var minDistance = 0.0;
+        var item = null;
+        for(var i = 0; i < this.items.length; i++) {
+            var distance = cc.pDistance(this.items[i].position, this.node.position);
+            if(distance > minDistance) {
+                minDistance = distance;
+                item = this.items[i];
+            } 
+        }
+
+        if(item) {
+            var itemId = item.getComponent("ItemAction").itemID;
+            this.pickUpItem(item, itemId, touchPos);
+        }
+
+        return item;
     },
 
     onStartMove: function(position) {

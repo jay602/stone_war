@@ -40,29 +40,48 @@ cc.Class({
             type: cc.Node,
         },
 
-        itemBody: {
-            default: null,
-            type: cc.RigidBody,
-        },
-
         itemID : 0,
 
         enableEvent: false,
     },
 
     onLoad () {
-        //cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyPressed, this);
-        //cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP, this.onKeyReleased, this);
-
         this.canvas = cc.find("Canvas");
-        this.createEventListener();
         this.camera = cc.find("Camera").getComponent(cc.Camera);
         this.cameraControl = cc.find("Camera").getComponent("CameraControl");
 
         this.sky = cc.find("World/sky_bg");
         this.skyBox = this.sky.getBoundingBoxToWorld();
 
+        this.touchControl = cc.find("touchControl");
+        this.pickTouchRange = cc.find("touchRange");
+        this.stickBg = this.touchControl.getChildByName("joyStickBg");
+        this.stick = this.stickBg.getChildByName("joyStick");
+        this.touchRadius = this.touchControl.getBoundingBoxToWorld().width/2;
+        this.stickBgRadius = this.stickBg.getBoundingBoxToWorld().width/2;
+
         this.itemBox = null;
+
+       
+        if(cc.sys.isMobile) {
+            this.touchControl.active = true;
+            this.pickTouchRange.active = true;
+            this.createTouchEvent();
+        } else {
+            this.touchControl.active = false;
+            this.pickTouchRange = false;
+            this.createEventListener();
+        }
+    },
+
+    createTouchEvent: function() {
+        this.touchControl.on(cc.Node.EventType.TOUCH_START, this.onTouchBegan, this);
+        this.touchControl.on(cc.Node.EventType.TOUCH_MOVE, this.onTouchMoved, this);
+        this.touchControl.on(cc.Node.EventType.TOUCH_END, this.onTouchEnded, this);
+
+        this.pickTouchRange.on(cc.Node.EventType.TOUCH_START, this.touchPickIem, this);
+        this.pickTouchRange.on(cc.Node.EventType.TOUCH_MOVE, this.touchAdjustThrow, this);
+        this.pickTouchRange.on(cc.Node.EventType.TOUCH_END, this.touchStartThrow, this);
     },
 
     enableEventListen: function() {
@@ -79,7 +98,6 @@ cc.Class({
         return this.enableEvent;
     },
 
-
     enableMouseEvent: function() {
         this.canvas.on(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
         this.canvas.on(cc.Node.EventType.MOUSE_UP, this.starThrowItem, this);
@@ -87,7 +105,6 @@ cc.Class({
         this.node.on(cc.Node.EventType.MOUSE_UP , this.starThrowItem, this);
 
         if(this.item) {
-            this.item.on(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
             this.item.on(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
             this.item.on(cc.Node.EventType.MOUSE_UP , this.starThrowItem, this);
         }
@@ -100,7 +117,6 @@ cc.Class({
         this.node.off(cc.Node.EventType.MOUSE_UP , this.starThrowItem, this);
 
         if(this.item) {
-            this.item.off(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
             this.item.off(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
             this.item.off(cc.Node.EventType.MOUSE_UP , this.starThrowItem, this);
         }
@@ -143,54 +159,111 @@ cc.Class({
         cc.eventManager.addListener(keyBoardListener, 1);
     },
 
-    onKeyPressed: function (keyCode, event) {
-        if(!this.enableEvent) return;
-       // cc.log("789 press key: ", keyCode);
-        switch(keyCode) {
-            case cc.KEY.a:
-            case cc.KEY.left:
-                if(this.player) {
-                    this.player.leftWalk();
-                }
-                break;
-            case cc.KEY.d:
-            case cc.KEY.right:
-                if(this.player) {
-                    this.player.rightWalk();
-                }
-                break;
-            case cc.KEY.w:
-            case cc.KEY.up:
-                if(this.player) {
-                    this.player.jump();
-                }
-                break;
-        }
-    },
-    
-    onKeyReleased: function (keyCode, event) {
-        if(!this.enableEvent) return;
-       // cc.log("release key: ", keyCode);
-        switch(keyCode) {
-            case cc.KEY.a:
-            case cc.KEY.left:
-                if(this.player){
-                    this.player.stopWalk();
-                }
-                
-                break;
-            case cc.KEY.d:
-            case cc.KEY.right:
-                if(this.player) {
-                    this.player.stopWalk();
-                }
-                break;
-        }
-    },
-
     setPlayer: function(player) {
         if(player) {
             this.player = player.getComponent("AvatarAction");
+        }
+    },
+
+    touchControlPlayer: function(point) {
+        var angle =  Math.atan2(point.y, point.x) * (180/Math.PI); 
+        console.log("angle = %f", angle);
+        //向右走
+        if( (angle > -90 && angle < 0 || angle > 0 && angle < 30)  && this.player)  
+        {  
+            console.log("right walk");
+            this.player.rightWalk();
+        } 
+        else if( (angle < -90 && angle >= -180 || angle <= 180 && angle > 150) && this.player)  
+        {
+            console.log("left walk");
+            this.player.leftWalk();
+            
+        }
+        else if(angle >= 30 && angle <= 60 && this.player)  
+        {
+            console.log("right walk");
+            this.player.rightWalk();
+            this.player.jump();
+        }
+        else if(angle >= 120 && angle <= 150 && this.player)  
+        {
+            console.log("left jump");
+            this.player.leftWalk();
+            this.player.jump();
+        }
+        else if(angle > 60 && angle < 120 && this.player)  
+        {
+            console.log("jump");
+            this.player.jump();
+        }
+    },
+
+    onTouchBegan: function(event) {
+        if(!this.enableEvent) return;
+        
+        var touchPos = this.touchControl.convertToNodeSpaceAR(event.getLocation());
+        var len = cc.pDistance(touchPos, cc.v2(0, 0));
+
+        console.log("onTouchBegan: pos(%f, %f) radius=%d", touchPos.x, touchPos.y, this.radius);
+        
+        if(len < this.touchRadius) {
+            var normal = touchPos.normalize();
+            var point = normal.mul(this.stickBgRadius);
+            this.stick.setPosition(point);
+            this.touchControlPlayer(point);
+        }
+    } ,
+
+    onTouchMoved: function(event) {
+        if(!this.enableEvent) return;
+
+        var touchPos = this.touchControl.convertToNodeSpaceAR( event.getLocation());
+        var len = cc.pDistance(touchPos, cc.v2(0, 0));
+
+        console.log("onTouchMoved: pos(%f, %f) radius=%s", touchPos.x, touchPos.y, this.radius);
+        
+        if(len < this.touchRadius) {
+            var normal = touchPos.normalize();
+            var point = normal.mul(this.stickBgRadius);
+            this.stick.setPosition(point);
+            this.touchControlPlayer(point);
+        }
+    } ,
+
+    onTouchEnded: function(event) {
+        if(!this.enableEvent) return;
+
+        console.log("onTouchEnded");
+        this.stick.setPosition(cc.v2(0, 0));
+        if(this.player) {
+            this.player.stopWalk();
+        }
+    } ,
+
+    touchPickIem: function(event) {
+        if(!this.enableEvent) return;
+
+        if(this.player) {
+            var item = this.player.touchPickItem(event.getLocation());
+            if(item)  this.item = item;
+        }
+    },
+
+    touchAdjustThrow: function(event) {
+        if(!this.enableEvent) return;
+
+        if(this.player) {
+            this.player.adjustThrow(event.getLocation());
+        }
+    },
+    
+    touchStartThrow: function(event) {
+        if(!this.enableEvent) return;
+
+        if(this.player) {
+            if(this.item) this.cameraControl.setTarget(this.item);
+            this.player.throw(event.getLocation());
         }
     },
 
@@ -198,11 +271,8 @@ cc.Class({
         if(!this.enableEvent) return;
 
         var pos = this.camera.getCameraToWorldPoint(event.getLocation());
-        var v2 = new cc.Vec2();
-        v2.x = pos.x;
-        v2.y = pos.y;
-
-        this.player.adjustThrow(v2);
+        var point = new cc.Vec2(pos.x, pos.y);
+        this.player.adjustThrow(point);
     },
 
     starThrowItem: function(event) {
@@ -210,20 +280,18 @@ cc.Class({
 
         cc.log("player start throw item");
         var pos = this.camera.getCameraToWorldPoint(event.getLocation());
-        var v2 = new cc.Vec2();
-        v2.x = pos.x;
-        v2.y = pos.y;
-
+        var point = new cc.Vec2(pos.x, pos.y);
+       
         if(this.item) {
             cc.log("carama settarget item");
             this.cameraControl.setTarget(this.item);
         }
         
-        this.player.throw(v2);
+        this.player.throw(point);
 
-        
-        this.itemBody = this.item.getComponent(cc.RigidBody);
-        this.disEnableMouseEvent();
+        if(!cc.sys.isMobile) {
+            this.disEnableMouseEvent();
+        }
     },
 
     pickUpItem: function(item, itemID, pickPos) {
@@ -233,7 +301,9 @@ cc.Class({
         this.player.pickUpItem(item, itemID, pickPos);
         this.item = item;
        
-        this.enableMouseEvent();
+        if(!cc.sys.isMobile) {
+            this.enableMouseEvent();
+        }
     },
 
     checkItemOutRange: function() {
@@ -270,7 +340,6 @@ cc.Class({
                 cc.log("new turn");
                 itemAction.setThrowed(false);
                 this.item = null;
-                this.itemBody = null;
                 player.newTurn();
             }
         }

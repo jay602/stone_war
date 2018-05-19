@@ -16,9 +16,13 @@ KBEngine.Avatar = KBEngine.Entity.extend(
                    
         onEnterWorld : function()
         {
+            console.log("Fire onEnterWorld");
             this._super();
             if(this.isPlayer()) {
                 KBEngine.Event.fire("onAvatarEnterWorld", KBEngine.app.entity_uuid, this.id, this);
+                console.log("Fire onAvatarEnterWorld 111");
+                console.log(KBEngine.Event);
+                console.log("-----------------------");
             }		
         },
 
@@ -31,13 +35,13 @@ KBEngine.Avatar = KBEngine.Entity.extend(
 
         onStartWalk: function()
         {
-            cc.log("8989 other avatar %d start walk, scaleX=%d", this.id);
+            cc.log("other avatar %d start walk, scaleX=%d", this.id);
             KBEngine.Event.fire("otherAvatarOnStartWalk", this.id);
         },
 
         stopWalk: function(pos)
         {
-            cc.log("8989 avatar %d stop walk, pos(%f, %f)", this.id, pos.x, pos.y);   
+            cc.log("avatar %d stop walk, pos(%f, %f)", this.id, pos.x, pos.y);   
             var vec3 = new KBEngine.Vector3();
             vec3.x = pos.x;
             vec3.y = pos.y;
@@ -50,7 +54,7 @@ KBEngine.Avatar = KBEngine.Entity.extend(
             var v2 = new cc.Vec2();
             v2.x = pos.x;
             v2.y = pos.y;
-            cc.log("8989 other avatar %d stop walk, pos(%f, %f)", this.id, v2.x, v2.y);   
+            cc.log("other avatar %d stop walk, pos(%f, %f)", this.id, v2.x, v2.y);   
             KBEngine.Event.fire("otherAvatarOnStopWalk", this.id, v2);
         },
 
@@ -68,10 +72,9 @@ KBEngine.Avatar = KBEngine.Entity.extend(
 
         onPickUpItem : function(itemID, positon)
         {
-            var v2 = new cc.Vec2();
-            v2.x = positon.x;
-            v2.y = positon.y;
-            KBEngine.Event.fire("otherAvatarOnPickUpItem", this.id, itemID, v2);
+            var point = new cc.Vec2(positon.x, positon.y);
+            KBEngine.Event.fire("otherAvatarOnPickUpItem", this.id, itemID, point);
+            console.warn("otherAvatarOnPickUpItem  " + itemID);
         },
 
         pickUpItem : function(itemID, pos)
@@ -80,9 +83,10 @@ KBEngine.Avatar = KBEngine.Entity.extend(
             vec3.x = pos.x;
             vec3.y = pos.y;
             vec3.z = 0.0;
-		    this.cellCall("pickUpItem", itemID, vec3);
+            this.cellCall("pickUpItem", itemID, vec3);
+            console.warn("cellCall: avatar pick item = %d pos(%f, %f)", itemID, pos.x, pos.y);
         }, 
-          
+                    
         throwItem : function(itemID, force)
         {
             var vec3 = new KBEngine.Vector3();
@@ -94,9 +98,7 @@ KBEngine.Avatar = KBEngine.Entity.extend(
          
         onThrowItem : function(itemID, force)
         {
-            var v2 = new cc.Vec2();
-            v2.x = force.x;
-            v2.y = force.y;
+            var v2 = new cc.Vec2(force.x, force.y);
 		    KBEngine.Event.fire("otherAvatarThrowItem", this.id, itemID, v2);
         },
 
@@ -124,7 +126,7 @@ KBEngine.Avatar = KBEngine.Entity.extend(
         recvDamage: function(itemID)
         {
             this.cellCall("recvDamage", itemID);
-            cc.log(" 9090 avatar id=%d recvDamage from item=%d", this.id, itemID);
+            cc.log("avatar id=%d recvDamage from item=%d", this.id, itemID);
         },
 
         onRecvDamage: function(avatarID, harm, hp)

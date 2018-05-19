@@ -76,7 +76,6 @@ class Avatar(KBEngine.Entity, EntityCommon):
 
 	def throwItem(self, exposed, itemID, force):
 		DEBUG_MSG("avavtar %i throw item=%d, force, selfID=%i" % (exposed, itemID, self.id))
-		DEBUG_MSG(force)
 		if exposed != self.id:
 			return
 

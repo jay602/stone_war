@@ -51,8 +51,8 @@ cc.Class({
        this.forceLayout =  cc.find("forceLayout");
        this.forceLayout.active = false;
 
-       this.hpLayout =  cc.find("hpLayout");
-       this.hpLayout.active = false;
+    //    this.hpLayout =  cc.find("hpLayout");
+    //    this.hpLayout.active = false;
     },
 
     isGameStart: function() {
@@ -97,7 +97,7 @@ cc.Class({
     },
 
     setPlayerHP: function(hp) {
-        this.hpLayout.active = true;
+      //  this.hpLayout.active = true;
         if(this.HP) {
             if(hp<0) hp = 0;
             this.HP.string = hp

@@ -62,8 +62,12 @@ cc.Class({
         this.camera = cc.find("Camera").getComponent(cc.Camera);
         this.ctx = cc.find("worldDraw").getComponent(cc.Graphics);
 
-        this.node.on(cc.Node.EventType.MOUSE_DOWN, this.pickUped, this);
-
+        if(cc.sys.isMobile) {
+            this.node.on(cc.Node.EventType.TOUCH_START, this.pickUped, this);
+        }else {
+            this.node.on(cc.Node.EventType.MOUSE_DOWN, this.pickUped, this);
+        }
+       
         this.draw = new cc.DrawNode();
         this.node._sgNode.addChild(this.draw);
 
@@ -75,29 +79,33 @@ cc.Class({
     },
 
     onCollisionEnter: function (other, self) {
-        if(self.tag == 110 && other.node.name === this.player.name && this.playerControl.isEnable()) {
+        if(self.tag == 110 && this.player &&other.node.name === this.player.name && this.playerControl &&this.playerControl.isEnable()) {
             if(other.node.getComponent("AvatarAction").isDead())
                 return;
 
             this.draw.drawPoly(this.chainCollider.points, cc.color(100, 0, 0, 50), 1, cc.color(0, 0, 0, 125));
             this.canPicked = true;
+            other.node.getComponent("AvatarAction").addItem(self.node);
         }
     },
 
     onCollisionStay: function (other, self) {
-        if(self.tag == 110 && other.node.name === this.player.name && this.playerControl.isEnable()) {
+        if(self.tag == 110 && this.player &&other.node.name === this.player.name && this.playerControl &&this.playerControl.isEnable()) {
             if(other.node.getComponent("AvatarAction").isDead())
                 return;
 
             this.draw.drawPoly(this.chainCollider.points, cc.color(100, 0, 0, 50), 1, cc.color(0, 0, 0, 125));
             this.canPicked = true;
+
+            other.node.getComponent("AvatarAction").addItem(self.node);
         }
     },
 
     onCollisionExit: function (other, self) {
-        if(self.tag == 110 && other.node.name === this.player.name && this.playerControl.isEnable()) {
+        if(self.tag == 110 && this.player &&other.node.name === this.player.name && this.playerControl &&this.playerControl.isEnable()) {
             this.draw.clear();
             this.canPicked = false;
+            other.node.getComponent("AvatarAction").removeItem(self.node);
         }
     },
 
@@ -120,10 +128,6 @@ cc.Class({
         if( otherCollider.tag == 100 && this.isThrowed) {
             contact.disabled = true;
         }
-    },
-
-    // 只在两个碰撞体结束接触时被调用一次
-    onEndContact: function (contact, selfCollider, otherCollider) {
     },
 
     // 每次处理完碰撞体接触逻辑时被调用
@@ -181,21 +185,14 @@ cc.Class({
     },
 
     pickUped: function(event) {
-        var pickPos = event.getLocation();
-        
-        pickPos = this.camera.getCameraToWorldPoint(pickPos);
-
+        var pickPos = this.camera.getCameraToWorldPoint( event.getLocation());
         var isHited = cc.Intersection.pointInPolygon(pickPos, this.polyCollider.world.points);
-        if(event.getButton() === cc.Event.EventMouse.BUTTON_LEFT && this.canPicked && isHited) {
+        var ret = cc.sys.isMobile ? true : (event.getButton() === cc.Event.EventMouse.BUTTON_LEFT);
+
+        if(ret && this.canPicked && isHited && this.player) {
             cc.log("pick up Item %s ", this.node.name);
-            if(this.player) {
-                var v2 = new cc.Vec2();
-                v2.x = pickPos.x;
-                v2.y = pickPos.y;
-                this.player.getComponent("AvatarControl").pickUpItem(this.node, this.itemID, v2);
-            }
-        }else {
-            cc.log("not hit Item %s ", this.node.name);
+            var point = new cc.Vec2(pickPos.x,  pickPos.y);
+            this.player.getComponent("AvatarControl").pickUpItem(this.node, this.itemID, point);
         }
     },
 

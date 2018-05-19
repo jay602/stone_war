@@ -2820,7 +2820,7 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 			</onRemoveAvatar>				
 		*/
 		if(valname.length == 0)
-			length = "Null_" + utype;
+			valname = "Null_" + utype;
 			
 		if(canprint)
 			KBEngine.INFO_MSG("KBEngineApp::Client_onImportClientEntityDef: importAlias(" + name + ":" + valname + ")!");
@@ -4450,6 +4450,7 @@ KBEngine.create = function(kbengineArgs)
 	if(KBEngine.app != undefined)
 		return;
 
+	// 一些平台如小程序上可能没有assert
 	if(console.assert == undefined)
 	{
 		console.assert = function(bRet, s)

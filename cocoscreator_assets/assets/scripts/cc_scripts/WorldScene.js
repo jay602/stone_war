@@ -37,6 +37,11 @@ cc.Class({
             type: cc.Prefab,
         },
 
+        joyStickPrefab: {
+            default: null,
+            type: cc.Prefab,
+        },
+
         camera: {
             default: null,
             type: cc.Camera,
@@ -65,11 +70,20 @@ cc.Class({
         this.cameraControl = this.camera.getComponent("CameraControl");
 
         this.enablePhysicManager();
-        //this.enablePhysicsDebugDraw();
+       // this.enablePhysicsDebugDraw();
         this.installEvents();
         this.items = new Array();
 
         this.gameState = this.node.getComponent("GameState");
+       
+        var self = this;
+        cc.game.on(cc.game.EVENT_HIDE, function() {
+
+        });
+
+        cc.game.on(cc.game.EVENT_SHOW, function() {
+
+        });
     },
 
     enablePhysicManager: function () {
@@ -194,6 +208,8 @@ cc.Class({
     },
 
     onAvatarEnterWorld : function(rndUUID, eid, avatar){
+        var ret = this.player==null;
+        console.log("player is null = %s", ret.toString());
         if(!this.player) {
             cc.log("player id=%d name=%s onAvatarEnterWorld", avatar.id, avatar.accountName);
             if(avatar.modelID == 0) {
@@ -206,7 +222,7 @@ cc.Class({
             var action= this.player.addComponent("AvatarAction");
             var anim= this.player.addComponent("AvatarAnim");
            
-              //注意顺序： anim ---> action --->ctrl
+            //注意顺序： anim ---> action --->ctrl
             anim.setModelID(avatar.modelID);
             anim.setAnim(this.player.getComponent(cc.Animation));
 
@@ -225,6 +241,7 @@ cc.Class({
             this.entities[avatar.id] = this.player;
 
             this.gameState.setPlayerHP(avatar.HP);
+
         }
     },
 
@@ -403,13 +420,13 @@ cc.Class({
         }
 
         this.disEnableControlPlayer();
+        this.player = null;
     },
 
     enableControlPlayer: function() {
         if(this.player) {
             this.player.getComponent("AvatarControl").enableEventListen();
         }
-       
     },
 
     disEnableControlPlayer: function() {

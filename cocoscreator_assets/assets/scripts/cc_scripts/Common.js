@@ -29,6 +29,8 @@ window.PIPI_NAME = "pipiPrefab";
 window.POP_NAME = "pop_player";
 window.TAG_ITEM_CHECK_PLAYER_NEAR = 110;
 window.MAX_THROW_FORCE_Y = 1000;
+window.JOY_STICK_POSITION_X = 120;
+window.JOY_STICK_POSITION_Y = 120;
 
 
 
