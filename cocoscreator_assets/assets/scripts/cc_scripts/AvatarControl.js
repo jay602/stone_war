@@ -52,6 +52,8 @@ cc.Class({
         this.sky = cc.find("World/sky_bg");
         this.skyBox = this.sky.getBoundingBoxToWorld();
 
+        this.ctx = cc.find("worldDraw").getComponent(cc.Graphics);
+
         this.touchControl = cc.find("touchControl");
         this.pickTouchRange = cc.find("touchRange");
         this.stickBg = this.touchControl.getChildByName("joyStickBg");
@@ -61,7 +63,6 @@ cc.Class({
         this.stickBgRadius = this.stickBg.getBoundingBoxToWorld().width/2;
 
         this.itemBox = null;
-
        
         if(cc.sys.isMobile) {
             this.touchControl.active = true;
@@ -83,6 +84,7 @@ cc.Class({
         this.pickTouchRange.on(cc.Node.EventType.TOUCH_START, this.touchPickIem, this);
         this.pickTouchRange.on(cc.Node.EventType.TOUCH_MOVE, this.touchAdjustThrow, this);
         this.pickTouchRange.on(cc.Node.EventType.TOUCH_END, this.touchStartThrow, this);
+        this.pickTouchRange.on(cc.Node.EventType.TOUCH_CANCEL, this.touchStartThrow, this);
     },
 
     enableEventListen: function() {
@@ -100,9 +102,9 @@ cc.Class({
     },
 
     enableMouseEvent: function() {
-        this.canvas.on(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
+        this.canvas.on(cc.Node.EventType.MOUSE_MOVE, this.mouseAdjustThrow, this);
         this.canvas.on(cc.Node.EventType.MOUSE_UP, this.starThrowItem, this);
-        this.node.on(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
+        this.node.on(cc.Node.EventType.MOUSE_MOVE, this.mouseAdjustThrow, this);
         this.node.on(cc.Node.EventType.MOUSE_UP , this.starThrowItem, this);
 
         if(this.item) {
@@ -112,9 +114,9 @@ cc.Class({
     },
 
     disEnableMouseEvent: function() {
-        this.canvas.off(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
+        this.canvas.off(cc.Node.EventType.MOUSE_MOVE, this.mouseAdjustThrow, this);
         this.canvas.off(cc.Node.EventType.MOUSE_UP, this.starThrowItem, this);
-        this.node.off(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
+        this.node.off(cc.Node.EventType.MOUSE_MOVE, this.mouseAdjustThrow, this);
         this.node.off(cc.Node.EventType.MOUSE_UP , this.starThrowItem, this);
 
         if(this.item) {
@@ -207,10 +209,8 @@ cc.Class({
         var len = cc.pDistance(touchPos, cc.v2(0, 0));
 
        KBEngine.INFO_MSG("onTouchBegan: pos(" + touchPos.x + ", " + touchPos.y + "," + "  Radius = " + this.touchRadius);
-        
-        if(len < this.touchRadius) {
-            this.stickBg.setPosition(touchPos);
-        }
+      
+        this.stickBg.setPosition(touchPos);
     } ,
 
     onTouchMoved: function(event) {
@@ -221,12 +221,11 @@ cc.Class({
 
        // console.log("onTouchMoved: pos(%f, %f) radius=%s", touchPos.x, touchPos.y, this.touchRadius);
         
-        if(len < this.touchRadius) {
-            var normal = touchPos.normalize();
-            var point = normal.mul(this.stickBgRadius);
-            this.stick.setPosition(point);
-            this.touchControlPlayer(point);
-        }
+        var normal = touchPos.normalize();
+        var point = normal.mul(this.stickBgRadius);
+        this.stick.setPosition(point);
+        this.touchControlPlayer(point);
+        
     } ,
 
     onTouchEnded: function(event) {
@@ -242,9 +241,11 @@ cc.Class({
 
     touchPickIem: function(event) {
         if(!this.enableEvent) return;
-
+        
         if(this.player) {
-            var item = this.player.touchPickItem(event.getLocation());
+            var pos = this.camera.getCameraToWorldPoint(event.getLocation());
+            var item = this.player.touchPickItem(pos);
+
             if(item)  this.item = item;
         }
     },
@@ -253,7 +254,8 @@ cc.Class({
         if(!this.enableEvent) return;
 
         if(this.player) {
-            this.player.adjustThrow(event.getLocation());
+            var pos = this.camera.getCameraToWorldPoint(event.getLocation());
+            this.player.touchAdjustThrow(pos);
         }
     },
     
@@ -262,11 +264,13 @@ cc.Class({
 
         if(this.player) {
             if(this.item) this.cameraControl.setTarget(this.item);
-            this.player.throw(event.getLocation());
+            var pos = this.camera.getCameraToWorldPoint(event.getLocation());
+            var point = new cc.Vec2(pos.x, pos.y);
+            this.player.throw(point);
         }
     },
 
-    adjustThrow: function(event) {
+    mouseAdjustThrow: function(event) {
         if(!this.enableEvent) return;
 
         var pos = this.camera.getCameraToWorldPoint(event.getLocation());
@@ -297,7 +301,7 @@ cc.Class({
         if(!this.enableEvent) return;
 
         cc.log("AvatarControl pickUpItem:");
-        this.player.pickUpItem(item, itemID, pickPos);
+        this.player.onMousePickUpItem(item, itemID, pickPos);
         this.item = item;
        
         if(!cc.sys.isMobile) {

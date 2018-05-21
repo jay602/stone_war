@@ -4,6 +4,20 @@
 
 var KBEngine = require("kbengine");
 
+var getCurrentTime = function(){
+    　　　　　　 var date = new Date();
+                var year=date.getFullYear(); //获取当前年份
+                var mon=date.getMonth()+1; //获取当前月份
+                var da=date.getDate(); //获取当前日
+                var day=date.getDay(); //获取当前星期几
+                var hour=date.getHours(); //获取小时
+                var minute=date.getMinutes(); //获取分钟
+                var second=date.getSeconds(); //获取秒
+                var millseocnd =date.getMilliseconds()
+                var str = "当前时间: " + hour + ":" + minute + ":" + second + "." +  millseocnd;
+                return str;
+　　　　};
+
 KBEngine.Avatar = KBEngine.Entity.extend(
     {
         __init__ : function()
@@ -92,13 +106,15 @@ KBEngine.Avatar = KBEngine.Entity.extend(
             vec3.x = force.x;
             vec3.y = force.y;
             vec3.z = 0.0;
-		    this.cellCall("throwItem", itemID, vec3);
+            this.cellCall("throwItem", itemID, vec3);
+            KBEngine.INFO_MSG("avatar throw time: " + getCurrentTime());
         },
          
         onThrowItem : function(itemID, force)
         {
             var v2 = new cc.Vec2(force.x, force.y);
-		    KBEngine.Event.fire("otherAvatarThrowItem", this.id, itemID, v2);
+            KBEngine.Event.fire("otherAvatarThrowItem", this.id, itemID, v2);
+            KBEngine.INFO_MSG("another avatar on throw time: " + getCurrentTime());
         },
 
         onNewTurn : function(eid, second)

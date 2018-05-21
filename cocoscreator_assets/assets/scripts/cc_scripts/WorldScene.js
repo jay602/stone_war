@@ -75,18 +75,6 @@ cc.Class({
         this.items = new Array();
 
         this.gameState = this.node.getComponent("GameState");
-       
-        var self = this;
-        cc.game.on(cc.game.EVENT_HIDE, function() {
-            var player = KBEngine.app.player();
-            if(player == undefined || !player.inWorld)
-                return;
-            player.leaveRoom();
-        });
-
-        cc.game.on(cc.game.EVENT_SHOW, function() {
-
-        });
     },
 
     enablePhysicManager: function () {
@@ -260,7 +248,6 @@ cc.Class({
     },
 
     updatePosition : function(entity) {
-        // 服务器同步到实体的新位置，我们需要将实体平滑移动到指定坐标点
         if(entity.className == "Item")
             return;
 
@@ -280,7 +267,7 @@ cc.Class({
             ae.scaleX = -1;
         }
         var position = cc.p(entity.position.x*SCALE, entity.position.z*SCALE);
-       // cc.log("8888 updatePosition, entityid=%d dir=%f position(%f, %f)", entity.id, entity.direction.z, position.x, position.y);
+       // cc.log("updatePosition, entityid=%d dir=%f position(%f, %f)", entity.id, entity.direction.z, position.x, position.y);
         var action = ae.getComponent("AvatarAction");
         action.onStartMove(position);
     },	  

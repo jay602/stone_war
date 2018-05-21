@@ -146,6 +146,7 @@ cc.Class({
         this.hpValue = 100;
         this.itemPoint = null;
         this.items = [];
+        this.touchThrowCenter = null;
     },
 
     addItem: function(item){
@@ -418,8 +419,17 @@ cc.Class({
         item.setPosition(position);
     },
 
-    pickUpItem: function(item, itemID, pickPos) {
-        cc.log("player start pick up item ....");
+    onMousePickUpItem: function(item, itemID, pickPos) {
+        if(this.pickUpItem(item, itemID)) {
+            var point = this.arrow.convertToWorldSpaceAR(cc.v2(0, 0));
+            //this.testNode1.setPosition(pickPos);
+            var center = new cc.Vec2(point.x, point.y);
+            this.adjustArrowDir(pickPos, center);
+        }
+    },
+
+    pickUpItem: function(item, itemID) {
+        KBEngine.INFO_MSG("player start pick up item ....");
         if(!this.item) {
             this.hasPickUpItem = true;
             this.item = item;
@@ -431,16 +441,17 @@ cc.Class({
             }
 
             this.setPlaceItem(item, this.getItemPoint());
-            this.adjustArrowDir(pickPos);
+            return true;
         }
+        return false;
     },
 
-    adjustArrowDir: function(pos) {
-        //cc.log("player adjustArrowDir: pos(%f, %f)", pos.x, pos.y);
+    adjustArrowDir: function(pos, center) {
+        KBEngine.INFO_MSG("adjust arrow dir: pos(" + pos.x + ", " + pos.y + ")");
+        KBEngine.INFO_MSG("adjust arrow dir: center(" + center.x + ", " + center.y + ")");
         this.arrow.active = true;
-        var arrowWorldPoint = this.arrow.convertToWorldSpaceAR(cc.v2(0, 0));
-        var dx = pos.x - arrowWorldPoint.x;
-        var dy = pos.y - arrowWorldPoint.y;
+        var dx = pos.x - center.x;
+        var dy = pos.y - center.y;
 
         var factor = 1;
         if(this.node.scaleX == this.rightDir) {
@@ -454,22 +465,27 @@ cc.Class({
         var angle = Math.atan2(dy, dx) * 180 / Math.PI;
         this.arrowAngle = angle*factor;
 
-        this.calculateForce(pos);
+        this.calculateForce(pos, center);
 
-        this.testNode1.setPosition(arrowWorldPoint);
+       // this.testNode1.setPosition(center);
         this.testNode2.setPosition(pos);
+    },
+
+    getArrowWorldPoit: function() {
+        var point = this.arrow.convertToWorldSpaceAR(cc.v2(0, 0));
+        var center = new cc.Vec2(point.x, point.y);
+        return center;
     },
 
     adjustThrow: function(pos) {
         if(!this.hasPickUpItem) return;
-
-        this.adjustArrowDir(pos);
+       
+        this.adjustArrowDir(pos, this.getArrowWorldPoit());
     },
 
-    calculateForce: function(pos) {
-        var arrowWorldPoint = this.arrow.convertToWorldSpaceAR(cc.v2(0, 0));
-        
-        var force = arrowWorldPoint.sub(pos);
+    calculateForce: function(pos, center) {
+        var point = new cc.Vec2(center.x, center.y);
+        var force = point.sub(pos);
         force.mulSelf(MULTIPLE);
         if(force.y > MAX_THROW_FORCE_Y) 
             force.y = MAX_THROW_FORCE_Y; 
@@ -482,10 +498,15 @@ cc.Class({
 
     throw: function(pos) {
         if(!this.hasPickUpItem) return;
-
-        var impulse = this.calculateForce(pos);
-      
-        cc.log("AvatarAction throwItem: force(%f, %f)", impulse.x, impulse.y);
+        KBEngine.INFO_MSG("throw stone");
+        var impulse = null
+        if(cc.sys.isMobile && this.touchThrowCenter) {
+            impulse = this.calculateForce(pos, this.touchThrowCenter);
+            KBEngine.INFO_MSG(" touch throw item: force(" + impulse.x + "," + impulse.y + ")");
+        } else {
+            impulse = this.calculateForce(pos, this.getArrowWorldPoit());
+            KBEngine.INFO_MSG(" mouse throw item: force(" + impulse.x + "," + impulse.y + ")");
+        }
 
         var player = KBEngine.app.player();
         if(player != undefined && player.inWorld) {
@@ -502,6 +523,7 @@ cc.Class({
         this.arrow.active = false;
         this.item = null;
         this.itemAction = null;
+        this.touchThrowCenter = null;
     },
 
     throwItem: function(item, impulse) {
@@ -513,18 +535,34 @@ cc.Class({
         var item = null;
         for(var i = 0; i < this.items.length; i++) {
             var distance = cc.pDistance(this.items[i].position, this.node.position);
-            if(distance > minDistance) {
+            if(i==0) {
                 minDistance = distance;
                 item = this.items[i];
-            } 
+            } else if(minDistance > distance) {
+                minDistance = distance;
+                item = this.items[i];
+            }
         }
 
         if(item) {
             var itemId = item.getComponent("ItemAction").itemID;
-            this.pickUpItem(item, itemId, touchPos);
+            if(this.pickUpItem(item, itemId)) {
+                this.arrow.active = true;
+                this.arrow.scaleX = this.node.scaleX;
+                this.touchThrowCenter = touchPos;
+                
+                this.testNode1.setPosition(touchPos);
+                KBEngine.INFO_MSG("touch pick item: center(" + touchPos.x + ", " + touchPos.y + ")");
+            }
         }
 
         return item;
+    },
+
+    touchAdjustThrow: function(touchPos) {
+        if(this.touchThrowCenter) {
+            this.adjustArrowDir(touchPos, this.touchThrowCenter);
+        }
     },
 
     onStartMove: function(position) {
@@ -533,7 +571,6 @@ cc.Class({
         if (dx > 0.8) // 右
         {
             this.moveFlag = MOVE_RIGHT;
-           
         } else if (dx < -0.8) //左
         {
             this.moveFlag = MOVE_LEFT;
@@ -611,7 +648,6 @@ cc.Class({
 
     // 每次处理完碰撞体接触逻辑时被调用
     onPostSolve: function (contact, selfCollider, otherCollider) {
-      
         if(otherCollider.tag == 999 || otherCollider.tag == 998) {
             this.isCollideLand = false;
         }else if(otherCollider.tag == 100 ) {
@@ -628,28 +664,26 @@ cc.Class({
     },
 
     drawTestNode: function() {
+       
         this.ctx.clear();
-        if(!this.hasPickUpItem) return;
-
-        this.ctx.circle(this.testNode1.x, this.testNode1.y, 3);
-        this.ctx.fillColor = cc.Color.RED;
+        this.ctx.fillColor = this.touchThrowCenter ? cc.Color.RED : cc.Color.GREEN;
+        this.ctx.circle(this.testNode1.x, this.testNode1.y, 10);
         this.ctx.fill();
 
-        this.ctx.circle(this.testNode2.x, this.testNode2.y, 3);
-        this.ctx.fillColor = cc.Color.GREEN;
+        this.ctx.circle(this.testNode2.x, this.testNode2.y, 10);
+        this.ctx.fillColor = cc.Color.BLUE;
         this.ctx.fill();
 
         this.ctx.moveTo(this.testNode1.x, this.testNode1.y);
-        this.ctx.lineTo(this.testNode2.x, this.testNode2.y);
-        this.ctx.stroke();
+        this.ctx.lineTo(this.testNode1.x, this.testNode1.y)
 
-        // var basePoint = this.basePoint.convertToWorldSpaceAR(cc.v2(0, 0));
-        // this.ctx.rect(basePoint.x, basePoint.y, 256, 256);
+        this.ctx.stroke();
+     
 
     },
    
     update: function(dt) {
-        this.drawTestNode();
+        //this.drawTestNode();
 
         if(this.arrow.active) {
             this.arrow.rotation = this.arrowAngle;
@@ -696,14 +730,6 @@ cc.Class({
         var start = this.start_point.convertToWorldSpaceAR(cc.v2(0, 0));
         var end = this.end_point.convertToWorldSpaceAR(cc.v2(0, 0));
         results = cc.director.getPhysicsManager().rayCast(start, end, cc.RayCastType.AllClosest);
-
-      // cc.log("0000 down rayCast Result Count=%d", results.length);
-      // cc.log("0000 down rayCast: start(%f, %f)  end(%f, %f)", start.x, start.y, end.x, end.y);
-
-        // this.ctx.clear();
-        // this.ctx.moveTo(start.x, start.y);
-        // this.ctx.lineTo(end.x, end.y);
-        // this.ctx.stroke();
 
         for (var i = 0; i < results.length; i++) {
             var result = results[i];
