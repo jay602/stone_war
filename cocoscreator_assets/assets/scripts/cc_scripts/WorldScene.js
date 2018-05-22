@@ -116,10 +116,12 @@ cc.Class({
         KBEngine.Event.register("otherAvatarThrowItem", this, "otherAvatarThrowItem");
         KBEngine.Event.register("otherAvatarOnStopWalk", this, "otherAvatarOnStopWalk");
         KBEngine.Event.register("otherAvatarOnStartWalk", this, "otherAvatarOnStartWalk");
-        KBEngine.Event.register("otherAvatarResetItem", this, "otherAvatarResetItem");
+        KBEngine.Event.register("otherAvatarRecoverItem", this, "otherAvatarRecoverItem");
         KBEngine.Event.register("onRecvDamage", this, "onRecvDamage");
         KBEngine.Event.register("onAvatarDie", this, "onAvatarDie");
+
         KBEngine.Event.register("onGameOver", this, "onGameOver");
+        KBEngine.Event.register("onResetItem", this, "onResetItem");
     },
 
     onDisconnected : function() {
@@ -259,7 +261,6 @@ cc.Class({
         if(player && player.inWorld && player.id == entity.id)
             return;
         
-       
         ae.isOnGround = entity.isOnGround;
         if(entity.direction.z >= 1)  {
             ae.scaleX = 1;
@@ -290,6 +291,20 @@ cc.Class({
         this.cameraControl.setTarget(ae);
     },
 
+    checkPlayerHasItem: function(left) {
+        var count = 0;
+        for(var i in this.items) {
+            var item = this.items[i];
+            if(left) {
+                if(item.x < 80) count++;
+            } else {
+                if(item.x > 350) count++;
+            }
+        }
+
+        return count;
+    },
+
     newTurn: function(avatarID, second){
         this.curAvatarID = avatarID;
         this.setCameraTarget(avatarID);
@@ -303,6 +318,24 @@ cc.Class({
 
         if(this.curAvatarID == KBEngine.app.player().id) {
             this.enableControlPlayer();
+            var avatar = this.entities[this.curAvatarID];
+            var itemCount = 0;
+            var left = 0;
+            if( avatar.name == PIPI_NAME) {
+                itemCount = this.checkPlayerHasItem(false);
+                left = 0;
+            } else {
+                itemCount = this.checkPlayerHasItem(true);
+                left = 1;
+            }
+
+            if(itemCount == 0) {
+                var player = KBEngine.app.player();
+                if(player == undefined || !player.inWorld)
+                    return;
+               
+                player.addItem(left);
+            }
         }else {
             this.disEnableControlPlayer();
         }
@@ -358,7 +391,7 @@ cc.Class({
         action.playWalkAnim();
     },
 
-    otherAvatarResetItem: function(avatarID, itemID) {
+    otherAvatarRecoverItem: function(avatarID, itemID) {
         var player = this.entities[avatarID];
         var item = this.entities[itemID];
         if(player == undefined || item == undefined)
@@ -408,6 +441,14 @@ cc.Class({
 
         this.disEnableControlPlayer();
         this.player = null;
+    },
+
+    onResetItem: function(itemID, position) {
+        var item = this.entities[itemID];
+        if(item == undefined) 
+            return;
+    
+        item.setPosition(position.x*SCALE, position.z*SCALE);
     },
 
     enableControlPlayer: function() {

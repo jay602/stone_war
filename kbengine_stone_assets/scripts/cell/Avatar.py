@@ -3,6 +3,7 @@ import KBEngine
 from KBEDebug import *
 import GameUtils
 import GameConfigs
+import random
 from interfaces.EntityCommon import EntityCommon
 
 
@@ -111,12 +112,12 @@ class Avatar(KBEngine.Entity, EntityCommon):
 
 		self.otherClients.onStartWalk()
 
-	def resetItem(self, exposed, itemID):
-		DEBUG_MSG("avavtar %i reset item:%i, selfID=%i" % (exposed, itemID, self.id))
+	def recoverItem(self, exposed, itemID):
+		DEBUG_MSG("avavtar %i recover item:%i, selfID=%i" % (exposed, itemID, self.id))
 		if exposed != self.id:
 			return
 
-		self.otherClients.onResetItem(itemID)
+		self.otherClients.onRecoverItem(itemID)
 
 	def reset(self):
 		self.harmCount = 0
@@ -161,3 +162,16 @@ class Avatar(KBEngine.Entity, EntityCommon):
 
 	def leaveRoom(self, exposed):
 		pass
+
+	def resetItem(self, exposed, itemID):
+		DEBUG_MSG("reset item %i" % (itemID))
+		room = self.getCurrRoom()
+		if room:
+			item = room.resetItem(itemID)
+
+	def addItem(self, exposed, left):
+		DEBUG_MSG("add item ......")
+
+		room = self.getCurrRoom()
+		if room:
+			room.addItem(left)

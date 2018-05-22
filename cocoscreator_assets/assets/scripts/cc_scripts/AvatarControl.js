@@ -71,7 +71,8 @@ cc.Class({
         } else {
             this.touchControl.active = false;
             this.pickTouchRange = false;
-            this.createEventListener();
+            cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
+            cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP, this.onKeyUp, this);
         }
     },
 
@@ -108,7 +109,7 @@ cc.Class({
         this.node.on(cc.Node.EventType.MOUSE_UP , this.starThrowItem, this);
 
         if(this.item) {
-            this.item.on(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
+            this.item.on(cc.Node.EventType.MOUSE_MOVE, this.mouseAdjustThrow, this);
             this.item.on(cc.Node.EventType.MOUSE_UP , this.starThrowItem, this);
         }
     },
@@ -120,46 +121,38 @@ cc.Class({
         this.node.off(cc.Node.EventType.MOUSE_UP , this.starThrowItem, this);
 
         if(this.item) {
-            this.item.off(cc.Node.EventType.MOUSE_MOVE, this.adjustThrow, this);
+            this.item.off(cc.Node.EventType.MOUSE_MOVE, this.mouseAdjustThrow, this);
             this.item.off(cc.Node.EventType.MOUSE_UP , this.starThrowItem, this);
         }
     },
 
-    createEventListener: function () {
-            var self = this;
-            var keyBoardListener = cc.EventListener.create({
-                event: cc.EventListener.KEYBOARD,
-                onKeyPressed: function(keyCode, event){
-                    if(!self.enableEvent) return;
-                    //cc.log("AvatarControl press key=%d", keyCode);
-                    switch(keyCode) {
-                        case cc.KEY.a: 
-                            self.player.leftWalk();
-                            break;
-            
-                        case cc.KEY.d:
-                            self.player.rightWalk();
-                            break;
-            
-                        case cc.KEY.w:
-                            self.player.jump();
-                            break;
-                    };
-                },
-                onKeyReleased: function(keyCode, event){
-                    if(!self.enableEvent) return;
-                   // cc.log("AvatarControl release key=%d", keyCode);
-                    switch(keyCode) {
-                        case cc.KEY.a: 
-                        case cc.KEY.d:
-                            self.player.stopWalk();                          
-                            break;
-                        };
-                },
-            }
-        );  
+    onKeyDown: function(event) {
+        if(!this.enableEvent) return;
+        //cc.log("AvatarControl press key=%d", keyCode);
+        switch(event.keyCode) {
+            case cc.KEY.a: 
+                this.player.leftWalk();
+                break;
 
-        cc.eventManager.addListener(keyBoardListener, 1);
+            case cc.KEY.d:
+                this.player.rightWalk();
+                break;
+
+            case cc.KEY.w:
+                this.player.jump();
+                break;
+        };
+    },
+
+    onKeyUp: function(event) {
+        if(!this.enableEvent) return;
+                   // cc.log("AvatarControl release key=%d", keyCode);
+        switch(event.keyCode) {
+            case cc.KEY.a: 
+            case cc.KEY.d:
+                this.player.stopWalk();                          
+                break;
+            };
     },
 
     setPlayer: function(player) {
@@ -328,22 +321,28 @@ cc.Class({
         if(player == undefined || !player.inWorld)
             return;
     
+        //同步位置
         player.position.x = this.node.x/SCALE;
         player.position.y = 0;
         player.position.z = this.node.y/SCALE;
         player.isOnGround = this.player.isOnGround;
         player.direction.z = this.player.node.scaleX;
 
+        //扔出石头后，石头出界或停下来就新的一轮
         if(this.item) {
             var itemAction = this.item.getComponent("ItemAction");
             var isOutRange = this.checkItemOutRange();
-            var isThrowed = itemAction.isThrowed;
             var itemSpeed = this.item.getComponent(cc.RigidBody).linearVelocity.mag();
-            if( isThrowed && (isOutRange ||itemSpeed == 0) ) {
+            if( itemAction.isThrowed && (isOutRange ||itemSpeed == 0) ) {
                 cc.log("new turn");
                 itemAction.setThrowed(false);
                 this.item = null;
                 player.newTurn();
+
+                //出界就产生新的石头
+                if(isOutRange) {
+                    player.resetItem(itemAction.itemID);
+                }
             }
         }
     },

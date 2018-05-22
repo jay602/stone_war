@@ -147,3 +147,32 @@ class Room(KBEngine.Entity):
 	def gameOver(self):
 		timer = self.addTimer(1, 0, TIMER_TYPE_GAME_OVER)
 		DEBUG_MSG("add timer %i: game over" % (timer))
+
+	def resetItem(self, itemID):
+		item = self.items[itemID]
+		pos = item.position
+		DEBUG_MSG("reset item position(%f, %f, %f)" % (pos.x, pos.y, pos.z))
+		if item:
+			for entity in self.avatars.values():
+				entity.client.onResetItem(itemID, pos)
+
+	def addItem(self, left):
+		item = GameConfigs.ITEMS["map1"]
+		itemPos = None
+		if left==0:
+			itemPos = GameConfigs.ITEMS_POS["map1"]["left"]
+		else:
+			itemPos = GameConfigs.ITEMS_POS["map1"]["right"]
+
+		count = 3
+		index = 0
+		for name, prop in GameConfigs.ITEMS["map1"].items():
+			if index >= 3:
+				break
+				
+			pos = itemPos[index]
+			index += 1
+			harm = prop['harm']
+			dir = (0.0, 0.0, 0.0)
+			entity = KBEngine.createEntity("Item", self.spaceID, pos, dir, {"name" : name, "harm" : harm})
+			self.items[entity.id] = entity

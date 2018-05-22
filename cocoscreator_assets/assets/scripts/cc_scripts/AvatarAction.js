@@ -230,7 +230,7 @@ cc.Class({
             this.item.getComponent("ItemAction").setPlacePrePosition();
             var player = KBEngine.app.player();
             if(this.eid==player.id && player != undefined && player.inWorld) {
-                player.resetItem(this.itemID);
+                player.recoverItem(this.itemID);
             }
 
             this.item = null;
@@ -447,8 +447,8 @@ cc.Class({
     },
 
     adjustArrowDir: function(pos, center) {
-        KBEngine.INFO_MSG("adjust arrow dir: pos(" + pos.x + ", " + pos.y + ")");
-        KBEngine.INFO_MSG("adjust arrow dir: center(" + center.x + ", " + center.y + ")");
+        //KBEngine.INFO_MSG("adjust arrow dir: pos(" + pos.x + ", " + pos.y + ")");
+       // KBEngine.INFO_MSG("adjust arrow dir: center(" + center.x + ", " + center.y + ")");
         this.arrow.active = true;
         var dx = pos.x - center.x;
         var dy = pos.y - center.y;
@@ -628,9 +628,9 @@ cc.Class({
     onPreSolve: function (contact, selfCollider, otherCollider) {
         if(otherCollider.tag == 999 || otherCollider.tag == 998) {
             //this.isCollideLand = true;
-        }else if(otherCollider.node.name == "land_bg") {
+        } else if(otherCollider.node.name == "land_bg") {
             contact.disabled = true;
-        }else if(otherCollider.tag == 100) {
+        } else if(otherCollider.tag == 100) {
             var rigidBody = otherCollider.node.getComponent(cc.RigidBody);
             var speedX =  rigidBody.linearVelocity.x;
             var speedY =  rigidBody.linearVelocity.y;

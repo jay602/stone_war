@@ -61,9 +61,9 @@
 				<Arg>		VECTOR3			</Arg>
 		</onThrowItem>
 
-		<onResetItem>
+		<onRecoverItem>
 			<Arg>		ENTITY_ID	</Arg>
-		</onResetItem>
+		</onRecoverItem>
 
 		<onRecvDamage>
 			<Arg>		ENTITY_ID	</Arg>
@@ -78,6 +78,11 @@
 		<onGameOver>
 			<Arg>		BOOL	</Arg>
 		</onGameOver>
+
+		<onResetItem>
+			<Arg>		ENTITY_ID		</Arg>
+			<Arg>		VECTOR3			</Arg>
+		</onResetItem>
 	</ClientMethods>
 
 	<BaseMethods>
@@ -116,15 +121,25 @@
 			<Exposed/>
 		</newTurn>
 
-		<resetItem>
+		<recoverItem>
 			<Exposed/>
 			<Arg>		ENTITY_ID	</Arg>
-		</resetItem>
+		</recoverItem>
 
 		<recvDamage>
 			<Exposed/>
 			<Arg>		ENTITY_ID	</Arg>
 		</recvDamage>
+
+		<resetItem>
+			<Exposed/>
+			<Arg>		ENTITY_ID	</Arg>
+		</resetItem>
+
+		<addItem>
+			<Exposed/>
+			<Arg>		INT32	</Arg>
+		</addItem>
 	</CellMethods>
 
 </root>

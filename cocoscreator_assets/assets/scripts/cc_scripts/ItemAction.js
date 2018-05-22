@@ -41,14 +41,13 @@ cc.Class({
             type: cc.Camera,
         },
 
-        itemID : 0,
-
         rigidBody: {
             default: null,
             type: cc.RigidBody,
         },
 
         harm: 10,
+        itemID : 0,
     },
 
     onLoad () {
@@ -58,16 +57,9 @@ cc.Class({
         
         this.testNode1 = cc.find("testNode1");
         this.sky = cc.find("World/sky_bg");
-
         this.camera = cc.find("Camera").getComponent(cc.Camera);
         this.ctx = cc.find("worldDraw").getComponent(cc.Graphics);
 
-        if(cc.sys.isMobile) {
-            this.node.on(cc.Node.EventType.TOUCH_START, this.pickUped, this);
-        }else {
-            this.node.on(cc.Node.EventType.MOUSE_DOWN, this.pickUped, this);
-        }
-       
         this.draw = new cc.DrawNode();
         this.node._sgNode.addChild(this.draw);
 
@@ -76,6 +68,12 @@ cc.Class({
         this.isThrowed = false;
         this.isOutRange = false;
         this.touchPlayerCount = 0;
+
+        if(cc.sys.isMobile) {
+            this.node.on(cc.Node.EventType.TOUCH_START, this.pickUped, this);
+        } else {
+            this.node.on(cc.Node.EventType.MOUSE_DOWN, this.pickUped, this);
+        }
     },
 
     onCollisionEnter: function (other, self) {
@@ -123,7 +121,7 @@ cc.Class({
             }
         }
 
-        if( otherCollider.tag == 998 ) {
+        if( otherCollider.tag == 998 || otherCollider.tag == 10 || otherCollider.tag == 11 ||  otherCollider.tag == 12 ||  otherCollider.tag == 13) {
             contact.disabled = true;
         }
 
@@ -154,7 +152,7 @@ cc.Class({
             }
         }
 
-        if( otherCollider.tag == 100 && this.isThrowed) {
+        if( otherCollider.tag == 100 && this.isThrowed ) {
             contact.disabled = true;
         }
     },
@@ -222,8 +220,9 @@ cc.Class({
     },
 
     setZeroRigidBody: function() {
-        var itemRigidbody = this.node.getComponent(cc.RigidBody);;
+        var itemRigidbody = this.node.getComponent(cc.RigidBody);
         itemRigidbody.gravityScale = 0;
         itemRigidbody.linearVelocity = cc.v2(0, 0);
-    }
+    },
+
 });

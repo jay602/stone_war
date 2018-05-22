@@ -127,14 +127,15 @@ KBEngine.Avatar = KBEngine.Entity.extend(
             this.cellCall("newTurn");
         }, 
 
-        resetItem: function(itemID)
+        //捡起石头，时间到了，不扔石头，就还原石头的位置
+        recoverItem: function(itemID)
         {
-            this.cellCall("resetItem", itemID);
+            this.cellCall("recoverItem", itemID);
         },
 
-        onResetItem: function(itemID)
+        onRecoverItem: function(itemID)
         {
-            KBEngine.Event.fire("otherAvatarResetItem", this.id, itemID);
+            KBEngine.Event.fire("otherAvatarRecoverItem", this.id, itemID);
         },
 
         recvDamage: function(itemID)
@@ -159,6 +160,26 @@ KBEngine.Avatar = KBEngine.Entity.extend(
         {
             KBEngine.INFO_MSG("Game is over: avatar " + this.id + "win= " + isWin.toString());
             KBEngine.Event.fire("onGameOver", this.id, isWin);
+        },
+
+        //石头出界，重置石头
+        resetItem: function(itemID)
+        {
+            KBEngine.INFO_MSG("reset item ......");
+            this.cellCall("resetItem", itemID);
+        },
+
+        onResetItem: function(itemID, position)
+        {
+            KBEngine.INFO_MSG("on reset item position(" + position.x + ", " + position.y + ", " + position.z + ")");
+            KBEngine.Event.fire("onResetItem", itemID, position);
+        },
+
+        //没石头扔，就产生石头
+        addItem: function(left)
+        {
+            KBEngine.INFO_MSG("add item ......: " + left.toString());
+            this.cellCall("addItem", left);
         },
 
     });
