@@ -185,4 +185,26 @@ cc.Class({
             this.limitRightX = self.node.x;
         }
     },
+
+    onCollisionStay: function (other, self) {
+        if(other.tag == this.topWallCollider.tag) {
+            this.touchTop = true;
+            this.limitTopY = self.node.y;
+        }
+
+        if(other.tag == this.bottomWallCollider.tag) {
+            this.touchBottom = true;
+            this.limitBottomY = self.node.y;
+        }
+
+        if(other.tag == this.leftWallCollider.tag) {
+            this.touchLeft = true;
+            this.limitLeftX = self.node.x;
+        }
+
+        if(other.tag == this.rightWallCollider.tag) {
+            this.touchRight = true;
+            this.limitRightX = self.node.x;
+        }
+    },
 });

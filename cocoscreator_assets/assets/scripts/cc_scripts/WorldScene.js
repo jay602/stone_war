@@ -339,6 +339,10 @@ cc.Class({
         }else {
             this.disEnableControlPlayer();
         }
+
+        if(this.player && cc.sys.isMobile) {
+            this.player.getComponent("AvatarControl").resetJoyStick();
+        }
     },
 
 

@@ -39,7 +39,6 @@ KBEngine.Avatar = KBEngine.Entity.extend(
             }		
         },
 
-
         startWalk: function()
         {
             cc.log("8989 avatar %d start walk, scaleX=%d", this.id);
@@ -87,7 +86,6 @@ KBEngine.Avatar = KBEngine.Entity.extend(
         {
             var point = new cc.Vec2(positon.x, positon.y);
             KBEngine.Event.fire("otherAvatarOnPickUpItem", this.id, itemID, point);
-            console.warn("otherAvatarOnPickUpItem  " + itemID);
         },
 
         pickUpItem : function(itemID, pos)

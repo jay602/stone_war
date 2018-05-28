@@ -13,9 +13,9 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        gravity: -1000,
+        gravity: -900,
 
-        jumpSpeed: cc.v2(300, 505),
+        jumpSpeed: cc.v2(300, 550),
         maxSpeed: cc.v2(400, 550),
         walkspeed: cc.v2(110, 50),
         jumpSpeedY : 0,
@@ -293,8 +293,9 @@ cc.Class({
         this.moveFlag = MOVE_LEFT;
         if(!this.jumping) {
             this.node.scaleX = this.leftDir;
+            this.playWalkAnim();
         }
-        this.playWalkAnim();
+        
 
         var player = KBEngine.app.player();
         if(player != undefined && player.inWorld) {
@@ -312,8 +313,9 @@ cc.Class({
         this.moveFlag = MOVE_RIGHT;
         if(!this.jumping) {
             this.node.scaleX = this.rightDir;
+            this.playWalkAnim();
         }
-        this.playWalkAnim();
+       
 
         var player = KBEngine.app.player();
         if(player != undefined && player.inWorld) {
@@ -378,6 +380,7 @@ cc.Class({
 
     _jump: function() {
         if (!this.jumping) {
+            KBEngine.INFO_MSG("player jump .......");
             this.jumping = true;
             this.jumpSpeedY = this.jumpSpeed.y;
             if(this.anim) {
@@ -387,7 +390,7 @@ cc.Class({
     },
 
     onJump: function() {
-        cc.log("AvatarAction onJump");
+        KBEngine.INFO_MSG("AvatarAction onJump, position(" + this.node.x + ", "+ this.node.y + ")");
         this._jump();
     },
 
@@ -568,10 +571,10 @@ cc.Class({
     onStartMove: function(position) {
         this.targetPosition = position;
         var dx = position.x - this.node.x;
-        if (dx > 0.8) // 右
+        if (dx > 0.5) // 右
         {
             this.moveFlag = MOVE_RIGHT;
-        } else if (dx < -0.8) //左
+        } else if (dx < -0.5) //左
         {
             this.moveFlag = MOVE_LEFT;
         } else 
@@ -734,12 +737,12 @@ cc.Class({
         for (var i = 0; i < results.length; i++) {
             var result = results[i];
             var collider = result.collider;
-            //cc.log("0000 down rayCast Result %d  name: %s,  point(%s, %s)", i, collider.node.name, result.point.x, result.point.y);
             if(collider.node.name == "land_bg") {
                 var foot_point = this.node.parent.convertToNodeSpace(result.point);
                 this.node.y = foot_point.y;
                 this.isOnGround = true;
                 if(this.jumping) {
+                    KBEngine.INFO_MSG("player stop jump, position(" + this.node.x + ", "+ this.node.y + ")");
                     this.jumping = false;
                     this.moveFlag = STATIC;
                     this.anim.playIdleAnim();

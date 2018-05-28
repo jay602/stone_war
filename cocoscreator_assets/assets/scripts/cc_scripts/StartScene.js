@@ -40,6 +40,27 @@ cc.Class({
         this.textinput_name.string = this.randomstring(4);
      },
 
+     start: function() {
+        if(cc.sys.isMobile) {
+            wx.login({
+                success: function () {
+                  console.log("wxlogin");
+                  wx.getUserInfo();
+                }
+              })
+        }
+       
+     },
+
+    //  wxLoginNative() {
+    //     var self = this;
+    //     wx.login({
+            
+    //     }
+
+    //     ),
+    //  },
+
      randomstring: function(L){
         var s= '';
         var randomchar=function(){

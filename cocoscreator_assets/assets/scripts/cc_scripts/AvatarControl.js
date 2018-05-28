@@ -174,25 +174,29 @@ cc.Class({
         {
           //  KBEngine.INFO_MSG("left walk");
             this.player.leftWalk();
-            
         }
         else if(angle >= 30 && angle <= 60 && this.player)  
         {
           //  KBEngine.INFO_MSG("right walk");
-            this.player.rightWalk();
             this.player.jump();
+            this.player.rightWalk();
         }
         else if(angle >= 120 && angle <= 150 && this.player)  
         {
            // KBEngine.INFO_MSG("left jump");
-            this.player.leftWalk();
             this.player.jump();
+            this.player.leftWalk();
         }
         else if(angle > 60 && angle < 120 && this.player)  
         {
           //  KBEngine.INFO_MSG("jump");
             this.player.jump();
         }
+    },
+
+    resetJoyStick: function() {
+        this.stickBg.setPosition(this.oriStickPos);
+        this.stick.setPosition(0, 0);
     },
 
     onTouchBegan: function(event) {
