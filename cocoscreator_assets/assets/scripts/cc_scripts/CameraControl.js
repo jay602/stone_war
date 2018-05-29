@@ -10,8 +10,6 @@ cc.Class({
 
     // use this for initialization
     onLoad: function () {
-        this.onEnable();
-
         this.camera = this.getComponent(cc.Camera);
 
         this.sky = cc.find("World/sky_bg");
@@ -39,6 +37,8 @@ cc.Class({
         this.limitBottomY = 0;
         this.limitLeftX = 0;
         this.limitRightX = 0;
+
+        this.onEnable();
     },
 
     onEnable: function () {

@@ -50,6 +50,19 @@ class Avatar(KBEngine.Entity, EntityCommon):
 		
 		if room:
 			room.onLeave(self.id)
+	def rightJump(self, exposed):
+		DEBUG_MSG("avavtar %i right jump, selfID=%i" % (exposed, self.id))
+		if exposed != self.id:
+			return
+		DEBUG_MSG("avatar %i start right jump" % (self.id))
+		self.otherClients.onRightJump()
+
+	def leftJump(self, exposed):
+		DEBUG_MSG("avavtar %i left jump, selfID=%i" % (exposed, self.id))
+		if exposed != self.id:
+			return
+		DEBUG_MSG("avatar %i start left jump" % (self.id))
+		self.otherClients.onLeftJump()
 
 	def jump(self, exposed):
 		"""
@@ -105,12 +118,12 @@ class Avatar(KBEngine.Entity, EntityCommon):
 		self.otherClients.onStopWalk(pos)
 
 
-	def startWalk(self, exposed):
-		DEBUG_MSG("avavtar %i start walk, selfID=%i" % (exposed, self.id))
+	def startWalk(self, exposed, moveFlag):
+		DEBUG_MSG("avavtar %i start walk, selfID=%i moveflag=%i" % (exposed, self.id, moveFlag))
 		if exposed != self.id:
 			return
 
-		self.otherClients.onStartWalk()
+		self.otherClients.onStartWalk(moveFlag)
 
 	def recoverItem(self, exposed, itemID):
 		DEBUG_MSG("avavtar %i recover item:%i, selfID=%i" % (exposed, itemID, self.id))

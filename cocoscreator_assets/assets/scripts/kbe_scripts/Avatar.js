@@ -30,25 +30,22 @@ KBEngine.Avatar = KBEngine.Entity.extend(
                    
         onEnterWorld : function()
         {
-            console.log("Fire onEnterWorld");
             this._super();
             if(this.isPlayer()) {
                 KBEngine.Event.fire("onAvatarEnterWorld", KBEngine.app.entity_uuid, this.id, this);
-                console.log("Fire onAvatarEnterWorld 111");
-                console.log("-----------------------");
             }		
         },
 
-        startWalk: function()
+        startWalk: function(moveFlag)
         {
-            cc.log("8989 avatar %d start walk, scaleX=%d", this.id);
-            this.cellCall("startWalk");
+            KBEngine.INFO_MSG("avatar " + this.id + " start walk: " + moveFlag);
+            this.cellCall("startWalk", moveFlag);
         },
 
-        onStartWalk: function()
+        onStartWalk: function(moveFlag)
         {
-            cc.log("other avatar %d start walk, scaleX=%d", this.id);
-            KBEngine.Event.fire("otherAvatarOnStartWalk", this.id);
+            KBEngine.INFO_MSG("other avatar " + this.id + " on start walk: " + moveFlag);
+            KBEngine.Event.fire("otherAvatarOnStartWalk", this.id, moveFlag);
         },
 
         stopWalk: function(pos)
@@ -78,9 +75,31 @@ KBEngine.Avatar = KBEngine.Entity.extend(
 
         onJump : function()
 	    {
-            cc.log("other avatar %d onJump", this.id);
+            cc.log("other avatar %d on jump", this.id);
 		    KBEngine.Event.fire("otherAvatarOnJump", this);
         }, 
+
+        rightJump: function()
+        {
+            this.cellCall("rightJump");
+            KBEngine.INFO_MSG("avatar " + this.id + " right jump");
+        },
+
+        onRightJump: function()
+        {
+            KBEngine.Event.fire("otherAvatarOnRightJump", this.id);
+        },
+
+        leftJump: function()
+        {
+            this.cellCall("leftJump");
+            KBEngine.INFO_MSG("avatar " + this.id + " left jump");
+        },
+
+        onLeftJump: function()
+        {
+            KBEngine.Event.fire("otherAvatarOnLeftJump", this.id);
+        },
 
         onPickUpItem : function(itemID, positon)
         {
@@ -95,7 +114,7 @@ KBEngine.Avatar = KBEngine.Entity.extend(
             vec3.y = pos.y;
             vec3.z = 0.0;
             this.cellCall("pickUpItem", itemID, vec3);
-            console.warn("cellCall: avatar pick item = %d pos(%f, %f)", itemID, pos.x, pos.y);
+            console.log("cellCall: avatar pick item = %d pos(%f, %f)", itemID, pos.x, pos.y);
         }, 
                     
         throwItem : function(itemID, force)
@@ -179,6 +198,8 @@ KBEngine.Avatar = KBEngine.Entity.extend(
             KBEngine.INFO_MSG("add item ......: " + left.toString());
             this.cellCall("addItem", left);
         },
+
+       
 
     });
     

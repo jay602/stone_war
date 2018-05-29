@@ -125,7 +125,13 @@ cc.Class({
             contact.disabled = true;
         }
 
-        if( otherCollider.tag == 100 && this.isThrowed) {
+        if( otherCollider.tag == 100) {
+            contact.disabled = true;
+        }
+    },
+
+    onEndContact: function (contact, selfCollider, otherCollider) {
+        if( otherCollider.tag == 100) {
             contact.disabled = true;
         }
     },
@@ -133,6 +139,10 @@ cc.Class({
     // 每次处理完碰撞体接触逻辑时被调用
     onPostSolve: function (contact, selfCollider, otherCollider) {
         if( otherCollider.tag == 998 ) {
+            contact.disabled = true;
+        }
+
+        if( otherCollider.tag == 100) {
             contact.disabled = true;
         }
     },
@@ -152,7 +162,11 @@ cc.Class({
             }
         }
 
-        if( otherCollider.tag == 100 && this.isThrowed ) {
+        if( otherCollider.tag == 100) {
+            contact.disabled = true;
+        }
+
+        if( otherCollider.tag == 998 || otherCollider.tag == 10 || otherCollider.tag == 11 ||  otherCollider.tag == 12 ||  otherCollider.tag == 13) {
             contact.disabled = true;
         }
     },

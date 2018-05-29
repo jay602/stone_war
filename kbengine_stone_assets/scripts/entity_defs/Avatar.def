@@ -37,6 +37,7 @@
 
 	<ClientMethods>
 		<onStartWalk>
+			<Arg>		INT32	</Arg>
 		</onStartWalk>
 
 		<onStopWalk>
@@ -45,6 +46,12 @@
 
 		<onJump>
 		</onJump>
+
+		<onLeftJump>
+		</onLeftJump>
+
+		<onRightJump>
+		</onRightJump>
 
 		<onNewTurn>
 				<Arg>		ENTITY_ID		</Arg>
@@ -94,6 +101,7 @@
 	<CellMethods>
 		<startWalk>
 			<Exposed/>
+			<Arg>		INT32	</Arg>
 		</startWalk>
 
 		<stopWalk>
@@ -104,6 +112,14 @@
 		<jump>
 			<Exposed/>
 		</jump>
+
+		<rightJump>
+			<Exposed/>
+		</rightJump>
+
+		<leftJump>
+			<Exposed/>
+		</leftJump>
 
 		<pickUpItem>
 			<Exposed/>

@@ -39,6 +39,11 @@ cc.Class({
             type: cc.Node,
         },
 
+        pickTouchRange: {
+            default: null,
+            type: cc.Node,
+        },
+
         itemID : 0,
 
         enableEvent: false,
@@ -54,26 +59,29 @@ cc.Class({
 
         this.ctx = cc.find("worldDraw").getComponent(cc.Graphics);
 
-        this.touchControl = cc.find("touchControl");
-        this.pickTouchRange = cc.find("touchRange");
+       // this.touchControl = cc.find("touchControl");
+        
+       
+        this.itemBox = null;
+       
+        if(!cc.sys.isMobile) {
+            cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
+            cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP, this.onKeyUp, this);
+        }
+    },
+
+    setTouchControl: function(touchControl) {
+        this.touchControl = touchControl;
         this.stickBg = this.touchControl.getChildByName("joyStickBg");
         this.oriStickPos = this.stickBg.position;
         this.stick = this.stickBg.getChildByName("joyStick");
         this.touchRadius = this.touchControl.getBoundingBoxToWorld().width/2;
         this.stickBgRadius = this.stickBg.getBoundingBoxToWorld().width/2;
 
-        this.itemBox = null;
-       
-        if(cc.sys.isMobile) {
-            this.touchControl.active = true;
-            this.pickTouchRange.active = true;
-            this.createTouchEvent();
-        } else {
-            this.touchControl.active = false;
-            this.pickTouchRange = false;
-            cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
-            cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP, this.onKeyUp, this);
-        }
+        this.pickTouchRange = cc.find("touchRange");
+        this.pickTouchRange.active = true;
+
+        this.createTouchEvent();
     },
 
     createTouchEvent: function() {
@@ -177,15 +185,12 @@ cc.Class({
         }
         else if(angle >= 30 && angle <= 60 && this.player)  
         {
-          //  KBEngine.INFO_MSG("right walk");
-            this.player.jump();
-            this.player.rightWalk();
+            this.player.touchRightJump();
         }
         else if(angle >= 120 && angle <= 150 && this.player)  
         {
            // KBEngine.INFO_MSG("left jump");
-            this.player.jump();
-            this.player.leftWalk();
+           this.player.touchLeftJump();
         }
         else if(angle > 60 && angle < 120 && this.player)  
         {

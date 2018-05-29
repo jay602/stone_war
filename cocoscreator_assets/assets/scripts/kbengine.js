@@ -321,6 +321,7 @@ KBEngine.Event = function()
 		
 		if(evtlst == undefined)
 		{
+			KBEngine.WARNING_MSG('KBEngine.Event::fire: ' + evtName + " undefined");  
 			return;			
 		}
 		

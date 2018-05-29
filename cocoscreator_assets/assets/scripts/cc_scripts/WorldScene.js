@@ -87,16 +87,18 @@ cc.Class({
         manager.enabledDebugDraw = true;
         manager.enabledDrawBoundingBox = true;
 
-        cc.director.getPhysicsManager().debugDrawFlags = cc.PhysicsManager.DrawBits.e_aabbBit |
-        cc.PhysicsManager.DrawBits.e_pairBit |
-        cc.PhysicsManager.DrawBits.e_centerOfMassBit |
-        cc.PhysicsManager.DrawBits.e_jointBit |
-        cc.PhysicsManager.DrawBits.e_shapeBit |
-        cc.PhysicsManager.DrawBits.e_rayCast;
+        cc.director.getPhysicsManager().debugDrawFlags =
+            // cc.PhysicsManager.DrawBits.e_aabbBit |
+            // cc.PhysicsManager.DrawBits.e_pairBit |
+            cc.PhysicsManager.DrawBits.e_centerOfMassBit |
+            // cc.PhysicsManager.DrawBits.e_jointBit |
+            cc.PhysicsManager.DrawBits.e_shapeBit |
+            cc.PhysicsManager.DrawBits.e_rayCast;
     },
 
     installEvents : function() {
-		// common
+        // common
+        KBEngine.WARNING_MSG("WorldScene installEvents");
 		KBEngine.Event.register("onDisconnected", this, "onDisconnected");
 		KBEngine.Event.register("onConnectionState", this, "onConnectionState");
 		KBEngine.Event.register("onReloginBaseappFailed", this, "onReloginBaseappFailed");
@@ -112,6 +114,8 @@ cc.Class({
         KBEngine.Event.register("newTurn", this, "newTurn");
 
         KBEngine.Event.register("otherAvatarOnJump", this, "otherAvatarOnJump");
+        KBEngine.Event.register("otherAvatarOnRightJump", this, "otherAvatarOnRightJump");
+        KBEngine.Event.register("otherAvatarOnLeftJump", this, "otherAvatarOnLeftJump");
         KBEngine.Event.register("otherAvatarOnPickUpItem", this, "otherAvatarOnPickUpItem");
         KBEngine.Event.register("otherAvatarThrowItem", this, "otherAvatarThrowItem");
         KBEngine.Event.register("otherAvatarOnStopWalk", this, "otherAvatarOnStopWalk");
@@ -213,6 +217,13 @@ cc.Class({
             var ctrl= this.player.addComponent("AvatarControl");
             var action= this.player.addComponent("AvatarAction");
             var anim= this.player.addComponent("AvatarAnim");
+
+           if(cc.sys.isMobile) {
+                var touchControl = cc.instantiate(this.joyStickPrefab);
+                this.node.parent.addChild(touchControl);
+                touchControl.setPosition(JOY_STICK_POSITION_X, JOY_STICK_POSITION_Y);
+                ctrl.setTouchControl(touchControl);
+           }
            
             //注意顺序： anim ---> action --->ctrl
             anim.setModelID(avatar.modelID);
@@ -385,14 +396,19 @@ cc.Class({
         action.onStopWalk(pos);
     },
 
-    otherAvatarOnStartWalk: function(avatarID){
+    otherAvatarOnStartWalk: function(avatarID, moveFlag){
         var player = this.entities[avatarID];
         if(player == undefined)
             return;
 
-        cc.log("WorldScene::otherAvatarOnStartWalk: avatarID=%d, scale=%f ", avatarID);
+        KBEngine.INFO_MSG("WorldScene::otherAvatarOnStartWalk: avatarID=" + avatarID + " moveFlag=" + moveFlag);
         var action = player.getComponent("AvatarAction");
-        action.playWalkAnim();
+        if(moveFlag == MOVE_LEFT) {
+            action.onLeftWalk();
+        } else if(moveFlag == MOVE_RIGHT) {
+            action.onRightWalk();
+        }
+        
     },
 
     otherAvatarRecoverItem: function(avatarID, itemID) {
@@ -403,6 +419,26 @@ cc.Class({
 
         player.getComponent("AvatarAction").reset();
         item.getComponent("ItemAction").setPlacePrePosition();
+    },
+
+    otherAvatarOnLeftJump: function(avatarID){
+        var player = this.entities[avatarID];
+        if(player == undefined)
+            return;
+
+        cc.log("WorldScene::otherAvatarOnLeftJump: avatarID= " + avatarID);
+        var action = player.getComponent("AvatarAction");
+        action.onLeftJump();
+    },
+
+    otherAvatarOnRightJump: function(avatarID){
+        var player = this.entities[avatarID];
+        if(player == undefined)
+            return;
+
+        cc.log("WorldScene::otherAvatarOnRightJump: avatarID= " + avatarID);
+        var action = player.getComponent("AvatarAction");
+        action.onRightJump();
     },
 
     onRecvDamage: function(avatarID, harm, hp) {

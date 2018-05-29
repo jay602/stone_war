@@ -38,6 +38,9 @@ cc.Class({
        
         this.btn_start.node.on('click', this.startGame, this);
         this.textinput_name.string = this.randomstring(4);
+        cc.director.preloadScene("WorldScene", function () {
+            KBEngine.INFO_MSG("Next scene preloaded");
+        });
      },
 
      start: function() {
@@ -50,6 +53,7 @@ cc.Class({
               })
         }
        
+      
      },
 
     //  wxLoginNative() {

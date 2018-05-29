@@ -110,6 +110,8 @@ cc.Class({
             default: null,
             type: cc.Node,
         },
+
+        jumpFrame: 0,
     },
 
     onLoad () {
@@ -284,12 +286,15 @@ cc.Class({
     },
 
     leftWalk: function() {
+        KBEngine.INFO_MSG("11 avatar left walk: moveFlag=" + this.moveFlag);
         if(this.moveFlag == MOVE_LEFT) 
             return;
 
+        KBEngine.INFO_MSG("22 avatar left walk: hasPickUpItem= " + this.hasPickUpItem.toString());    
         if(this.hasPickUpItem)
             return;
 
+        KBEngine.INFO_MSG("33 avatar left walk: jumping= " + this.jumping.toString());  
         this.moveFlag = MOVE_LEFT;
         if(!this.jumping) {
             this.node.scaleX = this.leftDir;
@@ -298,8 +303,16 @@ cc.Class({
         
 
         var player = KBEngine.app.player();
-        if(player != undefined && player.inWorld) {
-            player.startWalk();
+        if(player != undefined && player.inWorld && player.id == this.eid) {
+            player.startWalk(MOVE_LEFT);
+        }
+    },
+
+    onLeftWalk: function() {
+        this.moveFlag = MOVE_LEFT;
+        if(!this.jumping) {
+            this.node.scaleX = this.leftDir;
+            this.playWalkAnim();
         }
     },
 
@@ -316,10 +329,17 @@ cc.Class({
             this.playWalkAnim();
         }
        
-
         var player = KBEngine.app.player();
-        if(player != undefined && player.inWorld) {
-            player.startWalk();
+        if(player != undefined && player.inWorld  && player.id == this.eid) {
+            player.startWalk(MOVE_RIGHT);
+        }
+    },
+
+    onRightWalk: function() {
+        this.moveFlag = MOVE_RIGHT;
+        if(!this.jumping) {
+            this.node.scaleX = this.rightDir;
+            this.playWalkAnim();
         }
     },
 
@@ -357,7 +377,9 @@ cc.Class({
     },
 
     onStopWalk: function(pos) {
-        cc.log("Avatar onStopWalk");
+        KBEngine.INFO_MSG("Avatar onStopWalk, pos1(" + pos.x + ", " + pos.y + "), pos2(" + this.node.x
+            + ", " + this.node.y + ")");
+
         this.moveFlag = STATIC;
         if(this.anim){
             this.anim.stopPlayAnim();
@@ -365,20 +387,53 @@ cc.Class({
         }
     },
 
+    touchLeftJump: function() {
+        if(this.hasPickUpItem)
+            return;
+
+        var canJump = this._jump();
+        if(canJump) {
+            this.moveFlag = MOVE_LEFT;
+            this.node.scaleX = this.leftDir; 
+
+            var player = KBEngine.app.player();
+            if(player != undefined && player.inWorld) {
+                player.leftJump();
+            }
+        }
+    },
+
+    touchRightJump: function() {
+        if(this.hasPickUpItem)
+            return;
+
+        var canJump = this._jump();
+        if(canJump) {
+            this.moveFlag = MOVE_RIGHT;   
+            this.node.scaleX = this.rightDir; 
+
+            var player = KBEngine.app.player();
+            if(player != undefined && player.inWorld) {
+                player.rightJump();
+            }
+        }
+    },
+
     jump: function() {
         if(this.hasPickUpItem)
             return;
 
-        this._jump();
-        if(this.jumping) {
+        var canJump = this._jump();
+        if(canJump && this.jumping) {
             var player = KBEngine.app.player();
-            if(player != undefined && player.inWorld) {
+            if(player != undefined && player.inWorld && player.id == this.eid) {
                 player.jump()
             }
         }
     },
 
     _jump: function() {
+        var canJump = false;
         if (!this.jumping) {
             KBEngine.INFO_MSG("player jump .......");
             this.jumping = true;
@@ -386,12 +441,36 @@ cc.Class({
             if(this.anim) {
                 this.anim.playJumpAnim(); 
             }
+            canJump = true;
         }
+
+        return canJump;
     },
 
     onJump: function() {
         KBEngine.INFO_MSG("AvatarAction onJump, position(" + this.node.x + ", "+ this.node.y + ")");
         this._jump();
+    },
+
+    onLeftJump: function() {
+        KBEngine.INFO_MSG("AvatarAction on left jump, position(" + this.node.x + ", "+ this.node.y + ")");
+
+        //if(this.moveFlag == MOVE_LEFT) return;
+        if(this._jump()) {
+            this.node.scaleX = this.leftDir; 
+            this.moveFlag = MOVE_LEFT;
+        }
+    },
+
+    onRightJump: function() {
+        KBEngine.INFO_MSG("AvatarAction on right jump, position(" + this.node.x + ", "+ this.node.y + ")");
+
+       // if(this.moveFlag == MOVE_RIGHT) return;
+
+       if(this._jump()) {
+            this.node.scaleX = this.rightDir; 
+            this.moveFlag = MOVE_RIGHT;
+        }
     },
 
     setAnim: function(anim) {
@@ -570,19 +649,22 @@ cc.Class({
 
     onStartMove: function(position) {
         this.targetPosition = position;
-        var dx = position.x - this.node.x;
-        if (dx > 0.5) // 右
-        {
-            this.moveFlag = MOVE_RIGHT;
-        } else if (dx < -0.5) //左
-        {
-            this.moveFlag = MOVE_LEFT;
-        } else 
-        {
-            this.moveFlag = STATIC;
-        }
+
+        // var dx = position.x - this.node.x;
+        // if (dx > 0.5) // 右
+        // {
+        //     this.moveFlag = MOVE_RIGHT;
+        // } else if (dx < -0.5) //左
+        // {
+        //     this.moveFlag = MOVE_LEFT;
+        // } else 
+        // {
+        //     this.moveFlag = STATIC;
+        // }
+
         this.hpProcessBar.scaleX = this.node.scaleX;
         this.labelName.scaleX = this.node.scaleX;
+
         //cc.log("AvatarAction::onStartMove, dx=%f, move=%f, prePosition(%f, %f)", dx, this.moveFlag, this.node.x, this.node.y);
     },
 
@@ -667,26 +749,29 @@ cc.Class({
     },
 
     drawTestNode: function() {
-       
+        var start = this.start_point.convertToWorldSpaceAR(cc.v2(0, 0));
+        var end = this.end_point.convertToWorldSpaceAR(cc.v2(0, 0));
+
+        this.testNode1.setPosition(start);
+        this.testNode2.setPosition(end);
+
         this.ctx.clear();
         this.ctx.fillColor = this.touchThrowCenter ? cc.Color.RED : cc.Color.GREEN;
-        this.ctx.circle(this.testNode1.x, this.testNode1.y, 10);
+        this.ctx.circle(this.testNode1.x, this.testNode1.y, 2);
         this.ctx.fill();
 
-        this.ctx.circle(this.testNode2.x, this.testNode2.y, 10);
+        this.ctx.circle(this.testNode2.x, this.testNode2.y, 2);
         this.ctx.fillColor = cc.Color.BLUE;
         this.ctx.fill();
 
         this.ctx.moveTo(this.testNode1.x, this.testNode1.y);
-        this.ctx.lineTo(this.testNode1.x, this.testNode1.y)
+        this.ctx.lineTo(this.testNode2.x, this.testNode2.y)
 
         this.ctx.stroke();
-     
-
     },
    
     update: function(dt) {
-        //this.drawTestNode();
+        this.drawTestNode();
 
         if(this.arrow.active) {
             this.arrow.rotation = this.arrowAngle;
@@ -696,39 +781,70 @@ cc.Class({
         var speedX = this.walkspeed.x * dt;
         var results = null;
 
-        if(this.moveFlag == MOVE_LEFT) {
-            if(player.id == this.eid) {
-               if(!this.isCollideLand) {
-                    this.addAxisX(-speedX);
-               }
-            }else {
-               if(this.node.x >= this.targetPosition.x) {
-                    this.addAxisX(-speedX);
-                 } 
-            }
-        } 
-        else if (this.moveFlag == MOVE_RIGHT ) {
-            if(player.id == this.eid) {
-                if(!this.isCollideLand) {
-                    this.addAxisX(speedX);
-                }
-            }else {
-                if(this.node.x <= this.targetPosition.x) {
-                    this.addAxisX(speedX);
-                } 
-            }
-        }  
-
         if(this.jumping) {
             this.jumpSpeedY +=  this.gravity * dt;
 
             if(Math.abs(this.jumpSpeedY) > this.maxSpeed.y) {
                 this.jumpSpeedY = this.jumpSpeedY > 0 ? this.maxSpeed.y : -this.maxSpeed.y;
             }
+            var jumpHeight = this.jumpSpeedY*dt
 
-            this.addAxisY(this.jumpSpeedY*dt);
+            if(this.jumpFrame == 0) {
+                if(jumpHeight<8.5) jumpHeight = 8.56;
+
+                var start = this.start_point.convertToWorldSpaceAR(cc.v2(0, 0));
+                var end = this.end_point.convertToWorldSpaceAR(cc.v2(0, 0));
+                results = cc.director.getPhysicsManager().rayCast(start, end, cc.RayCastType.AllClosest);
+        
+                for (var i = 0; i < results.length; i++) {
+                    var result = results[i];
+                    var collider = result.collider;
+                    if(collider.node.name == "land_bg") {
+                        var rayHeight = result.point.y - end.y; 
+                        KBEngine.INFO_MSG("first jump : endPoint(" + end.x + ", " + end.y + ")");
+                        KBEngine.INFO_MSG("first jump : rayPoint(" + result.point.x + ", " + result.point.y + ")");
+                        KBEngine.INFO_MSG("first jump : rayCast height = " + rayHeight);
+                        break;
+                    }
+                }
+            }
+
+            this.jumpFrame++;
+            this.addAxisY(jumpHeight);
+            KBEngine.INFO_MSG("player jumping, position(" + this.node.x + ", "+ this.node.y + ")");
+            KBEngine.INFO_MSG("player jumping, jumpHeight= " + jumpHeight);
+            KBEngine.INFO_MSG("player jumping, dt= " + dt);
+            //KBEngine.INFO_MSG("player jumping, jumpSpeedY= " + this.jumpSpeedY);
+            //KBEngine.INFO_MSG("player jumping, acced= " + this.gravity * dt);
             this.isOnGround = false;
         }
+
+        if(this.moveFlag == MOVE_LEFT) {
+            this.addAxisX(-speedX);
+            // if(player.id == this.eid) {
+            //    if(!this.isCollideLand) {
+            //         this.addAxisX(-speedX);
+            //    }
+            // }else {
+            //    if(this.targetPosition && this.node.x >= this.targetPosition.x) {
+            //         KBEngine.INFO_MSG("update: other avatar move left");
+            //         this.addAxisX(-speedX);
+            //      } 
+            // }
+        } 
+        else if (this.moveFlag == MOVE_RIGHT ) {
+            this.addAxisX(speedX);
+            // if(player.id == this.eid) {
+            //     if(!this.isCollideLand) {
+            //         this.addAxisX(speedX);
+            //     }
+            // }else {
+            //     if(this.targetPosition && this.node.x <= this.targetPosition.x) {
+            //         KBEngine.INFO_MSG("update: other avatar move left");
+            //         this.addAxisX(speedX);
+            //     } 
+            // }
+        }  
 
         var start = this.start_point.convertToWorldSpaceAR(cc.v2(0, 0));
         var end = this.end_point.convertToWorldSpaceAR(cc.v2(0, 0));
@@ -738,14 +854,26 @@ cc.Class({
             var result = results[i];
             var collider = result.collider;
             if(collider.node.name == "land_bg") {
-                var foot_point = this.node.parent.convertToNodeSpace(result.point);
-                this.node.y = foot_point.y;
-                this.isOnGround = true;
+                var ret = this.jumping && this.jumpFrame==1;
+                if(!ret) {
+                    var foot_point = this.node.parent.convertToNodeSpace(result.point);
+                    this.node.y = foot_point.y;
+                    this.isOnGround = true;
+                }
+               
                 if(this.jumping) {
+                    if(ret) break;
                     KBEngine.INFO_MSG("player stop jump, position(" + this.node.x + ", "+ this.node.y + ")");
+
+                    var rayHeight = result.point.y - end.y; 
+                    KBEngine.INFO_MSG("endPoint(" + end.x + ", " + end.y + ")");
+                    KBEngine.INFO_MSG("rayPoint(" + result.point.x + ", " + result.point.y + ")");
+                    KBEngine.INFO_MSG("rayCast height = " + rayHeight);
+
                     this.jumping = false;
                     this.moveFlag = STATIC;
                     this.anim.playIdleAnim();
+                    this.jumpFrame = 0;
                 }
                 break;
             }
