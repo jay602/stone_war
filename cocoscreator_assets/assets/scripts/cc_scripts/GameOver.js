@@ -36,6 +36,26 @@ cc.Class({
             default: null,
             type: cc.Prefab,
         },
+
+        labelHitRate: {
+            default: null,
+            type: cc.Label,
+        },
+
+        labelTotalTime: {
+            default: null,
+            type: cc.Label,
+        },
+
+        labelTotalHarm: {
+            default: null,
+            type: cc.Label,
+        },
+
+        labelScore: {
+            default: null,
+            type: cc.Label,
+        },
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -60,6 +80,11 @@ cc.Class({
 
         this.player.addChild(result);
         result.setPosition(0, 0);
+
+        this.labelHitRate.string = HIT_RATE.toFixed(2) * 100 + '%';
+        this.labelTotalHarm.string = TOTAL_HARM;
+        this.labelTotalTime.string = TOTAL_TIME + 'S';
+        this.labelScore.string = SCORE;
     },
 
 });

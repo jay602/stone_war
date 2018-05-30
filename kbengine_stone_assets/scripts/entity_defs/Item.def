@@ -4,10 +4,17 @@
 			<Type>		STRING				</Type>
 			<Flags>		ALL_CLIENTS			</Flags>
 		</name>
+
 		<harm>
-			<Type>	UINT8 </Type>
+			<Type>		UINT8 				</Type>
 			<Flags>		ALL_CLIENTS			</Flags>
 		</harm>
+
+		<throwPlayerID>
+			<Type>		ENTITY_ID 			</Type>
+			<Flags>		CELL_PUBLIC			</Flags>
+			<Default>		0				</Default>
+		</throwPlayerID>
 	</Properties>
 
 	<ClientMethods>

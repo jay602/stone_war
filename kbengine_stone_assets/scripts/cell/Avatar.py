@@ -50,6 +50,7 @@ class Avatar(KBEngine.Entity, EntityCommon):
 		
 		if room:
 			room.onLeave(self.id)
+
 	def rightJump(self, exposed):
 		DEBUG_MSG("avavtar %i right jump, selfID=%i" % (exposed, self.id))
 		if exposed != self.id:
@@ -93,9 +94,14 @@ class Avatar(KBEngine.Entity, EntityCommon):
 		if exposed != self.id:
 			return
 
+		item = None
 		room = self.getCurrRoom()
 		if room:
 			room.killNewTurnTimer()
+			item = room.findItemByID(itemID)
+			item.throwPlayerID = self.id
+
+		self.throwCount += 1
 			
 		DEBUG_MSG("avatar %i pick up item=%i" % (self.id, itemID))
 		self.otherClients.onThrowItem(itemID, force)
@@ -146,6 +152,7 @@ class Avatar(KBEngine.Entity, EntityCommon):
 			return
 
 		room = self.getCurrRoom()
+		otherPlayer = None
 		item = None
 		harm = 0
 		if room:
@@ -153,11 +160,18 @@ class Avatar(KBEngine.Entity, EntityCommon):
 
 		if item:
 			harm = item.harm
+			if item.throwPlayerID > 0:
+				otherPlayer = room.findAvatarByID(item.throwPlayerID)
+
+		if otherPlayer and otherPlayer.id != self.id:
+			otherPlayer.hitCount += 1
+			otherPlayer.totalHarm += harm
 
 		self.HP = self.HP - harm
 		if self.HP <= 0:
 			self.HP = 0
-		DEBUG_MSG("avatar %i recv harm=%i hp=%i harmCount=%i" % (exposed, harm, self.HP, self.harmCount))
+
+		DEBUG_MSG("avatar %i recv harm=%i hp=%i harmCount=%i from player %i " % (exposed, harm, self.HP, self.harmCount, otherPlayer.id))
 
 		self.client.onRecvDamage(self.id, harm, self.HP)
 		self.otherClients.onRecvDamage(self.id, harm, self.HP)

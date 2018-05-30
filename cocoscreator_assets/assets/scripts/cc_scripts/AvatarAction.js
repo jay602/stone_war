@@ -771,7 +771,7 @@ cc.Class({
     },
    
     update: function(dt) {
-        this.drawTestNode();
+       // this.drawTestNode();
 
         if(this.arrow.active) {
             this.arrow.rotation = this.arrowAngle;
@@ -791,32 +791,34 @@ cc.Class({
 
             if(this.jumpFrame == 0) {
                 if(jumpHeight<8.5) jumpHeight = 8.56;
-
-                var start = this.start_point.convertToWorldSpaceAR(cc.v2(0, 0));
-                var end = this.end_point.convertToWorldSpaceAR(cc.v2(0, 0));
-                results = cc.director.getPhysicsManager().rayCast(start, end, cc.RayCastType.AllClosest);
+                
+                // var start = this.start_point.convertToWorldSpaceAR(cc.v2(0, 0));
+                // var end = this.end_point.convertToWorldSpaceAR(cc.v2(0, 0));
+                // results = cc.director.getPhysicsManager().rayCast(start, end, cc.RayCastType.AllClosest);
         
-                for (var i = 0; i < results.length; i++) {
-                    var result = results[i];
-                    var collider = result.collider;
-                    if(collider.node.name == "land_bg") {
-                        var rayHeight = result.point.y - end.y; 
-                        KBEngine.INFO_MSG("first jump : endPoint(" + end.x + ", " + end.y + ")");
-                        KBEngine.INFO_MSG("first jump : rayPoint(" + result.point.x + ", " + result.point.y + ")");
-                        KBEngine.INFO_MSG("first jump : rayCast height = " + rayHeight);
-                        break;
-                    }
-                }
+                // for (var i = 0; i < results.length; i++) {
+                //     var result = results[i];
+                //     var collider = result.collider;
+                //     if(collider.node.name == "land_bg") {
+                //         var rayHeight = result.point.y - end.y; 
+                //         KBEngine.INFO_MSG("first jump : endPoint(" + end.x + ", " + end.y + ")");
+                //         KBEngine.INFO_MSG("first jump : rayPoint(" + result.point.x + ", " + result.point.y + ")");
+                //         KBEngine.INFO_MSG("first jump : rayCast height = " + rayHeight);
+                //         break;
+                //     }
+                // }
             }
 
             this.jumpFrame++;
             this.addAxisY(jumpHeight);
-            KBEngine.INFO_MSG("player jumping, position(" + this.node.x + ", "+ this.node.y + ")");
-            KBEngine.INFO_MSG("player jumping, jumpHeight= " + jumpHeight);
-            KBEngine.INFO_MSG("player jumping, dt= " + dt);
+            this.isOnGround = false;
+
+            // KBEngine.INFO_MSG("player jumping, position(" + this.node.x + ", "+ this.node.y + ")");
+            // KBEngine.INFO_MSG("player jumping, jumpHeight= " + jumpHeight);
+            // KBEngine.INFO_MSG("player jumping, dt= " + dt);
             //KBEngine.INFO_MSG("player jumping, jumpSpeedY= " + this.jumpSpeedY);
             //KBEngine.INFO_MSG("player jumping, acced= " + this.gravity * dt);
-            this.isOnGround = false;
+            
         }
 
         if(this.moveFlag == MOVE_LEFT) {
@@ -863,12 +865,12 @@ cc.Class({
                
                 if(this.jumping) {
                     if(ret) break;
-                    KBEngine.INFO_MSG("player stop jump, position(" + this.node.x + ", "+ this.node.y + ")");
+                    // KBEngine.INFO_MSG("player stop jump, position(" + this.node.x + ", "+ this.node.y + ")");
 
-                    var rayHeight = result.point.y - end.y; 
-                    KBEngine.INFO_MSG("endPoint(" + end.x + ", " + end.y + ")");
-                    KBEngine.INFO_MSG("rayPoint(" + result.point.x + ", " + result.point.y + ")");
-                    KBEngine.INFO_MSG("rayCast height = " + rayHeight);
+                    // var rayHeight = result.point.y - end.y; 
+                    // KBEngine.INFO_MSG("endPoint(" + end.x + ", " + end.y + ")");
+                    // KBEngine.INFO_MSG("rayPoint(" + result.point.x + ", " + result.point.y + ")");
+                    // KBEngine.INFO_MSG("rayCast height = " + rayHeight);
 
                     this.jumping = false;
                     this.moveFlag = STATIC;

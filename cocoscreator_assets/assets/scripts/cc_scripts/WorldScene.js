@@ -463,8 +463,11 @@ cc.Class({
         anim.playDieAnim();
     },
 
-    onGameOver: function(avatarID, isWin) {
-        cc.log("WorldScene::onGameOver: avatarID=%d, win=%s, hp=%d ", avatarID, isWin.toString());
+    onGameOver: function(avatarID, isWin, hitRate, totalTime, totalHarm, score) {
+        KBEngine.INFO_MSG("WorldScene::onGameOver: avatarID= " + avatarID + ", isWin=" + isWin.toString());
+        KBEngine.INFO_MSG("hitRate=" + hitRate + " , totalTime=" + totalTime + " , totalHarm="
+            + totalHarm + " , score=" + score);
+
         if(avatarID == KBEngine.app.player().id) {
             if(this.player.name == PIPI_NAME) {
                 GAME_RESULT = isWin ? PIPI_WIN : PIPI_LOSE;
@@ -472,6 +475,11 @@ cc.Class({
                 GAME_RESULT = isWin ? POP_WIN : POP_LOSE;
             }
 
+            HIT_RATE = hitRate;
+            TOTAL_TIME = totalTime;
+            TOTAL_HARM = totalHarm;
+            SCORE = score;
+            
             if(isWin) {
                 cc.director.loadScene("WinScene");
             } else {

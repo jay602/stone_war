@@ -173,10 +173,10 @@ KBEngine.Avatar = KBEngine.Entity.extend(
             KBEngine.Event.fire("onAvatarDie", avatarID);
         },
 
-        onGameOver: function(isWin)
+        onGameOver: function(isWin, hitRate, totalTime, totalHarm, score)
         {
             KBEngine.INFO_MSG("Game is over: avatar " + this.id + "win= " + isWin.toString());
-            KBEngine.Event.fire("onGameOver", this.id, isWin);
+            KBEngine.Event.fire("onGameOver", this.id, isWin, hitRate, totalTime, totalHarm, score);
         },
 
         //石头出界，重置石头

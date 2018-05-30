@@ -10,6 +10,7 @@ TIMER_TYPE_BALANCE_MASS = 2
 TIMER_TYPE_GAME_START = 3
 TIMER_TYPE_NEXT_PLAYER = 4
 TIMER_TYPE_GAME_OVER = 5
+TIMER_TYPE_SECOND = 6
 
 class Room(KBEngine.Entity):
 	"""
@@ -26,6 +27,8 @@ class Room(KBEngine.Entity):
 		self.items = {}
 		self.curEid = 0
 		self.newTurnTimer = 0
+		self.secondTimer = 0
+		self.totalTime = 0
 		DEBUG_MSG('created space[%d] entityID = %i.' % (self.roomKeyC, self.id))
 		KBEngine.globalData["Room_%i" % self.spaceID] = self.base
 		self.createItems()
@@ -76,7 +79,6 @@ class Room(KBEngine.Entity):
 		@param id		: addTimer 的返回值ID
 		@param userArg	: addTimer 最后一个参数所给入的数据
 		"""
-		DEBUG_MSG("Room::onTimer: timeID=%i, userArg=%i" % (id, userArg))
 		if TIMER_TYPE_GAME_START == userArg:
 			self.startGame()
 			self.newTurnTimer = self.addTimer(GameConfigs.PLAY_TIME_PER_TURN, 0, TIMER_TYPE_NEXT_PLAYER)
@@ -87,18 +89,40 @@ class Room(KBEngine.Entity):
 
 		if TIMER_TYPE_GAME_OVER == userArg:
 			DEBUG_MSG("Game is Over !!!")
-			for entity in self.avatars.values():
+			self.settleAccount()
+
+		if TIMER_TYPE_SECOND == userArg:
+			self.totalTime += 1
+
+	def getTotalTime(self):
+		return self.totalTime
+
+	def settleAccount(self):
+		for entity in self.avatars.values():
 				win = not entity.isDead()
 				result = "lose"
 				if win:
 					result = "win"
 				DEBUG_MSG("entity id=%i is %s" % (entity.id, result))
-				entity.client.onGameOver(win)
+
+				entity.hitRate = round(entity.hitCount/entity.throwCount, 3)
+				entity.totalTime = self.totalTime
+				entity.score = int(100000 * entity.hitRate * entity.totalHarm / entity.totalTime)
+				entity.client.onGameOver(win, entity.hitRate, entity.totalTime, entity.totalHarm, entity.score)
+
+				DEBUG_MSG("entity id=%i,  hitCount=%i, throwCount=%i" % (entity.id, entity.hitCount, entity.throwCount))
+				DEBUG_MSG("entity id=%i, game result(%f, %i, %i, %i)" % (entity.id, 
+					entity.hitRate, entity.totalTime, entity.totalHarm, entity.score))
 
 	def startGame(self):
+		self.secondTimer = self.addTimer(1, 1, TIMER_TYPE_SECOND)
 		self.newTurn(self.curEid)
 	
 	def newTurn(self, eid):
+		DEBUG_MSG("Room Key=%i" % (self.roomKeyC))
+		for item in self.items.values():
+			item.throwPlayerID = 0
+			
 		for entity in self.avatars.values():
 			entity.reset()
 			entity.client.onNewTurn(eid, GameConfigs.PLAY_TIME_PER_TURN)
@@ -144,8 +168,11 @@ class Room(KBEngine.Entity):
 		return self.items[itemID]
 
 	def gameOver(self):
-		timer = self.addTimer(1, 0, TIMER_TYPE_GAME_OVER)
-		DEBUG_MSG("add timer %i: game over" % (timer))
+		if self.secondTimer > 0:
+			self.delTimer(self.secondTimer)
+			self.secondTimer = 0
+
+		self.addTimer(1, 0, TIMER_TYPE_GAME_OVER)
 
 	def resetItem(self, itemID):
 		item = self.items[itemID]
@@ -175,3 +202,6 @@ class Room(KBEngine.Entity):
 			dir = (0.0, 0.0, 0.0)
 			entity = KBEngine.createEntity("Item", self.spaceID, pos, dir, {"name" : name, "harm" : harm})
 			self.items[entity.id] = entity
+
+	def findAvatarByID(self, avatarID):
+		return self.avatars[avatarID]

@@ -31,8 +31,44 @@
 		<HP>
 			<Type>		INT32				</Type>
 			<Flags>		ALL_CLIENTS			</Flags>
-			<Default>		300				</Default>
+			<Default>		100				</Default>
 		</HP>
+
+		<totalHarm>
+			<Type>		INT32				</Type>
+			<Flags>	  CELL_PUBLIC_AND_OWN	</Flags>
+			<Default>		0				</Default>
+		</totalHarm>
+
+		<totalTime>
+			<Type>		INT32				</Type>
+			<Flags>	  CELL_PUBLIC_AND_OWN	</Flags>
+			<Default>		0				</Default>
+		</totalTime>
+
+		<hitCount>
+			<Type>		INT32				</Type>
+			<Flags>	  CELL_PUBLIC_AND_OWN	</Flags>
+			<Default>		0				</Default>
+		</hitCount>
+
+		<throwCount>
+			<Type>		INT32				</Type>
+			<Flags>	 CELL_PUBLIC_AND_OWN	</Flags>
+			<Default>		0				</Default>
+		</throwCount>
+
+		<score>
+			<Type>		INT32				</Type>
+			<Flags>	 CELL_PUBLIC_AND_OWN	</Flags>
+			<Default>		0				</Default>
+		</score>
+
+		<hitRate>
+			<Type>		FLOAT				</Type>
+			<Flags>	 CELL_PUBLIC_AND_OWN	</Flags>
+			<Default>		0				</Default>
+		</hitRate>
 	</Properties>
 
 	<ClientMethods>
@@ -84,6 +120,10 @@
 
 		<onGameOver>
 			<Arg>		BOOL	</Arg>
+			<Arg>		FLOAT	</Arg>
+			<Arg>		INT32		</Arg>
+			<Arg>		INT32		</Arg>
+			<Arg>		INT32		</Arg>
 		</onGameOver>
 
 		<onResetItem>
