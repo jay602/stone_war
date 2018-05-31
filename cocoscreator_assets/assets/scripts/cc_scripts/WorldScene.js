@@ -62,18 +62,14 @@ cc.Class({
         this.cameraControl = this.camera.getComponent("CameraControl");
 
         this.enablePhysicManager();
-       // this.enablePhysicsDebugDraw();
+        //this.enablePhysicsDebugDraw();
         this.installEvents();
         this.items = new Array();
 
         this.gameState = this.node.getComponent("GameState");
-        KBEngine.INFO_MSG("WorldScene onLoad");
     },
 
-    start() {
-        //cc.game.addPersistRootNode(this.node)
-    },
-
+    
     enablePhysicManager: function () {
         cc.director.getCollisionManager().enabled = true;
         cc.director.getPhysicsManager().enabled = true;
@@ -123,8 +119,6 @@ cc.Class({
 
         KBEngine.Event.register("onGameOver", this, "onGameOver");
         KBEngine.Event.register("onResetItem", this, "onResetItem");
-
-        KBEngine.WARNING_MSG("WorldScene installEvents");
     },
 
     unInstallEvents: function() {
@@ -156,8 +150,6 @@ cc.Class({
 
         KBEngine.Event.deregister("onGameOver", this);
         KBEngine.Event.deregister("onResetItem", this);
-
-        KBEngine.WARNING_MSG("WorldScene unInstallEvents  ....");
     },
 
     onDisconnected : function() {

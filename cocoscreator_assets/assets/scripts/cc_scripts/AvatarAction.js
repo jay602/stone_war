@@ -771,7 +771,7 @@ cc.Class({
     },
    
     update: function(dt) {
-       // this.drawTestNode();
+        this.drawTestNode();
 
         if(this.arrow.active) {
             this.arrow.rotation = this.arrowAngle;
