@@ -4,6 +4,7 @@ from KBEDebug import *
 import GameUtils
 import GameConfigs
 import random
+import copy
 from interfaces.EntityCommon import EntityCommon
 
 
@@ -13,6 +14,7 @@ class Avatar(KBEngine.Entity, EntityCommon):
 		EntityCommon.__init__(self)
 		DEBUG_MSG("Avatar cell ctor position")
 		DEBUG_MSG(self.position)
+		self.startPosition = copy.deepcopy(self.position)
 		self.getCurrRoom().onEnter(self)
 		
 	def isAvatar(self):
@@ -202,3 +204,27 @@ class Avatar(KBEngine.Entity, EntityCommon):
 		room = self.getCurrRoom()
 		if room:
 			room.addItem(left)
+
+	def resetGameData(self):
+		self.hitRate = 0.0
+		self.totalTime = 0
+		self.totalHarm = 0
+		self.score = 0
+		self.hitCount = 0
+		self.throwCount = 0
+		self.HP = 100
+
+	def continueGame(self, exposed):
+		DEBUG_MSG("Avatar %i continueGame" % (self.id))
+		if self.id != exposed:
+			return
+		DEBUG_MSG(self.position)
+		self.position = copy.deepcopy(self.startPosition)
+		DEBUG_MSG(self.startPosition)
+		self.client.onContinueGame(self.id)
+		#self.otherClients.onContinueGame(self.id)
+
+		room = self.getCurrRoom()
+		if room:
+			room.addReadyPlayerCount(1, self)
+			

@@ -123,7 +123,9 @@ class Avatar(KBEngine.Proxy):
 
 	def enterRoom(self):
 		# 如果玩家存在cell， 说明已经在地图中了， 因此不需要再次进入地图
-		DEBUG_MSG("Avatar %i reqEnterRoom" % (self.id))
+		DEBUG_MSG("Avatar %i reqEnterRoom, hasCell=%i" % (self.id, self.cell!=None))
 		if self.cell is None:
 			# 玩家上线了或者重登陆了， 此处告诉大厅，玩家请求登陆到游戏地图中
 			KBEngine.globalData["Halls"].enterRoom(self, self.cellData["position"], self.cellData["direction"], self.roomKey)
+
+	

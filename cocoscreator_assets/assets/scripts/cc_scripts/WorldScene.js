@@ -9,14 +9,6 @@
 //  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
 
 var KBEngine = require("kbengine");
-const kPlayerStartX = 657;
-const kPlayerStartY = 29;
-
-const kOtherPlayerStartX = 105;
-const kOtherPlayerStartY = 34;
-
-var entitypos = 0;
-var entityID = 0;
 
 cc.Class({
     extends: cc.Component,
@@ -75,6 +67,11 @@ cc.Class({
         this.items = new Array();
 
         this.gameState = this.node.getComponent("GameState");
+        KBEngine.INFO_MSG("WorldScene onLoad");
+    },
+
+    start() {
+        //cc.game.addPersistRootNode(this.node)
     },
 
     enablePhysicManager: function () {
@@ -98,7 +95,6 @@ cc.Class({
 
     installEvents : function() {
         // common
-        KBEngine.WARNING_MSG("WorldScene installEvents");
 		KBEngine.Event.register("onDisconnected", this, "onDisconnected");
 		KBEngine.Event.register("onConnectionState", this, "onConnectionState");
 		KBEngine.Event.register("onReloginBaseappFailed", this, "onReloginBaseappFailed");
@@ -106,6 +102,7 @@ cc.Class({
 
         // in world
         KBEngine.Event.register("onAvatarEnterWorld", this, "onAvatarEnterWorld");
+        KBEngine.Event.register("onAvatarContinueGame", this, "onAvatarContinueGame");
 		KBEngine.Event.register("onEnterWorld", this, "onEnterWorld");
         KBEngine.Event.register("onLeaveWorld", this, "onLeaveWorld");
         KBEngine.Event.register("updatePosition", this, "updatePosition");
@@ -126,6 +123,41 @@ cc.Class({
 
         KBEngine.Event.register("onGameOver", this, "onGameOver");
         KBEngine.Event.register("onResetItem", this, "onResetItem");
+
+        KBEngine.WARNING_MSG("WorldScene installEvents");
+    },
+
+    unInstallEvents: function() {
+        KBEngine.Event.deregister("onDisconnected", this, "onDisconnected");
+		KBEngine.Event.deregister("onConnectionState", this, "onConnectionState");
+		KBEngine.Event.deregister("onReloginBaseappFailed", this, "onReloginBaseappFailed");
+		KBEngine.Event.deregister("onReloginBaseappSuccessfully", this, "onReloginBaseappSuccessfully");
+
+        // in world
+        KBEngine.Event.deregister("onAvatarEnterWorld", this, "onAvatarEnterWorld");
+        KBEngine.Event.deregister("onAvatarContinueGame", this, "onAvatarContinueGame");
+		KBEngine.Event.deregister("onEnterWorld", this, "onEnterWorld");
+        KBEngine.Event.deregister("onLeaveWorld", this, "onLeaveWorld");
+        KBEngine.Event.deregister("updatePosition", this, "updatePosition");
+       
+        KBEngine.Event.deregister("set_position", this, "set_position");
+        KBEngine.Event.deregister("newTurn", this, "newTurn");
+
+        KBEngine.Event.deregister("otherAvatarOnJump", this);
+        KBEngine.Event.deregister("otherAvatarOnRightJump", this);
+        KBEngine.Event.deregister("otherAvatarOnLeftJump", this);
+        KBEngine.Event.deregister("otherAvatarOnPickUpItem", this);
+        KBEngine.Event.deregister("otherAvatarThrowItem", this);
+        KBEngine.Event.deregister("otherAvatarOnStopWalk", this);
+        KBEngine.Event.deregister("otherAvatarOnStartWalk", this);
+        KBEngine.Event.deregister("otherAvatarRecoverItem", this);
+        KBEngine.Event.deregister("onRecvDamage", this);
+        KBEngine.Event.deregister("onAvatarDie", this);
+
+        KBEngine.Event.deregister("onGameOver", this);
+        KBEngine.Event.deregister("onResetItem", this);
+
+        KBEngine.WARNING_MSG("WorldScene unInstallEvents  ....");
     },
 
     onDisconnected : function() {
@@ -158,11 +190,12 @@ cc.Class({
             var ae = null;
 
             if(entity.className == "Avatar") {
-                if(entity.modelID == 0) {
+                if(entity.modelID == 0 && this.pipiPrefab) {
                     ae = cc.instantiate(this.pipiPrefab);
-                }else if(entity.modelID == 1) {
+                }else if(entity.modelID == 1 && this.popPrefab) {
                     ae = cc.instantiate(this.popPrefab);
                 }
+                if(!ae) return;
                 var action = ae.addComponent("AvatarAction");
                 var anim = ae.addComponent("AvatarAnim");
                 cc.log("another avatar(id=%d, accountName=%s) enter world", entity.id, entity.accountName);
@@ -195,7 +228,7 @@ cc.Class({
             
             ae.setPosition(entity.position.x*SCALE,  entity.position.z*SCALE);
             this.entities[entity.id] = ae;
-            cc.log("other entity %d join room, dir=%f", entity.id, entity.direction.z);
+            cc.log("other entity %d join room, position(%f, %f, %f)", entity.id, entity.position.x, entity.position.y, entity.position.z);
         }
     },
 
@@ -206,45 +239,7 @@ cc.Class({
     onAvatarEnterWorld : function(rndUUID, eid, avatar) {
         var ret = this.player==null;
         console.log("player is null = %s", ret.toString());
-        if(!this.player) {
-            cc.log("player id=%d name=%s onAvatarEnterWorld", avatar.id, avatar.accountName);
-            if(avatar.modelID == 0) {
-                this.player = cc.instantiate(this.pipiPrefab);
-            }else if(avatar.modelID == 1) {
-                this.player = cc.instantiate(this.popPrefab);
-            }
-
-            var ctrl= this.player.addComponent("AvatarControl");
-            var action= this.player.addComponent("AvatarAction");
-            var anim= this.player.addComponent("AvatarAnim");
-
-           if(cc.sys.isMobile) {
-                var touchControl = cc.instantiate(this.joyStickPrefab);
-                this.node.parent.addChild(touchControl);
-                touchControl.setPosition(JOY_STICK_POSITION_X, JOY_STICK_POSITION_Y);
-                ctrl.setTouchControl(touchControl);
-           }
-           
-            //注意顺序： anim ---> action --->ctrl
-            anim.setModelID(avatar.modelID);
-            anim.setAnim(this.player.getComponent(cc.Animation));
-
-            action.setAnim(anim);
-            action.setModelID(avatar.modelID);
-            action.setEntityId(avatar.id);
-            action.setGameState(this.gameState);
-            action.setHP(avatar.HP);
-
-            ctrl.setPlayer(this.player);
-
-            this.cameraControl.setTarget(this.player);
-            this.node.addChild(this.player);
-            this.player.setPosition(avatar.position.x*SCALE, avatar.position.z*SCALE);
-
-            this.entities[avatar.id] = this.player;
-
-            this.gameState.setPlayerHP(avatar.HP);
-        }
+        this.createPlayer(avatar);
     },
 
     otherAvatarOnJump: function(entity) {
@@ -285,6 +280,8 @@ cc.Class({
     },	  
     
     set_position: function(entity) {
+        if(!this.entities) return;
+
         var ae = this.entities[entity.id];
 		if(ae == undefined)
 			return;
@@ -488,7 +485,9 @@ cc.Class({
         }
 
         this.disEnableControlPlayer();
+        this.unInstallEvents();
         this.player = null;
+        // this.entities = null;
     },
 
     onResetItem: function(itemID, position) {
@@ -497,6 +496,55 @@ cc.Class({
             return;
     
         item.setPosition(position.x*SCALE, position.z*SCALE);
+    },
+
+
+    createPlayer: function(avatar) {
+        if(!this.player) {
+            if(avatar.modelID == 0 && this.pipiPrefab) {
+                this.player = cc.instantiate(this.pipiPrefab);
+            }else if(avatar.modelID == 1 && this.popPrefab) {
+                this.player = cc.instantiate(this.popPrefab);
+            }
+
+            if(!this.player) return;
+            cc.log("player id=%d name=%s onAvatarEnterWorld", avatar.id, avatar.accountName);
+
+            var ctrl= this.player.addComponent("AvatarControl");
+            var action= this.player.addComponent("AvatarAction");
+            var anim= this.player.addComponent("AvatarAnim");
+
+           if(cc.sys.isMobile) {
+                var touchControl = cc.instantiate(this.joyStickPrefab);
+                this.node.parent.addChild(touchControl);
+                touchControl.setPosition(JOY_STICK_POSITION_X, JOY_STICK_POSITION_Y);
+                ctrl.setTouchControl(touchControl);
+           }
+           
+            //注意顺序： anim ---> action --->ctrl
+            anim.setModelID(avatar.modelID);
+            anim.setAnim(this.player.getComponent(cc.Animation));
+
+            action.setAnim(anim);
+            action.setModelID(avatar.modelID);
+            action.setEntityId(avatar.id);
+            action.setGameState(this.gameState);
+            action.setHP(avatar.HP);
+
+            ctrl.setPlayer(this.player);
+
+            this.cameraControl.setTarget(this.player);
+            this.node.addChild(this.player);
+            this.player.setPosition(avatar.position.x*SCALE, avatar.position.z*SCALE);
+
+            this.entities[avatar.id] = this.player;
+
+            this.gameState.setPlayerHP(avatar.HP);
+        }
+    },
+
+    onAvatarContinueGame: function(avatar) {
+       this.createPlayer(avatar);
     },
 
     enableControlPlayer: function() {

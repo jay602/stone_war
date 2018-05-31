@@ -23,5 +23,4 @@ class Item(KBEngine.Entity, EntityCommon):
 		if room == None:
 			return
 			
-		room.onItemDestroy(self.id)
 

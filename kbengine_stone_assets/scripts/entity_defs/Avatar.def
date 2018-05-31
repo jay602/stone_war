@@ -130,6 +130,10 @@
 			<Arg>		ENTITY_ID		</Arg>
 			<Arg>		VECTOR3			</Arg>
 		</onResetItem>
+
+		<onContinueGame>
+			<Arg>		ENTITY_ID		</Arg>
+		</onContinueGame>
 	</ClientMethods>
 
 	<BaseMethods>
@@ -196,6 +200,11 @@
 			<Exposed/>
 			<Arg>		INT32	</Arg>
 		</addItem>
+
+		<continueGame>
+			<Exposed/>
+		</continueGame>
+		
 	</CellMethods>
 
 </root>

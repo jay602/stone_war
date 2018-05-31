@@ -32,6 +32,7 @@ KBEngine.Avatar = KBEngine.Entity.extend(
         {
             this._super();
             if(this.isPlayer()) {
+                KBEngine.INFO_MSG("avatar " +  this.id +" onEnterWorld");
                 KBEngine.Event.fire("onAvatarEnterWorld", KBEngine.app.entity_uuid, this.id, this);
             }		
         },
@@ -136,6 +137,7 @@ KBEngine.Avatar = KBEngine.Entity.extend(
 
         onNewTurn : function(eid, second)
 	    {
+            KBEngine.INFO_MSG("avatar " + eid + " on new turn");
 		    KBEngine.Event.fire("newTurn", eid, second);
         }, 
 
@@ -199,7 +201,25 @@ KBEngine.Avatar = KBEngine.Entity.extend(
             this.cellCall("addItem", left);
         },
 
-       
+        continueGame: function()
+        {
+            this.cellCall("continueGame");
+            KBEngine.INFO_MSG("avatar " + this.id + " continue game");
+        },
+
+        onContinueGame: function(avatarID)
+        {
+            KBEngine.INFO_MSG("12 avatar " + avatarID + "on continue game, local avatarID=" + this.id);
+            KBEngine.Event.fire("onAvatarEnterWorld", KBEngine.app.entity_uuid, this.id, this);
+
+            // if(this.isPlayer()) {
+            //     KBEngine.INFO_MSG(" player enter world");
+            //     KBEngine.Event.fire("onAvatarEnterWorld", KBEngine.app.entity_uuid, this.id, this);
+            // } else {
+            //     KBEngine.INFO_MSG(" other enter world");
+            //     KBEngine.Event.fire("onEnterWorld", this);
+            // }
+        }
 
     });
     

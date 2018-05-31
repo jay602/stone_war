@@ -8,6 +8,8 @@
 //  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
 
+var KBEngine = require("kbengine");
+
 cc.Class({
     extends: cc.Component,
 
@@ -85,6 +87,20 @@ cc.Class({
         this.labelTotalHarm.string = TOTAL_HARM;
         this.labelTotalTime.string = TOTAL_TIME + 'S';
         this.labelScore.string = SCORE;
+
+        cc.director.preloadScene("WorldScene");
     },
+
+    continueGame: function() {
+        var player = KBEngine.app.player();
+        if(player == undefined || !player.inWorld)
+            return;
+
+       
+        cc.director.loadScene("WorldScene", function() {
+            KBEngine.INFO_MSG("load WorldScene finish");
+            player.continueGame();
+        });
+    }
 
 });

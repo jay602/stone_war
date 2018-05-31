@@ -28,6 +28,8 @@ window.TOTAL_TIME = 0;
 window.TOTAL_HARM = 0;
 window.SCORE = 0;
 
+window.PLAYER_NAME = '';
+
 
 window.PIPI_NAME = "pipiPrefab";
 window.POP_NAME = "pop_player";

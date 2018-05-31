@@ -38,9 +38,7 @@ cc.Class({
        
         this.btn_start.node.on('click', this.startGame, this);
         this.textinput_name.string = this.randomstring(4);
-        cc.director.preloadScene("WorldScene", function () {
-            KBEngine.INFO_MSG("Next scene preloaded");
-        });
+        cc.director.preloadScene("WorldScene");
      },
 
      start: function() {
@@ -119,7 +117,7 @@ cc.Class({
             logStr = "Connect successfully, please wait...(连接成功，请等候...)";
         }
         this.label_hint.string = logStr;
-        cc.log(logStr);
+        KBEngine.INFO_MSG(logStr);
 	},
 
      onLoginFailed : function(failedcode) {
@@ -134,7 +132,7 @@ cc.Class({
         }    
         
         this.label_hint.string = logStr;
-        cc.log(logStr); 	
+        KBEngine.INFO_MSG(logStr);	
      },
 
      onReloginBaseappFailed: function(failedcode){
@@ -179,7 +177,7 @@ cc.Class({
             this.label_hint.string = "长度必须大于等于3!";
             return;
         }
- 
+        PLAYER_NAME = this.textinput_name.string;
         KBEngine.Event.fire("login", this.textinput_name.string, "123456", "kbengine_cocos2d_js_demo");  
      },
 
