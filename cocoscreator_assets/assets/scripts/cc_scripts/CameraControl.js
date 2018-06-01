@@ -136,14 +136,12 @@ cc.Class({
             this.limitRightX = 0;
         }
         
-        //cc.log("9999 touchTop=%s, limitTopY=%f, y1=%f point.y+160=%f", this.touchTop.toString(), this.limitTopY, point.y, point.y+160);
         point.y += 160;
 
         if(this.touchTop && this.limitTopY != 0) {
             point.y = this.limitTopY;
         }
 
-        //cc.log("camera position(%f)", point.x, point.y);
         if(this.touchBottom && this.limitBottomY != 0) {
             point.y = this.limitBottomY;
         }
@@ -156,6 +154,7 @@ cc.Class({
             point.x = this.limitRightX;
         }
         
+        if(point.y < 217) point.y = 217;
         this.node.position = point;
         let ratio = targetPos.y / cc.winSize.height;
         //this.camera.zoomRatio = 1 + (0.5 - ratio) * 0.5 ;
@@ -168,21 +167,26 @@ cc.Class({
         if(other.tag == this.topWallCollider.tag) {
             this.touchTop = true;
             this.limitTopY = self.node.y;
+           // console.log("Camera touch top 11 : %f, other: %s ",  this.limitTopY, other.node.name);
         }
 
         if(other.tag == this.bottomWallCollider.tag) {
             this.touchBottom = true;
             this.limitBottomY = self.node.y;
+        //    console.log("Camera bottom 11 :%f, target:%s, pos(%f, %f)", this.limitBottomY, this.target.name, 
+        //         this.node.x, this.node.y);
         }
 
         if(other.tag == this.leftWallCollider.tag) {
             this.touchLeft = true;
             this.limitLeftX = self.node.x;
+         //   console.log("Camera touch left 11 %f, other:%s", this.limitLeftX, other.node.name);
         }
 
         if(other.tag == this.rightWallCollider.tag) {
             this.touchRight = true;
             this.limitRightX = self.node.x;
+         //   console.log("Camera touch right 11 %f, other: %s", this.limitRightX, other.node.name);
         }
     },
 
@@ -190,21 +194,26 @@ cc.Class({
         if(other.tag == this.topWallCollider.tag) {
             this.touchTop = true;
             this.limitTopY = self.node.y;
+        //    console.log("Camera top 22 : %f", this.limitTopY);
         }
 
         if(other.tag == this.bottomWallCollider.tag) {
             this.touchBottom = true;
             this.limitBottomY = self.node.y;
+            // console.log("Camera bottom 22:%f, target: %s, pos(%f, %f)", this.limitBottomY, this.target.name,
+            // this.node.x, this.node.y);
         }
 
         if(other.tag == this.leftWallCollider.tag) {
             this.touchLeft = true;
             this.limitLeftX = self.node.x;
+          //  console.log("Camera touch left 22, %f", this.limitLeftX);
         }
 
         if(other.tag == this.rightWallCollider.tag) {
             this.touchRight = true;
             this.limitRightX = self.node.x;
+        //    console.log("Camera touch right 22, %f", this.limitRightX);
         }
     },
 });
