@@ -3,6 +3,11 @@ import os
 import KBEngine
 from KBEDebug import *
 from Poller import Poller
+import GameConfigs
+import string
+import hashlib
+import copy
+from urllib import request, parse
 
 """
 interfaces进程主要处理KBEngine服务端与第三方平台的接入接出工作。
@@ -32,6 +37,7 @@ interfaces进程主要处理KBEngine服务端与第三方平台的接入接出�
 """
 
 g_poller = Poller()
+g_3rdSession = {}
 
 def onInterfaceAppReady():
 	"""
@@ -71,7 +77,8 @@ def onRequestCreateAccount(registerName, password, datas):
 	@type  datas: bytes
 	"""
 	INFO_MSG('onRequestCreateAccount: registerName=%s' % (registerName))
-	
+	INFO_MSG('onRequestCreateAccount: datas:')
+	INFO_MSG(datas)
 	commitName = registerName
 	
 	# 默认账号名就是提交时的名
@@ -98,13 +105,56 @@ def onRequestAccountLogin(loginName, password, datas):
 	@param datas: 客户端请求时所附带的数据，可将数据转发第三方平台
 	@type  datas: bytes
 	"""
-	INFO_MSG('onRequestAccountLogin: registerName=%s' % (loginName))
-	
+	INFO_MSG('onRequestAccountLogin: loginName=%s' % (loginName))
+	INFO_MSG(datas)
 	commitName = loginName
 	
 	# 默认账号名就是提交时的名
-	realAccountName = commitName 
-	
+	realAccountName = copy.deepcopy(commitName)
+
+	wetchat = '%d' % GameConfigs.WECHAT_GAME
+	code= None
+	IsWeiWinLogin = False
+
+	param = datas.decode()
+	params = param.split('&')
+	INFO_MSG(params)
+
+	if params and len(params) >= 2:
+		param1 = params[0].split('=')
+		param2 = params[1].split('=')
+
+		if param1[0] == 'platform' and param1[1] == wetchat and param2[0] == 'code' and param2[1] != 'null':
+			code = param2[1]
+			values = {}
+			values['appid'] = GameConfigs.APPID
+			values['secret'] = GameConfigs.APP_SECRET
+			values['js_code'] = code
+			values['grant_type'] = 'authorization_code'
+			query_string = parse.urlencode(values)
+			url = GameConfigs.WEI_XIN_URL + "?" + query_string
+			
+			try:
+				INFO_MSG("vist weixin : " + url)
+
+				#阻塞同步访问，大量用户访问时，会造成性能下降，建议使用异步访问
+				respone = request.urlopen(url).read().decode("utf8")
+				userInfo = eval(respone)
+
+				INFO_MSG("wei_xin_server respone= " + respone)
+				INFO_MSG(userInfo)
+				if respone:
+					sessionId = get3rdSession(respone)
+					realAccountName = userInfo["openid"]
+					if not sessionId in g_3rdSession:
+						g_3rdSession[sessionId] = userInfo
+						userInfo['3rdSessionId'] = sessionId
+						datas = str(userInfo).encode()
+						INFO_MSG(datas)
+				
+			except Exception as err:
+ 				INFO_MSG("weixin Error: " + str(err))
+
 	# 此处可通过http等手段将请求提交至第三方平台，平台返回的数据也可放入datas
 	# datas将会回调至客户端
 	# 如果使用http访问，因为interfaces是单线程的，同步http访问容易卡住主线程，建议使用
@@ -137,3 +187,8 @@ def onRequestCharge(ordersID, entityDBID, datas):
 	
 	KBEngine.chargeResponse(ordersID, datas, KBEngine.SERVER_SUCCESS)
 
+# 加密得到3rd_session
+def get3rdSession(openid):
+    md5 = hashlib.md5()
+    md5.update(openid.encode("utf-8"))
+    return md5.hexdigest()

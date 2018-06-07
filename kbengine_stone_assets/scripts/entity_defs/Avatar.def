@@ -69,6 +69,21 @@
 			<Flags>	 CELL_PUBLIC_AND_OWN	</Flags>
 			<Default>		0				</Default>
 		</hitRate>
+
+		<sessionId>
+			<Type>		STRING				</Type>
+			<Flags>	 BASE_AND_CLIENT		</Flags>
+		</sessionId>
+
+		<sessionKey>
+			<Type>		STRING				</Type>
+			<Flags>	 	BASE_AND_CLIENT		</Flags>
+		</sessionKey>
+
+		<openId>
+			<Type>		STRING				</Type>
+			<Flags>	 	BASE				</Flags>
+		</openId>
 	</Properties>
 
 	<ClientMethods>
@@ -140,6 +155,12 @@
 		<createCell>
 			<Arg>	ENTITYCALL </Arg>
 		</createCell>
+
+		<decodeEncryptedData>
+			<Arg>	STRING 	</Arg>
+			<Arg>	STRING 	</Arg>
+			<Arg>	STRING 	</Arg>
+		</decodeEncryptedData>
 	</BaseMethods>
 
 	<CellMethods>

@@ -231,6 +231,7 @@ cc.Class({
     onAvatarEnterWorld : function(rndUUID, eid, avatar) {
         var ret = this.player==null;
         console.log("player is null = %s", ret.toString());
+        console.log("avatar sessionId = %s", avatar.sessionId);
         this.createPlayer(avatar);
     },
 

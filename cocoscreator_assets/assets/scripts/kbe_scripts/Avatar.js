@@ -24,6 +24,7 @@ KBEngine.Avatar = KBEngine.Entity.extend(
         {
             this._super();
             if(this.isPlayer()) {
+                cc.sys.localStorage.setItem("sessionKey", this.sessionKey);
                 KBEngine.Event.fire("enterScene", KBEngine.app.entity_uuid, this.id, this);
             }
         },
@@ -211,16 +212,16 @@ KBEngine.Avatar = KBEngine.Entity.extend(
         {
             KBEngine.INFO_MSG("12 avatar " + avatarID + "on continue game, local avatarID=" + this.id);
             KBEngine.Event.fire("onAvatarEnterWorld", KBEngine.app.entity_uuid, this.id, this);
+        },
 
-            // if(this.isPlayer()) {
-            //     KBEngine.INFO_MSG(" player enter world");
-            //     KBEngine.Event.fire("onAvatarEnterWorld", KBEngine.app.entity_uuid, this.id, this);
-            // } else {
-            //     KBEngine.INFO_MSG(" other enter world");
-            //     KBEngine.Event.fire("onEnterWorld", this);
-            // }
+        decodeEncryptedData: function()
+        {
+            var encryptedData = cc.sys.localStorage.getItem("encryptedData");
+            var iv = cc.sys.localStorage.getItem("iv");
+            var sessionId = cc.sys.localStorage.getItem("3rdSessionId");
+            KBEngine.INFO_MSG("decodeEncryptedData: encryptedData=" + encryptedData + ", iv=" + iv + ", sessionId=" + sessionId);
+            this.baseCall(encryptedData, iv, sessionId);
         }
-
     });
     
     

@@ -64,6 +64,14 @@ PLAY_TIME_PER_TURN = 30
 #人物HP的初始值
 PLAYER_HP = 100
 
+DESKTOP_BROWSER = 101
+WECHAT_GAME = 104
+
+APPID = '###############'
+APP_SECRET = '*************************'
+WEI_XIN_URL = 'https://api.weixin.qq.com/sns/jscode2session'
+
+
 
 
 

@@ -9,6 +9,8 @@
 //  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
 
 var KBEngine = require("kbengine");
+//var WxBizDataCrypt = require("WxBizDataCrypt")
+var WxBizDataCrypt = require("WxBizDataCrypt");
 
 cc.Class({
     extends: cc.Component,
@@ -35,33 +37,155 @@ cc.Class({
         this.initKbengine();
         this.installEvents();
         this.loadItemPrefab();
-       
+        
+        this.userName = cc.sys.platform != cc.sys.WECHAT_GAME ? this.randomstring(4): '';
         this.btn_start.node.on('click', this.startGame, this);
-        this.textinput_name.string = this.randomstring(4);
+        this.code = null;
+        
         cc.director.preloadScene("WorldScene");
-     },
 
-     start: function() {
-        if(cc.sys.isMobile) {
-            wx.login({
-                success: function () {
-                  console.log("wxlogin");
-                  wx.getUserInfo();
-                }
-              })
+        if(cc.sys.platform == cc.sys.WECHAT_GAME) {
+            KBEngine.INFO_MSG("wx login ........");
+            this.wxLoginNative2();
+        } else {
+            this.textinput_name.string = this.userName;
         }
-       
-      
+
+        KBEngine.INFO_MSG("host: " + window.location.host);
+        KBEngine.INFO_MSG("port: " + window.location.port);
      },
 
-    //  wxLoginNative() {
-    //     var self = this;
-    //     wx.login({
-            
-    //     }
+     wxLoginNative3: function(){
+        KBEngine.INFO_MSG("wx getUserInfo ........");
+        var self = this;
+        wx.getUserInfo({
+            success: function(res) {
+                var userInfo = res.userInfo;
+                self.userName = userInfo.nickName;
+                self.textinput_name.string = self.userName;
 
-    //     ),
-    //  },
+                KBEngine.INFO_MSG("wx get user info success : data= " + JSON.stringify(res));
+                KBEngine.INFO_MSG("wx get user info success : userInfo= " + JSON.stringify(userInfo));
+                KBEngine.INFO_MSG("wx get user info success : nickName= " + userInfo.nickName);
+                KBEngine.INFO_MSG("wx get user info success : avatarUrl= " + userInfo.avatarUrl);
+            }
+        });
+     },
+
+    wxLoginNative2: function(){
+        var self = this;
+        wx.login({
+            success: function(res) {
+                KBEngine.INFO_MSG("wx.login success ...");
+                KBEngine.INFO_MSG("res ：" + JSON.stringify(res));
+                if(res.code) {
+                    self.code = res.code;
+                    KBEngine.INFO_MSG('code: ' + self.code);
+                   
+                    wx.getUserInfo({
+                        success: function(res) {
+                            var userInfo = res.userInfo;
+                            self.userName = userInfo.nickName;
+                            self.textinput_name.string = self.userName;
+                           
+                            cc.sys.localStorage.setItem("encryptedData", res.encryptedData)
+                            cc.sys.localStorage.setItem("iv", res.iv)
+
+                            KBEngine.INFO_MSG("wx.getUserInfo success : data= " + JSON.stringify(res));
+                            KBEngine.INFO_MSG("wx.getUserInfo success : userInfo= " + JSON.stringify(userInfo));
+                            KBEngine.INFO_MSG("wx.getUserInfo success : nickName= " + userInfo.nickName);
+                            KBEngine.INFO_MSG("wx.getUserInfo success : avatarUrl= " + userInfo.avatarUrl);
+                            KBEngine.INFO_MSG("wx.getUserInfo success : encryptedData= " + res.encryptedData);
+                            KBEngine.INFO_MSG("wx.getUserInfo success : iv= " + res.iv);
+                        }
+                    });
+                }
+                
+            }
+        }
+        );
+      },
+
+      wxLoginNative4:function() {
+        let button = wx.createUserInfoButton({
+            type: 'text',
+            text: '获取用户信息',
+            style: {
+                left: 10,
+                top: 76,
+                width: 200,
+                height: 40,
+                lineHeight: 40,
+                backgroundColor: '#ff0000',
+                color: '#ffffff',
+                textAlign: 'center',
+                fontSize: 16,
+                borderRadius: 4
+            }
+        });
+
+        button.onTap(function(res){
+            console.log(res);
+        });
+      },
+
+
+     //微信登录
+     wxLoginNative: function(){
+       var self = this;
+       wx.login({
+            success:function(res) {
+                KBEngine.INFO_MSG("res == " + JSON.stringify(res));
+                if(res.code) {
+                    self.code = res.code;
+                    KBEngine.INFO_MSG('code: ' + self.code);
+                   
+                    KBEngine.INFO_MSG("-------申请openid--------");
+                    wx.request({
+                        url: WEI_XIN_API_URL,
+                        data: {
+                            appid: APPID,
+                            secret: APP_SECRET,
+                            js_code: self.code,
+                            grant_type: 'authorization_code'
+                        },
+                        header: {
+                            "Content_Type": "application/x-www-form-urlencoded"
+                        },
+                        method: 'GET',
+                        success: function(res) {
+                            KBEngine.INFO_MSG("login quest res == " +  JSON.stringify(res));
+                            var pc = new WxBizDataCrypt(APPID, res.data.session_key);
+                            
+                            wx.getUserInfo({
+                                success: function(res) {
+                                    KBEngine.INFO_MSG("wx get user info success : data= " + JSON.stringify(res));
+                                    var userInfo = res.userInfo;
+                                    
+                                    cc.sys.localStorage.setItem("encryptedData", res.encryptedData);
+                                    cc.sys.localStorage.setItem("iv", res.iv);
+                                    KBEngine.INFO_MSG("wx get user info success : userInfo= " + JSON.stringify(userInfo));
+                                    KBEngine.INFO_MSG("wx get user info success : nickName= " + userInfo.nickName);
+                                    KBEngine.INFO_MSG("wx get user info success : avatarUrl= " + userInfo.avatarUrl);
+
+                                    var data = pc.descrytData(res.encryptedData , res.iv);
+                                    console.log('解密后 data: ', data);
+                                }
+                            });
+                        },
+                        fail: function(res) {
+                            KBEngine.INFO_MSG("wx login fail : " + JSON.stringify(res));
+                        },
+                        complete: function(res) {
+                        }
+                    });
+                } else {
+                    KBEngine.INFO_MSG("登录失败: " + res.errMsg)
+                }
+            }
+       }
+       );
+     },
 
      randomstring: function(L){
         var s= '';
@@ -92,8 +216,8 @@ cc.Class({
         var args = new KBEngine.KBEngineArgs();
 	
 	    // 设置登录ip地址
-	    args.ip = "192.168.0.106";
-	    args.port = 20013;
+	    args.ip = NGINX_IP;
+	    args.port = NGINX_PORT;
 	    KBEngine.create(args);
      },
 
@@ -146,9 +270,23 @@ cc.Class({
      onLoginBaseappFailed : function(failedcode) {
          cc.log("LoginBaseapp is failed(登陆网关失败), err=" + KBEngine.app.serverErr(failedcode));
      },
+
+     decodeEncryptedData:function() {
+        var encryptedData = cc.sys.localStorage.getItem("encryptedData");
+        var sessionKey = cc.sys.localStorage.getItem("sessionKey");
+        var iv = cc.sys.localStorage.getItem("iv");
+        KBEngine.INFO_MSG("decodeEncryptedData: encryptedData=" + encryptedData + " ,iv=" + iv + " ,sessionKey=" + sessionKey);
+        if(sessionKey && encryptedData && iv) {
+            var pc = new WxBizDataCrypt(APPID, sessionKey);
+            var data = pc.descrytData(encryptedData , iv);
+            console.log('解密后 data: ', data)
+        }
+     },
          
     
      enterScene : function(rndUUID, eid, accountEntity) {
+        this.decodeEncryptedData();
+
         cc.log("Login is successfully!(登陆成功!)");
         this.label_hint.string = "Login is successfully!(登陆成功!)";
         cc.director.loadScene("WorldScene");
@@ -172,18 +310,20 @@ cc.Class({
  
  
     startGame: function (event) {
-        if(this.textinput_name.string.length < 3)
+        KBEngine.INFO_MSG("user name : " + this.userName);
+        KBEngine.INFO_MSG("user name length: " + this.userName.length);
+        if(this.userName.length == 0)
         {
-            this.label_hint.string = "长度必须大于等于3!";
+            this.label_hint.string = "用户名不能为空";
             return;
         }
-        PLAYER_NAME = this.textinput_name.string;
-        KBEngine.Event.fire("login", this.textinput_name.string, "123456", "kbengine_cocos2d_js_demo");  
+        PLAYER_NAME = this.userName;
+        var datas = "";
+        datas += "platform=" + cc.sys.platform + "&";
+        datas += "code=" + this.code;
+        KBEngine.INFO_MSG("datas: " + datas);
+
+        KBEngine.Event.fire("login", this.userName, "123456", datas);  
      },
 
-    start () {
-
-    },
-
-    // update (dt) {},
 });

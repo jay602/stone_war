@@ -4,6 +4,9 @@ from KBEDebug import *
 import GameConfigs
 import GameUtils
 import random
+import base64
+import json
+#from Crypto.Cipher import AES
 
 TIMER_TYPE_ENTER_ROOM = 1
 
@@ -23,8 +26,20 @@ class Avatar(KBEngine.Proxy):
 		self.cellData["totalTime"] = 0
 		self.cellData["score"] = 0
 		self.cellData["hitRate"] = 0.0
-
-		DEBUG_MSG("new avatar: accountName=%s, %s" % (self.__ACCOUNT_NAME__, self.cellData["accountName"]))
+		
+		DEBUG_MSG("new avatar: accountName=%s" % (self.__ACCOUNT_NAME__))
+		datas = self.getClientDatas()
+		INFO_MSG(datas)
+		INFO_MSG(datas[0])
+		
+		userInfo = eval(datas[0].decode())
+		self.sessionId = userInfo['3rdSessionId']
+		self.sessionKey = userInfo['session_key']
+		self.openId = userInfo['openid']
+		
+		INFO_MSG("sessionId= " + self.sessionId)
+		INFO_MSG("sessionKey= " + self.sessionKey)
+		INFO_MSG("openId= " + self.openId)
 
 	def createCell(self, space):
 		"""
@@ -34,7 +49,6 @@ class Avatar(KBEngine.Proxy):
 		DEBUG_MSG("Avatar::createCellEntity: id=%i" % (self.id))
 		self.createCellEntity(space)
 
-	
 	def destroySelf(self):
 		"""
 		"""
@@ -70,6 +84,7 @@ class Avatar(KBEngine.Proxy):
 		该entity被正式激活为可使用， 此时entity已经建立了client对应实体， 可以在此创建它的
 		cell部分。
 		"""
+
 		INFO_MSG("Avatar[%i] entities enable. EntityCall:%s" % (self.id, self.client))
 		self.addTimer(1, 0, TIMER_TYPE_ENTER_ROOM)
 		
@@ -127,5 +142,27 @@ class Avatar(KBEngine.Proxy):
 		if self.cell is None:
 			# 玩家上线了或者重登陆了， 此处告诉大厅，玩家请求登陆到游戏地图中
 			KBEngine.globalData["Halls"].enterRoom(self, self.cellData["position"], self.cellData["direction"], self.roomKey)
+
+	def decodeEncryptedData(self, encryptedData, iv, sessionId):
+		pass
+		DEBUG_MSG("decodeEncryptedData: encryptedData=%s, iv=%s, sessionId=%s" % (encryptedData, iv, sessionId))
+		sessionKey = base64.b64decode(self.sessionKey)
+		encryptedData = base64.b64decode(encryptedData)
+		iv = base64.b64decode(iv)
+
+		cipher = AES.new(sessionKey, AES.MODE_CBC, iv)
+
+		decrypted = json.loads(self._unpad(cipher.decrypt(encryptedData)))
+		DEBUG_MSG(decrypted)
+		
+		if decrypted['watermark']['appid'] != GameConfigs.APPID:
+			DEBUG_MSG("appid not equal: %s != %s" % (decrypted['watermark']['appid'], GameConfigs.APPID))
+
+
+		return decrypted
+
+	def _unpad(self, s):
+		return s[:-ord(s[len(s)-1:])]
+
 
 	

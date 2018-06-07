@@ -36,7 +36,7 @@
   "webOrientation": "auto",
   "wechatgame": {
     "REMOTE_SERVER_ROOT": "http://192.168.0.106:8080/stone_war/",
-    "appid": "wx6ac3f5090a6b99c5",
+    "appid": "wxfe3c2a610dc6a2e4",
     "isSubdomain": false,
     "orientation": "landscape"
   },

@@ -37,6 +37,16 @@ window.TAG_ITEM_CHECK_PLAYER_NEAR = 110;
 window.MAX_THROW_FORCE_Y = 1000;
 window.JOY_STICK_POSITION_X = 120;
 window.JOY_STICK_POSITION_Y = 120;
+window.APPID = '***************';
+window.APP_SECRET = '##################';
+
+window.SERVER_IP = "192.168.0.106";
+window.SERVER_PORT = 20013;
+
+window.NGINX_IP = "wxgo.yoloii.com";
+window.NGINX_PORT = 30013;
+
+window.WEI_XIN_API_URL = "https://api.weixin.qq.com/sns/jscode2session";
 
 
 
