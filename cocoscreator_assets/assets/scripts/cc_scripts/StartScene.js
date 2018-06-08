@@ -46,33 +46,13 @@ cc.Class({
 
         if(cc.sys.platform == cc.sys.WECHAT_GAME) {
             KBEngine.INFO_MSG("wx login ........");
-            this.wxLoginNative2();
+            this.wxLoginNative();
         } else {
             this.textinput_name.string = this.userName;
         }
-
-        KBEngine.INFO_MSG("host: " + window.location.host);
-        KBEngine.INFO_MSG("port: " + window.location.port);
      },
 
-     wxLoginNative3: function(){
-        KBEngine.INFO_MSG("wx getUserInfo ........");
-        var self = this;
-        wx.getUserInfo({
-            success: function(res) {
-                var userInfo = res.userInfo;
-                self.userName = userInfo.nickName;
-                self.textinput_name.string = self.userName;
-
-                KBEngine.INFO_MSG("wx get user info success : data= " + JSON.stringify(res));
-                KBEngine.INFO_MSG("wx get user info success : userInfo= " + JSON.stringify(userInfo));
-                KBEngine.INFO_MSG("wx get user info success : nickName= " + userInfo.nickName);
-                KBEngine.INFO_MSG("wx get user info success : avatarUrl= " + userInfo.avatarUrl);
-            }
-        });
-     },
-
-    wxLoginNative2: function(){
+    wxLoginNative: function(){
         var self = this;
         wx.login({
             success: function(res) {
@@ -87,105 +67,16 @@ cc.Class({
                             var userInfo = res.userInfo;
                             self.userName = userInfo.nickName;
                             self.textinput_name.string = self.userName;
-                           
-                            cc.sys.localStorage.setItem("encryptedData", res.encryptedData)
-                            cc.sys.localStorage.setItem("iv", res.iv)
-
-                            KBEngine.INFO_MSG("wx.getUserInfo success : data= " + JSON.stringify(res));
-                            KBEngine.INFO_MSG("wx.getUserInfo success : userInfo= " + JSON.stringify(userInfo));
-                            KBEngine.INFO_MSG("wx.getUserInfo success : nickName= " + userInfo.nickName);
-                            KBEngine.INFO_MSG("wx.getUserInfo success : avatarUrl= " + userInfo.avatarUrl);
-                            KBEngine.INFO_MSG("wx.getUserInfo success : encryptedData= " + res.encryptedData);
-                            KBEngine.INFO_MSG("wx.getUserInfo success : iv= " + res.iv);
+                            cc.sys.localStorage.setItem("encryptedData", res.encryptedData);
+                            cc.sys.localStorage.setItem("iv", res.iv);
+                            KBEngine.INFO_MSG("wx.getUserInfo success");
                         }
                     });
                 }
                 
             }
-        }
-        );
-      },
-
-      wxLoginNative4:function() {
-        let button = wx.createUserInfoButton({
-            type: 'text',
-            text: '获取用户信息',
-            style: {
-                left: 10,
-                top: 76,
-                width: 200,
-                height: 40,
-                lineHeight: 40,
-                backgroundColor: '#ff0000',
-                color: '#ffffff',
-                textAlign: 'center',
-                fontSize: 16,
-                borderRadius: 4
-            }
-        });
-
-        button.onTap(function(res){
-            console.log(res);
         });
       },
-
-
-     //微信登录
-     wxLoginNative: function(){
-       var self = this;
-       wx.login({
-            success:function(res) {
-                KBEngine.INFO_MSG("res == " + JSON.stringify(res));
-                if(res.code) {
-                    self.code = res.code;
-                    KBEngine.INFO_MSG('code: ' + self.code);
-                   
-                    KBEngine.INFO_MSG("-------申请openid--------");
-                    wx.request({
-                        url: WEI_XIN_API_URL,
-                        data: {
-                            appid: APPID,
-                            secret: APP_SECRET,
-                            js_code: self.code,
-                            grant_type: 'authorization_code'
-                        },
-                        header: {
-                            "Content_Type": "application/x-www-form-urlencoded"
-                        },
-                        method: 'GET',
-                        success: function(res) {
-                            KBEngine.INFO_MSG("login quest res == " +  JSON.stringify(res));
-                            var pc = new WxBizDataCrypt(APPID, res.data.session_key);
-                            
-                            wx.getUserInfo({
-                                success: function(res) {
-                                    KBEngine.INFO_MSG("wx get user info success : data= " + JSON.stringify(res));
-                                    var userInfo = res.userInfo;
-                                    
-                                    cc.sys.localStorage.setItem("encryptedData", res.encryptedData);
-                                    cc.sys.localStorage.setItem("iv", res.iv);
-                                    KBEngine.INFO_MSG("wx get user info success : userInfo= " + JSON.stringify(userInfo));
-                                    KBEngine.INFO_MSG("wx get user info success : nickName= " + userInfo.nickName);
-                                    KBEngine.INFO_MSG("wx get user info success : avatarUrl= " + userInfo.avatarUrl);
-
-                                    var data = pc.descrytData(res.encryptedData , res.iv);
-                                    console.log('解密后 data: ', data);
-                                }
-                            });
-                        },
-                        fail: function(res) {
-                            KBEngine.INFO_MSG("wx login fail : " + JSON.stringify(res));
-                        },
-                        complete: function(res) {
-                        }
-                    });
-                } else {
-                    KBEngine.INFO_MSG("登录失败: " + res.errMsg)
-                }
-            }
-       }
-       );
-     },
 
      randomstring: function(L){
         var s= '';
@@ -215,7 +106,6 @@ cc.Class({
      initKbengine: function() {
         var args = new KBEngine.KBEngineArgs();
 	
-	    // 设置登录ip地址
 	    args.ip = NGINX_IP;
 	    args.port = NGINX_PORT;
 	    KBEngine.create(args);
@@ -260,15 +150,15 @@ cc.Class({
      },
 
      onReloginBaseappFailed: function(failedcode){
-        cc.log("reogin is failed(断线重连失败), err=" + KBEngine.app.serverErr(failedcode))
+        KBEngine.INFO_MSG("reogin is failed(断线重连失败), err=" + KBEngine.app.serverErr(failedcode))
      },
 
      onReloginBaseappSuccessfully : function() {
-       cc.log("reogin is successfully!(断线重连成功!)")
+        KBEngine.INFO_MSG("reogin is successfully!(断线重连成功!)")
     },
 
      onLoginBaseappFailed : function(failedcode) {
-         cc.log("LoginBaseapp is failed(登陆网关失败), err=" + KBEngine.app.serverErr(failedcode));
+        KBEngine.INFO_MSG("LoginBaseapp is failed(登陆网关失败), err=" + KBEngine.app.serverErr(failedcode));
      },
 
      decodeEncryptedData:function() {

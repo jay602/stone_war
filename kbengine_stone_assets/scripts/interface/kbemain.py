@@ -105,9 +105,12 @@ def onRequestAccountLogin(loginName, password, datas):
 	@param datas: 客户端请求时所附带的数据，可将数据转发第三方平台
 	@type  datas: bytes
 	"""
-	INFO_MSG('onRequestAccountLogin: loginName=%s' % (loginName))
-	INFO_MSG(datas)
+
 	commitName = loginName
+	INFO_MSG('onRequestAccountLogin: loginName=%s' % (loginName))
+	INFO_MSG('onRequestAccountLogin: commitName=%s' % (commitName))
+	INFO_MSG(datas)
+	
 	
 	# 默认账号名就是提交时的名
 	realAccountName = copy.deepcopy(commitName)
@@ -119,6 +122,8 @@ def onRequestAccountLogin(loginName, password, datas):
 	param = datas.decode()
 	params = param.split('&')
 	INFO_MSG(params)
+	 
+	isWeiXinLogin = False
 
 	if params and len(params) >= 2:
 		param1 = params[0].split('=')
@@ -143,6 +148,7 @@ def onRequestAccountLogin(loginName, password, datas):
 
 				INFO_MSG("wei_xin_server respone= " + respone)
 				INFO_MSG(userInfo)
+				isWeiXinLogin = True
 				if respone:
 					sessionId = get3rdSession(respone)
 					realAccountName = userInfo["openid"]
@@ -151,9 +157,10 @@ def onRequestAccountLogin(loginName, password, datas):
 						userInfo['3rdSessionId'] = sessionId
 						datas = str(userInfo).encode()
 						INFO_MSG(datas)
-				
+						
 			except Exception as err:
- 				INFO_MSG("weixin Error: " + str(err))
+				isWeiXinLogin = False
+				INFO_MSG("weixin Error: " + str(err))
 
 	# 此处可通过http等手段将请求提交至第三方平台，平台返回的数据也可放入datas
 	# datas将会回调至客户端
@@ -162,6 +169,9 @@ def onRequestAccountLogin(loginName, password, datas):
 	# tornado异步访问。也可以结合socket模拟http的方式与平台交互。
 	
 	# 如果返回码为KBEngine.SERVER_ERR_LOCAL_PROCESSING则表示验证登陆成功，但dbmgr需要检查账号密码，KBEngine.SERVER_SUCCESS则无需再检查密码
+	if not isWeiXinLogin:
+		INFO_MSG("Clear datas")
+		datas = bytes()
 	KBEngine.accountLoginResponse(commitName, realAccountName, datas, KBEngine.SERVER_ERR_LOCAL_PROCESSING)
 	INFO_MSG("accountLoginResponse, data:")
 	INFO_MSG(datas)

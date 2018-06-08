@@ -201,6 +201,7 @@ cc.Class({
                 action.setAnim(anim);
                 action.setEntityId(entity.id);
                 action.setAccountName(entity.accountName);
+                
                 if(entity.direction.z >= 1)  {
                     ae.scaleX = 1;
                 }else if(entity.direction.z <= -1) {
@@ -524,6 +525,8 @@ cc.Class({
             action.setEntityId(avatar.id);
             action.setGameState(this.gameState);
             action.setHP(avatar.HP);
+            action.setAccountName(avatar.accountName);
+            
 
             ctrl.setPlayer(this.player);
 

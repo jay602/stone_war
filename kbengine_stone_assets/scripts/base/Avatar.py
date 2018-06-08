@@ -14,7 +14,7 @@ TIMER_TYPE_ENTER_ROOM = 1
 class Avatar(KBEngine.Proxy):
 	def __init__(self):
 		KBEngine.Proxy.__init__(self)
-		
+
 		self.cellData["dbid"] = self.databaseID
 		self.cellData["modelID" ] = 0
 		self.cellData["accountName"] = self.__ACCOUNT_NAME__
@@ -31,22 +31,22 @@ class Avatar(KBEngine.Proxy):
 		DEBUG_MSG("new avatar: accountName=%s" % (self.__ACCOUNT_NAME__))
 		datas = self.getClientDatas()
 		INFO_MSG(datas)
-		INFO_MSG(datas[0])
-		
-		userInfo = eval(datas[0].decode())
-		if '3rdSessionId' in userInfo:
-			self.sessionId = userInfo['3rdSessionId']
+		if datas[0]:
+			INFO_MSG(datas[0])
+			
+			userInfo = eval(datas[0].decode())
+			if '3rdSessionId' in userInfo:
+				self.sessionId = userInfo['3rdSessionId']
 
-		if 'session_key' in userInfo:
-			self.sessionKey = userInfo['session_key']
+			if 'session_key' in userInfo:
+				self.sessionKey = userInfo['session_key']
 
-		if 'openid' in userInfo:
-			self.openId = userInfo['openid']
-		
-		
-		INFO_MSG("sessionId= " + self.sessionId)
-		INFO_MSG("sessionKey= " + self.sessionKey)
-		INFO_MSG("openId= " + self.openId)
+			if 'openid' in userInfo:
+				self.openId = userInfo['openid']
+			
+			INFO_MSG("sessionId= " + self.sessionId)
+			INFO_MSG("sessionKey= " + self.sessionKey)
+			INFO_MSG("openId= " + self.openId)
 
 	def createCell(self, space):
 		"""
@@ -152,7 +152,15 @@ class Avatar(KBEngine.Proxy):
 
 	def decodeEncryptedData(self, encryptedData, iv, sessionId):
 		DEBUG_MSG("decodeEncryptedData: encryptedData=%s, iv=%s, sessionId=%s" % (encryptedData, iv, sessionId))
+		if not self.sessionKey:
+			DEBUG_MSG("not sessionKey")
+			return
+
 		sessionKey = base64.b64decode(self.sessionKey)
+		if len(sessionKey) < 10 :
+			DEBUG_MSG("sessionKey invalid size")
+			return
+			
 		encryptedData = base64.b64decode(encryptedData)
 		iv = base64.b64decode(iv)
 
@@ -163,12 +171,14 @@ class Avatar(KBEngine.Proxy):
 		datas += cipher.feed(encryptedData[halfLen:])
 		datas += cipher.feed()
 		decrypted = eval(datas.decode())
-		self.decryptedData = decrypted
 		DEBUG_MSG(decrypted)
+
+		self.decryptedData = decrypted
+		INFO_MSG("nickName = %s" % (decrypted["nickName"]))
+		self.cellData["accountName"] = decrypted["nickName"]
 		
 		if decrypted['watermark']['appid'] != GameConfigs.APPID:
 			DEBUG_MSG("appid not equal: %s != %s" % (decrypted['watermark']['appid'], GameConfigs.APPID))
-
 
 		return decrypted
 

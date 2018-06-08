@@ -43,8 +43,8 @@ window.APP_SECRET = '********************';
 window.SERVER_IP = "192.168.0.106";
 window.SERVER_PORT = 20013;
 
-window.NGINX_IP = "wxgo.yoloii.com";
-window.NGINX_PORT = 30013;
+window.NGINX_IP = "192.168.0.106";
+window.NGINX_PORT = 20013;
 
 window.WEI_XIN_API_URL = "https://api.weixin.qq.com/sns/jscode2session";
 

@@ -10,13 +10,6 @@
 			<Persistent>		true				</Persistent>
 		</roomKey>
 
-		<name>
-			<Type>		UNICODE			</Type>
-			<Flags>		ALL_CLIENTS			</Flags>
-			<Persistent>		true				</Persistent>
-			<DetailLevel>		MEDIUM			</DetailLevel>
-		</name>
-
 		<accountName>
 			<Type>		UNICODE			</Type>
 			<Flags>		ALL_CLIENTS			</Flags>
