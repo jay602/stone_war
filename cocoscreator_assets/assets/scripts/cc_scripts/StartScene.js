@@ -46,6 +46,8 @@ cc.Class({
 
         if(cc.sys.platform == cc.sys.WECHAT_GAME) {
             KBEngine.INFO_MSG("wx login ........");
+            this.btn_start.node.active = false;
+            this.textinput_name.node.active = false;
             this.wxLoginNative();
         } else {
             this.textinput_name.string = this.userName;
@@ -58,6 +60,7 @@ cc.Class({
             success: function(res) {
                 KBEngine.INFO_MSG("wx.login success ...");
                 KBEngine.INFO_MSG("res ：" + JSON.stringify(res));
+                self.btn_start.node.active = true;
                 if(res.code) {
                     self.code = res.code;
                     KBEngine.INFO_MSG('code: ' + self.code);
