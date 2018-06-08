@@ -283,9 +283,13 @@ cc.Class({
         }
      },
          
-    
      enterScene : function(rndUUID, eid, accountEntity) {
-        this.decodeEncryptedData();
+        var player = KBEngine.app.player();
+        //debugger;
+        if(player) {
+            KBEngine.INFO_MSG("begin decodeEncryptedData ......");
+            player.decodeEncryptedData();
+        }
 
         cc.log("Login is successfully!(登陆成功!)");
         this.label_hint.string = "Login is successfully!(登陆成功!)";

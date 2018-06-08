@@ -12,7 +12,7 @@ class Avatar(KBEngine.Entity, EntityCommon):
 	def __init__(self):
 		KBEngine.Entity.__init__(self)
 		EntityCommon.__init__(self)
-		DEBUG_MSG("Avatar cell ctor position")
+		DEBUG_MSG("Avatar %i cell new" % (self.id))
 		DEBUG_MSG(self.position)
 		self.startPosition = copy.deepcopy(self.position)
 		self.getCurrRoom().onEnter(self)

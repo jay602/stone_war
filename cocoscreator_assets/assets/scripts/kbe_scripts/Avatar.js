@@ -24,7 +24,7 @@ KBEngine.Avatar = KBEngine.Entity.extend(
         {
             this._super();
             if(this.isPlayer()) {
-                cc.sys.localStorage.setItem("sessionKey", this.sessionKey);
+                cc.sys.localStorage.setItem("3rdSessionId", this.sessionId);
                 KBEngine.Event.fire("enterScene", KBEngine.app.entity_uuid, this.id, this);
             }
         },
@@ -32,8 +32,9 @@ KBEngine.Avatar = KBEngine.Entity.extend(
         onEnterWorld : function()
         {
             this._super();
+            KBEngine.INFO_MSG("333 444 Avatar " +  this.id +" onEnterWorld");
             if(this.isPlayer()) {
-                KBEngine.INFO_MSG("avatar " +  this.id +" onEnterWorld");
+                KBEngine.INFO_MSG("111 22 player " +  this.id +" onEnterWorld");
                 KBEngine.Event.fire("onAvatarEnterWorld", KBEngine.app.entity_uuid, this.id, this);
             }		
         },
@@ -220,7 +221,7 @@ KBEngine.Avatar = KBEngine.Entity.extend(
             var iv = cc.sys.localStorage.getItem("iv");
             var sessionId = cc.sys.localStorage.getItem("3rdSessionId");
             KBEngine.INFO_MSG("decodeEncryptedData: encryptedData=" + encryptedData + ", iv=" + iv + ", sessionId=" + sessionId);
-            this.baseCall(encryptedData, iv, sessionId);
+            this.baseCall("decodeEncryptedData", encryptedData, iv, sessionId);
         }
     });
     

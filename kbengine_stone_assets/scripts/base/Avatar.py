@@ -6,6 +6,7 @@ import GameUtils
 import random
 import base64
 import json
+import pyaes
 #from Crypto.Cipher import AES
 
 TIMER_TYPE_ENTER_ROOM = 1
@@ -13,8 +14,8 @@ TIMER_TYPE_ENTER_ROOM = 1
 class Avatar(KBEngine.Proxy):
 	def __init__(self):
 		KBEngine.Proxy.__init__(self)
+		
 		self.cellData["dbid"] = self.databaseID
-
 		self.cellData["modelID" ] = 0
 		self.cellData["accountName"] = self.__ACCOUNT_NAME__
 		self.cellData["position"] =  None
@@ -33,9 +34,15 @@ class Avatar(KBEngine.Proxy):
 		INFO_MSG(datas[0])
 		
 		userInfo = eval(datas[0].decode())
-		self.sessionId = userInfo['3rdSessionId']
-		self.sessionKey = userInfo['session_key']
-		self.openId = userInfo['openid']
+		if '3rdSessionId' in userInfo:
+			self.sessionId = userInfo['3rdSessionId']
+
+		if 'session_key' in userInfo:
+			self.sessionKey = userInfo['session_key']
+
+		if 'openid' in userInfo:
+			self.openId = userInfo['openid']
+		
 		
 		INFO_MSG("sessionId= " + self.sessionId)
 		INFO_MSG("sessionKey= " + self.sessionKey)
@@ -144,15 +151,19 @@ class Avatar(KBEngine.Proxy):
 			KBEngine.globalData["Halls"].enterRoom(self, self.cellData["position"], self.cellData["direction"], self.roomKey)
 
 	def decodeEncryptedData(self, encryptedData, iv, sessionId):
-		pass
 		DEBUG_MSG("decodeEncryptedData: encryptedData=%s, iv=%s, sessionId=%s" % (encryptedData, iv, sessionId))
 		sessionKey = base64.b64decode(self.sessionKey)
 		encryptedData = base64.b64decode(encryptedData)
 		iv = base64.b64decode(iv)
 
-		cipher = AES.new(sessionKey, AES.MODE_CBC, iv)
+		cipher = pyaes.Decrypter(pyaes.AESModeOfOperationCBC(sessionKey, iv))
+		halfLen = int(len(encryptedData) / 2)
 
-		decrypted = json.loads(self._unpad(cipher.decrypt(encryptedData)))
+		datas = cipher.feed(encryptedData[:halfLen])
+		datas += cipher.feed(encryptedData[halfLen:])
+		datas += cipher.feed()
+		decrypted = eval(datas.decode())
+		self.decryptedData = decrypted
 		DEBUG_MSG(decrypted)
 		
 		if decrypted['watermark']['appid'] != GameConfigs.APPID:

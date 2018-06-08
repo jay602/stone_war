@@ -91,6 +91,7 @@ cc.Class({
 
     installEvents : function() {
         // common
+        KBEngine.INFO_MSG("installEvents ......");
 		KBEngine.Event.register("onDisconnected", this, "onDisconnected");
 		KBEngine.Event.register("onConnectionState", this, "onConnectionState");
 		KBEngine.Event.register("onReloginBaseappFailed", this, "onReloginBaseappFailed");
@@ -122,6 +123,7 @@ cc.Class({
     },
 
     unInstallEvents: function() {
+        KBEngine.INFO_MSG("unInstallEvents ......");
         KBEngine.Event.deregister("onDisconnected", this, "onDisconnected");
 		KBEngine.Event.deregister("onConnectionState", this, "onConnectionState");
 		KBEngine.Event.deregister("onReloginBaseappFailed", this, "onReloginBaseappFailed");
@@ -231,7 +233,6 @@ cc.Class({
     onAvatarEnterWorld : function(rndUUID, eid, avatar) {
         var ret = this.player==null;
         console.log("player is null = %s", ret.toString());
-        console.log("avatar sessionId = %s", avatar.sessionId);
         this.createPlayer(avatar);
     },
 

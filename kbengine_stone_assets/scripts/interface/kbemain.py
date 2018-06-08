@@ -163,6 +163,8 @@ def onRequestAccountLogin(loginName, password, datas):
 	
 	# 如果返回码为KBEngine.SERVER_ERR_LOCAL_PROCESSING则表示验证登陆成功，但dbmgr需要检查账号密码，KBEngine.SERVER_SUCCESS则无需再检查密码
 	KBEngine.accountLoginResponse(commitName, realAccountName, datas, KBEngine.SERVER_ERR_LOCAL_PROCESSING)
+	INFO_MSG("accountLoginResponse, data:")
+	INFO_MSG(datas)
 	
 def onRequestCharge(ordersID, entityDBID, datas):
 	"""

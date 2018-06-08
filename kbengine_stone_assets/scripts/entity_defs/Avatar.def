@@ -84,6 +84,11 @@
 			<Type>		STRING				</Type>
 			<Flags>	 	BASE				</Flags>
 		</openId>
+
+		<decryptedData>
+			<Type>		PY_DICT				</Type>
+			<Flags>	 	BASE				</Flags>
+		</decryptedData>
 	</Properties>
 
 	<ClientMethods>
@@ -157,6 +162,7 @@
 		</createCell>
 
 		<decodeEncryptedData>
+			<Exposed/>
 			<Arg>	STRING 	</Arg>
 			<Arg>	STRING 	</Arg>
 			<Arg>	STRING 	</Arg>
