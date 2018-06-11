@@ -67,6 +67,24 @@ cc.Class({
         this.items = new Array();
 
         this.gameState = this.node.getComponent("GameState");
+
+        if(cc.sys.platform == cc.sys.WECHAT_GAME) {
+            wx.showShareMenu({
+                withShareTicket:true,
+                success:function(res) {
+                    KBEngine.INFO_MSG("分享成功, " + JSON.stringify(res));
+                },
+                fail:function() {
+                    KBEngine.INFO_MSG("分享失败");
+                },
+            });
+            wx.onShareAppMessage(function() {
+                return {
+                    title: "投石作战",
+                    imageUrl:SHARE_PICTURE,
+                }
+         });
+        }
     },
 
     

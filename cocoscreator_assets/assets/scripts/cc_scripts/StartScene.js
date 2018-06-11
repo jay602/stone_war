@@ -55,6 +55,21 @@ cc.Class({
      },
 
     wxLoginNative: function(){
+        wx.showShareMenu({
+            withShareTicket:true,
+            success:function(res) {
+                KBEngine.INFO_MSG("分享成功, " + JSON.stringify(res));
+            },
+            fail:function() {
+                KBEngine.INFO_MSG("分享失败");
+            },
+        });
+        wx.onShareAppMessage(function() {
+            return {
+                title: "投石作战",
+                imageUrl:SHARE_PICTURE,
+            }
+        });
         var self = this;
         wx.login({
             success: function(res) {
@@ -69,6 +84,7 @@ cc.Class({
                         success: function(res) {
                             var userInfo = res.userInfo;
                             self.userName = userInfo.nickName;
+                            WEI_XIN_NICK_NAME = userInfo.nickName;
                             self.textinput_name.string = self.userName;
                             cc.sys.localStorage.setItem("encryptedData", res.encryptedData);
                             cc.sys.localStorage.setItem("iv", res.iv);

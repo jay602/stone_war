@@ -29,6 +29,7 @@ window.TOTAL_HARM = 0;
 window.SCORE = 0;
 
 window.PLAYER_NAME = '';
+window.WEI_XIN_NICK_NAME = '';
 
 
 window.PIPI_NAME = "pipiPrefab";
@@ -47,6 +48,7 @@ window.NGINX_IP = "192.168.0.106";
 window.NGINX_PORT = 20013;
 
 window.WEI_XIN_API_URL = "https://api.weixin.qq.com/sns/jscode2session";
+window.SHARE_PICTURE = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528695025634&di=558c1a17dddf4183b6acf2003eb6bb39&imgtype=0&src=http%3A%2F%2Ff.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2Fdbb44aed2e738bd4e6e03f94a58b87d6267ff956.jpg";
 
 
 

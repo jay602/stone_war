@@ -166,6 +166,9 @@ cc.Class({
 
     setAccountName: function(name) {
         this.accountName = name;
+        if(cc.sys.platform == cc.sys.WECHAT_GAME && WEI_XIN_NICK_NAME.length > 0) {
+            this.accountName = WEI_XIN_NICK_NAME;
+        }
     },
 
     setHP: function(hp){
