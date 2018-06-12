@@ -196,7 +196,6 @@ cc.Class({
     },
 
     showOtherHp: function() {
-        //cc.log("show other avatar hp: eid=%d  playerid=%d hp=%d", this.eid, KBEngine.app.player().id, this.hpValue);
         if(this.eid != KBEngine.app.player().id) {
             this.hpProcessBar.active = true;
             this.hp.active = true;

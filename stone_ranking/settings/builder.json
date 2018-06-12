@@ -2,19 +2,14 @@
   "appKey": "",
   "appSecret": "",
   "encryptJs": true,
-  "excludeScenes": [
-    "5c0528e3-ecef-4313-b383-4a269d3bdf8a",
-    "226e2d0d-7345-4aae-9a30-471043c8e100",
-    "71d947c1-4e83-4c09-919e-7df22e152d06",
-    "e817ca9a-cc84-4452-8b91-2114e858467f"
-  ],
+  "excludeScenes": [],
   "fb-instant-games": {},
   "includeAnySDK": false,
   "includeSDKBox": false,
   "inlineSpriteFrames": true,
   "inlineSpriteFrames_native": true,
   "jailbreakPlatform": false,
-  "md5Cache": true,
+  "md5Cache": false,
   "mergeStartScene": false,
   "oauthLoginServer": "",
   "optimizeHotUpdate": false,
@@ -24,23 +19,23 @@
     "portrait": false,
     "upsideDown": false
   },
-  "packageName": "org.cocos2d.stone_demo",
+  "packageName": "org.cocos2d.stone_ranking",
   "privateKey": "",
   "qqplay": {
     "REMOTE_SERVER_ROOT": "",
     "orientation": "portrait"
   },
-  "renderMode": "0",
-  "startScene": "3f572132-1d6f-4ee4-b7ed-a8f1f960c7bb",
-  "title": "stone_war",
+  "renderMode": "1",
+  "startScene": "70a6b768-808e-4476-9edd-2b52b954a721",
+  "title": "stone_ranking",
   "webOrientation": "auto",
   "wechatgame": {
-    "REMOTE_SERVER_ROOT": "http://192.168.0.106:8080/stone_war/",
-    "appid": "wxfe3c2a610dc6a2e4",
-    "isSubdomain": false,
+    "REMOTE_SERVER_ROOT": "",
+    "appid": "wx6ac3f5090a6b99c5",
+    "isSubdomain": true,
     "orientation": "landscape",
-    "subContext": "stone_ranking"
+    "subContext": ""
   },
-  "xxteaKey": "f97f5c48-5bcf-45",
+  "xxteaKey": "97d74796-6092-41",
   "zipCompressJs": true
 }

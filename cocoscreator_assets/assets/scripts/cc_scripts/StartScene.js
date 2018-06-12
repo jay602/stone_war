@@ -52,6 +52,8 @@ cc.Class({
         } else {
             this.textinput_name.string = this.userName;
         }
+
+        
      },
 
     wxLoginNative: function(){
