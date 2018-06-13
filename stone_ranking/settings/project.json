@@ -14,9 +14,32 @@
   "design-resolution-height": 640,
   "design-resolution-width": 1136,
   "excluded-modules": [
+    "LabelOutline",
+    "ParticleSystem",
+    "TiledMap",
+    "Spine Skeleton",
+    "ProgressBar",
+    "Toggle",
+    "PageView",
+    "PageViewIndicator",
+    "Slider",
+    "EditorBox",
+    "VideoPlayer",
+    "WebView",
+    "AudioSource",
+    "Animation",
+    "MotionStreak",
+    "Collider",
+    "Action",
+    "Audio",
+    "Graphics",
+    "DragonBones",
     "Physics",
+    "StudioComponent",
+    "RenderTexture",
     "Chipmunk",
-    "Camera"
+    "Camera",
+    "Intersection"
   ],
   "fit-height": true,
   "fit-width": true,
@@ -28,7 +51,7 @@
     "height": 640,
     "width": 1136
   },
+  "start-scene": "70a6b768-808e-4476-9edd-2b52b954a721",
   "use-customize-simulator": false,
-  "use-project-simulator-setting": false,
-  "start-scene": "current"
+  "use-project-simulator-setting": false
 }

@@ -58,10 +58,6 @@ cc.Class({
         this.skyBox = this.sky.getBoundingBoxToWorld();
 
         this.ctx = cc.find("worldDraw").getComponent(cc.Graphics);
-
-       // this.touchControl = cc.find("touchControl");
-        
-       
         this.itemBox = null;
        
         if(!cc.sys.isMobile) {
@@ -97,12 +93,10 @@ cc.Class({
     },
 
     enableEventListen: function() {
-        cc.log("enableEventListen");
         this.enableEvent = true;
     },
 
     disEnableEventListen: function() {
-        cc.log("disEnableEventListen");
         this.enableEvent = false;
     },
 

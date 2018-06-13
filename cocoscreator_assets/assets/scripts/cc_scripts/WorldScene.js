@@ -287,7 +287,6 @@ cc.Class({
             ae.scaleX = -1;
         }
         var position = cc.p(entity.position.x*SCALE, entity.position.z*SCALE);
-       // cc.log("updatePosition, entityid=%d dir=%f position(%f, %f)", entity.id, entity.direction.z, position.x, position.y);
         var action = ae.getComponent("AvatarAction");
         action.onStartMove(position);
     },	  

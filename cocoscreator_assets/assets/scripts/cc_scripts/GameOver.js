@@ -74,32 +74,32 @@ cc.Class({
         this.isShowRankingView = false;
         this.buttonRanking.node.active = false;
         this.rankingView.active = false;
-        // var result = null;
-        // switch(GAME_RESULT)
-        // {
-        //     case PIPI_WIN:
-        //         result = cc.instantiate(this.pipiWin);
-        //         break;
-        //     case PIPI_LOSE:
-        //         result = cc.instantiate(this.pipiLose);
-        //         break;
-        //     case POP_WIN:
-        //         result = cc.instantiate(this.popWin);
-        //         break;
-        //     case POP_LOSE:
-        //         result = cc.instantiate(this.popLose);
-        //         break;
-        // }
+        var result = null;
+        switch(GAME_RESULT)
+        {
+            case PIPI_WIN:
+                result = cc.instantiate(this.pipiWin);
+                break;
+            case PIPI_LOSE:
+                result = cc.instantiate(this.pipiLose);
+                break;
+            case POP_WIN:
+                result = cc.instantiate(this.popWin);
+                break;
+            case POP_LOSE:
+                result = cc.instantiate(this.popLose);
+                break;
+        }
 
-        // this.player.addChild(result);
-        // result.setPosition(0, 0);
+        this.player.addChild(result);
+        result.setPosition(0, 0);
 
         this.labelHitRate.string = HIT_RATE.toFixed(2) * 100 + '%';
         this.labelTotalHarm.string = TOTAL_HARM;
         this.labelTotalTime.string = TOTAL_TIME + 'S';
         this.labelScore.string = SCORE;
 
-        //cc.director.preloadScene("WorldScene");
+        cc.director.preloadScene("WorldScene");
     },
 
     start() {
@@ -108,11 +108,11 @@ cc.Class({
             this._isShow = false;
             this.tex = new cc.Texture2D();
 
-            sharedCanvas.width = 1136;
-            sharedCanvas.height = 640;
+            sharedCanvas.width = cc.winSize.width;
+            sharedCanvas.height = cc.winSize.height;
 
             wx.setUserCloudStorage({
-                KVDataList: [{ key: 'score', value: "123" }],
+                KVDataList: [{ key: 'score', value: ""+SCORE }],
                 success: function (res) {
                     KBEngine.INFO_MSG('setUserCloudStorage  success' + JSON.stringify(res));
                 },
@@ -127,21 +127,22 @@ cc.Class({
     },
 
     continueGame: function() {
-        // var player = KBEngine.app.player();
-        // if(player == undefined || !player.inWorld)
-        //     return;
+        var player = KBEngine.app.player();
+        if(player == undefined || !player.inWorld)
+            return;
 
-        // cc.director.loadScene("WorldScene", function() {
-        //     KBEngine.INFO_MSG("load WorldScene finish");
-        //     player.continueGame();
-        // });
+        cc.director.loadScene("WorldScene", function() {
+            KBEngine.INFO_MSG("load WorldScene finish");
+            player.continueGame();
+        });
     },
 
     onDisplayRankingView() {
         if (window.wx == undefined)  return;
-        KBEngine.INFO_MSG("show ranking view");
+       
         this.isShowRankingView = !this.isShowRankingView;
         this.rankingView.active = this.isShowRankingView;
+        KBEngine.INFO_MSG("show ranking view: " + this.isShowRankingView.toString());
         // 发消息给子域
         let openDataContext = wx.getOpenDataContext();
         openDataContext.postMessage({
@@ -150,9 +151,9 @@ cc.Class({
     },
 
     _updateSubDomainCanvas() {
-        if (!this.tex) {
-            return;
-        }
+        if (window.wx == undefined)  return;
+        if (!this.tex)  return;
+        
         this.tex.initWithElement(sharedCanvas);
         this.tex.handleLoadedTexture();
         this.rankingScrollView.spriteFrame = new cc.SpriteFrame(this.tex);

@@ -59,12 +59,6 @@ cc.Class({
     wxLoginNative: function(){
         wx.showShareMenu({
             withShareTicket:true,
-            success:function(res) {
-                KBEngine.INFO_MSG("分享成功, " + JSON.stringify(res));
-            },
-            fail:function() {
-                KBEngine.INFO_MSG("分享失败");
-            },
         });
         wx.onShareAppMessage(function() {
             return {

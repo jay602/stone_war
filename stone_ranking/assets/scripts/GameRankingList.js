@@ -18,12 +18,6 @@ cc.Class({
         myScore: cc.Label,
     },
 
-    onLoad() {
-        this.canvas = cc.find("Canvas");
-        this.rankingList = cc.find("Canvas/GameRankingList");
-        this.scrollView = cc.find("Canvas/GameRankingList/rankingScrollView");
-        this.view = cc.find("Canvas/GameRankingList/rankingScrollView/view");
-    },
 
     start () {
         if (window.wx != undefined) {
@@ -39,25 +33,16 @@ cc.Class({
                 }
             });
         }
-
-        console.log("canvas: w=%f, h=%f", this.canvas.width, this.canvas.height);
-        console.log("rankingList: w=%f, h=%f", this.rankingList.width, this.rankingList.height);
-        console.log("scrollView: w=%f, h=%f", this.scrollView.width, this.scrollView.height);
-        console.log("view: w=%f, h=%f", this.view.width, this.view.height);
     },
 
     show () {
         if (window.wx == undefined) return;
 
         this.fetchFriendData();
-        
-        // let moveTo = cc.moveTo(0.5, 0, 73);
-        // this.rankingScrollView.runAction(moveTo);
     },
 
     hide () {
-        // let moveTo = cc.moveTo(0.5, 0, 1000);
-        // this.rankingScrollView.runAction(moveTo);
+        this.removeChild();
     },
 
     removeChild() {
@@ -91,13 +76,13 @@ cc.Class({
                                 return b.KVDataList[0].value - a.KVDataList[0].value;
                             });
 
-                            for (let i = 0; i < 20; i++) {
-                                var playerInfo = data[0];
+                            for (let i = 0; i < data.length; i++) {
+                                var playerInfo = data[i];
                                 var item = cc.instantiate(this.prefabRankItem);
                                 item.getComponent('RankItem').init(i, playerInfo);
                                 this.scrollViewContent.addChild(item);
 
-                                if (i == 0 && data[i].avatarUrl == userData.avatarUrl) {
+                                if (data[i].avatarUrl == userData.avatarUrl) {
                                     this.myScore.string = "我的分数: " + data[i].KVDataList[0].value + ", 排名: " +  (i+1);
                                 }
                             }

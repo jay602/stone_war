@@ -180,7 +180,7 @@ class Avatar(KBEngine.Entity, EntityCommon):
 
 		#HP小于等于0，则通知播放死亡动画，然后结束当局游戏
 		if self.HP <= 0:
-			DEBUG_MSG("avatar id=%i name=%s is defeated !!!" % (self.id, self.name))
+			DEBUG_MSG("avatar id=%i name=%s is defeated !!!" % (self.id, self.accountName))
 			self.client.onDie(self.id)
 			self.otherClients.onDie(self.id)
 			room.gameOver()

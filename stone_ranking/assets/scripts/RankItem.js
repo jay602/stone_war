@@ -19,11 +19,6 @@ cc.Class({
         topScoreLabel: cc.Label,
     },
 
-
-    start () {
-
-    },
-
     init: function (rank, data) {
         let avatarUrl = data.avatarUrl;
         // let nick = data.nickname.length <= 10 ? data.nickname : data.nickname.substr(0, 10) + "...";

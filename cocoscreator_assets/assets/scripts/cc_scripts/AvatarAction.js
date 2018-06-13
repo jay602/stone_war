@@ -292,11 +292,9 @@ cc.Class({
         if(this.moveFlag == MOVE_LEFT) 
             return;
 
-        KBEngine.INFO_MSG("22 avatar left walk: hasPickUpItem= " + this.hasPickUpItem.toString());    
         if(this.hasPickUpItem)
             return;
 
-        KBEngine.INFO_MSG("33 avatar left walk: jumping= " + this.jumping.toString());  
         this.moveFlag = MOVE_LEFT;
         if(!this.jumping) {
             this.node.scaleX = this.leftDir;

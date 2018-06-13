@@ -23,10 +23,6 @@ cc.Class({
        beginPoint: cc.v2(0, 0),
     },
 
-    onLoad () {
-        cc.log("FlyWord Load");
-    },
-
     showHarm: function(word, begin, scaleX) {
         this.word = word;
         this.beginPoint = begin;
@@ -78,7 +74,6 @@ cc.Class({
         }
         
         x = y / tan;
-        cc.log("9090 word fly: angle=%f x=%f y=%f  tan=%f", angle, x, y, tan);
         var action = cc.sequence(cc.moveBy(1, cc.p(x, y)), cc.fadeOut(1), finished);
         this.node.runAction(action);
     },

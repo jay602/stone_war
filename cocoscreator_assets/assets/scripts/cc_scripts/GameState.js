@@ -50,9 +50,6 @@ cc.Class({
 
        this.forceLayout =  cc.find("forceLayout");
        this.forceLayout.active = false;
-
-    //    this.hpLayout =  cc.find("hpLayout");
-    //    this.hpLayout.active = false;
     },
 
     isGameStart: function() {
@@ -60,7 +57,6 @@ cc.Class({
     },
 
     setGameStart: function(isStart) {
-        cc.log("Is game start: %s", isStart.toString());
         this.isStart = isStart;
         if(this.isStart) {
             this.scheduler.schedule(this.countDownSecond, this, 1, cc.REPEAT_FOREVER, 0, false);
