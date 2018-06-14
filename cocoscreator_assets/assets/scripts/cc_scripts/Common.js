@@ -41,10 +41,10 @@ window.JOY_STICK_POSITION_Y = 120;
 window.APPID = '################';
 window.APP_SECRET = '********************';
 
-window.SERVER_IP = "192.168.0.106";
+window.SERVER_IP = "127.0.0.1";
 window.SERVER_PORT = 20013;
 
-window.NGINX_IP = "192.168.0.106";
+window.NGINX_IP = "127.0.0.1";
 window.NGINX_PORT = 20013;
 
 window.WEI_XIN_API_URL = "https://api.weixin.qq.com/sns/jscode2session";

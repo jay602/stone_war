@@ -166,9 +166,9 @@ cc.Class({
 
     setAccountName: function(name) {
         this.accountName = name;
-        if(cc.sys.platform == cc.sys.WECHAT_GAME && WEI_XIN_NICK_NAME.length > 0) {
-            this.accountName = WEI_XIN_NICK_NAME;
-        }
+        // if(cc.sys.platform == cc.sys.WECHAT_GAME && WEI_XIN_NICK_NAME.length > 0 && ) {
+        //     this.accountName = WEI_XIN_NICK_NAME;
+        // }
     },
 
     setHP: function(hp){
@@ -288,7 +288,6 @@ cc.Class({
     },
 
     leftWalk: function() {
-        KBEngine.INFO_MSG("11 avatar left walk: moveFlag=" + this.moveFlag);
         if(this.moveFlag == MOVE_LEFT) 
             return;
 
@@ -298,6 +297,8 @@ cc.Class({
         this.moveFlag = MOVE_LEFT;
         if(!this.jumping) {
             this.node.scaleX = this.leftDir;
+            this.hpProcessBar.scaleX = this.node.scaleX;
+            this.labelName.scaleX = this.node.scaleX;
             this.playWalkAnim();
         }
         
@@ -326,6 +327,8 @@ cc.Class({
         this.moveFlag = MOVE_RIGHT;
         if(!this.jumping) {
             this.node.scaleX = this.rightDir;
+            this.hpProcessBar.scaleX = this.node.scaleX;
+            this.labelName.scaleX = this.node.scaleX;
             this.playWalkAnim();
         }
        
@@ -448,14 +451,13 @@ cc.Class({
     },
 
     onJump: function() {
-        KBEngine.INFO_MSG("AvatarAction onJump, position(" + this.node.x + ", "+ this.node.y + ")");
+       // KBEngine.INFO_MSG("AvatarAction onJump, position(" + this.node.x + ", "+ this.node.y + ")");
         this._jump();
     },
 
     onLeftJump: function() {
-        KBEngine.INFO_MSG("AvatarAction on left jump, position(" + this.node.x + ", "+ this.node.y + ")");
+      //  KBEngine.INFO_MSG("AvatarAction on left jump, position(" + this.node.x + ", "+ this.node.y + ")");
 
-        //if(this.moveFlag == MOVE_LEFT) return;
         if(this._jump()) {
             this.node.scaleX = this.leftDir; 
             this.moveFlag = MOVE_LEFT;
@@ -463,9 +465,7 @@ cc.Class({
     },
 
     onRightJump: function() {
-        KBEngine.INFO_MSG("AvatarAction on right jump, position(" + this.node.x + ", "+ this.node.y + ")");
-
-       // if(this.moveFlag == MOVE_RIGHT) return;
+      //  KBEngine.INFO_MSG("AvatarAction on right jump, position(" + this.node.x + ", "+ this.node.y + ")");
 
        if(this._jump()) {
             this.node.scaleX = this.rightDir; 

@@ -16,6 +16,7 @@ class Avatar(KBEngine.Entity, EntityCommon):
 		DEBUG_MSG(self.position)
 		self.startPosition = copy.deepcopy(self.position)
 		self.getCurrRoom().onEnter(self)
+		DEBUG_MSG("new avatar cell: id=%i accountName=%s nickName=%s avatarName=%s" % (self.id, self.accountName, self.nickName, self.avatarName))
 		
 	def isAvatar(self):
 		"""

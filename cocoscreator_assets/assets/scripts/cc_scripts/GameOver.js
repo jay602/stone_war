@@ -93,8 +93,9 @@ cc.Class({
 
         this.player.addChild(result);
         result.setPosition(0, 0);
-
-        this.labelHitRate.string = HIT_RATE.toFixed(2) * 100 + '%';
+        KBEngine.INFO_MSG("game is over, result: rate=%f harm=%f time=%f score=%f", HIT_RATE, TOTAL_HARM, TOTAL_TIME, SCORE);
+        var rate = HIT_RATE * 100;
+        this.labelHitRate.string = rate.toFixed(0) + '%';
         this.labelTotalHarm.string = TOTAL_HARM;
         this.labelTotalTime.string = TOTAL_TIME + 'S';
         this.labelScore.string = SCORE;
@@ -147,6 +148,16 @@ cc.Class({
         let openDataContext = wx.getOpenDataContext();
         openDataContext.postMessage({
             message: this.isShowRankingView ? 'Show' : 'Hide',
+        });
+    },
+
+    onCloseRankingView(){
+        this.rankingView.active = false;
+        KBEngine.INFO_MSG("close ranking view: ");
+        // 发消息给子域
+        let openDataContext = wx.getOpenDataContext();
+        openDataContext.postMessage({
+            message: 'Hide',
         });
     },
 

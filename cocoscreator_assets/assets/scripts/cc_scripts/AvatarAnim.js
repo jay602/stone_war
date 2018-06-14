@@ -58,28 +58,24 @@ cc.Class({
 
     stopPlayAnim: function() {
         if(this.anim) {
-           // cc.log("AvatarAnim::stop PlayAnim",);
             this.anim.stop();
         }
     },
 
     playJumpAnim: function(){
         if(this.anim) {
-           // cc.log("AvatarAnim::play Jump Anim %s", this.jumpAnim);
             this.anim.play(this.jumpAnim);
         }
     },
 
     playIdleAnim: function() {
         if(this.anim) {
-          //  cc.log("AvatarAnim::play Idle Anim %s", this.idleAnim);
             this.anim.play(this.idleAnim);
         }
     },
 
     playDieAnim: function() {
         if(this.anim) {
-           // cc.log("AvatarAnim::play die anim %s", this.dieAnim);
             this.anim.play(this.dieAnim);
         }
     }

@@ -2346,6 +2346,7 @@ KBEngine.KBEngineArgs = function()
 
 	// Reference: http://www.kbengine.org/docs/programming/clientsdkprogramming.html, client types
 	this.clientType = 5;
+	this.isWss = false;
 
 	// 在Entity初始化时是否触发属性的set_*事件(callPropertysSetMethods)
 	this.isOnInitCallPropertysSetMethods = true;
@@ -2361,6 +2362,7 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 	KBEngine.app = this;
 	
 	this.args = kbengineArgs;
+	
 	
 	this.username = "testhtml51";
 	this.password = "123456";
@@ -2391,6 +2393,8 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 	// 服务端分配的baseapp地址
 	this.baseappIP = "";
 	this.baseappPort = 0;
+
+	this.protocol = this.args.isWss ? "wss" : "ws";
 
 	this.resetSocket = function()
 	{
@@ -3141,8 +3145,8 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 	{  
 		if(noconnect)
 		{
-			KBEngine.INFO_MSG("KBEngineApp::createAccount_loginapp: start connect to wss://" + KBEngine.app.ip + ":" + KBEngine.app.port + "!");
-			KBEngine.app.connect("ws://" + KBEngine.app.ip + ":" + KBEngine.app.port);
+			KBEngine.INFO_MSG("KBEngineApp::createAccount_loginapp: start connect to " + KBEngine.app.protocol +  "://" + KBEngine.app.ip + ":" + KBEngine.app.port + "!");
+			KBEngine.app.connect(KBEngine.app.protocol + "://" + KBEngine.app.ip + ":" + KBEngine.app.port);
 			KBEngine.app.socket.onopen = KBEngine.app.onOpenLoginapp_createAccount;  
 		}
 		else
@@ -3190,8 +3194,8 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 	{  
 		if(noconnect)
 		{
-			KBEngine.INFO_MSG("KBEngineApp::login_loginapp: start connect to wss://" + KBEngine.app.ip + ":" + KBEngine.app.port + "!");
-			KBEngine.app.connect("ws://" + KBEngine.app.ip + ":" + KBEngine.app.port);
+			KBEngine.INFO_MSG("KBEngineApp::login_loginapp: start connect " + KBEngine.app.protocol + "://" + KBEngine.app.ip + ":" + KBEngine.app.port + "!");
+			KBEngine.app.connect(KBEngine.app.protocol + "://" + KBEngine.app.ip + ":" + KBEngine.app.port);
 			KBEngine.app.socket.onopen = KBEngine.app.onOpenLoginapp_login;  
 		}
 		else
@@ -3274,8 +3278,8 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 		if(noconnect)
 		{
 			KBEngine.Event.fire("onLoginBaseapp");
-			KBEngine.INFO_MSG("KBEngineApp::login_baseapp: start connect to wss://" + KBEngine.app.baseappIp + ":" + KBEngine.app.baseappPort + "!");
-			KBEngine.app.connect("ws://" + KBEngine.app.baseappIp + ":" + KBEngine.app.baseappPort);
+			KBEngine.INFO_MSG("KBEngineApp::login_baseapp: start connect to "+ KBEngine.app.protocol +"://" + KBEngine.app.baseappIp + ":" + KBEngine.app.baseappPort + "!");
+			KBEngine.app.connect(KBEngine.app.protocol + "://" + KBEngine.app.baseappIp + ":" + KBEngine.app.baseappPort);
 			
 			if(KBEngine.app.socket != undefined && KBEngine.app.socket != null)
 				KBEngine.app.socket.onopen = KBEngine.app.onOpenBaseapp;  
@@ -3297,8 +3301,8 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 		
 		KBEngine.app.resetSocket();
 		KBEngine.Event.fire("onReloginBaseapp");
-		KBEngine.INFO_MSG("KBEngineApp::reloginBaseapp: start connect to wss://" + KBEngine.app.baseappIp + ":" + KBEngine.app.baseappPort + "!");
-		KBEngine.app.connect("ws://" + KBEngine.app.baseappIp + ":" + KBEngine.app.baseappPort);
+		KBEngine.INFO_MSG("KBEngineApp::reloginBaseapp: start connect to " + KBEngine.app.protocol +"://" + KBEngine.app.baseappIp + ":" + KBEngine.app.baseappPort + "!");
+		KBEngine.app.connect(KBEngine.app.protocol + "://" + KBEngine.app.baseappIp + ":" + KBEngine.app.baseappPort);
 		
 		if(KBEngine.app.socket != undefined && KBEngine.app.socket != null)
 			KBEngine.app.socket.onopen = KBEngine.app.onReOpenBaseapp;  

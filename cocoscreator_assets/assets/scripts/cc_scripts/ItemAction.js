@@ -176,7 +176,6 @@ cc.Class({
     },
 
     setThrowed: function(throwed) {
-        cc.log("item is throwed");
         this.isThrowed = throwed;
         this.touchPlayerCount = 0;
     },
@@ -187,7 +186,6 @@ cc.Class({
 
     setPlacePrePosition: function() {
         if(this.prePosition) {
-            cc.log("item set prePosition");
             this.node.setPosition(this.prePosition);
             this.prePosition = null;
         }
@@ -195,7 +193,6 @@ cc.Class({
 
     recordPrePosition: function() {
         this.prePosition = this.node.getPosition();
-        cc.log("pre position(%f, %f)", this.prePosition.x, this.prePosition.y);
     },
 
     pickUped: function(event) {
@@ -204,7 +201,6 @@ cc.Class({
         var ret = cc.sys.isMobile ? true : (event.getButton() === cc.Event.EventMouse.BUTTON_LEFT);
 
         if(ret && this.canPicked && isHited && this.player) {
-            cc.log("pick up Item %s ", this.node.name);
             var point = new cc.Vec2(pickPos.x,  pickPos.y);
             this.player.getComponent("AvatarControl").pickUpItem(this.node, this.itemID, point);
         }

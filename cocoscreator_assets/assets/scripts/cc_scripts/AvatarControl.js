@@ -130,7 +130,7 @@ cc.Class({
 
     onKeyDown: function(event) {
         if(!this.enableEvent) return;
-        //cc.log("AvatarControl press key=%d", keyCode);
+
         switch(event.keyCode) {
             case cc.KEY.a: 
                 this.player.leftWalk();
@@ -148,7 +148,7 @@ cc.Class({
 
     onKeyUp: function(event) {
         if(!this.enableEvent) return;
-                   // cc.log("AvatarControl release key=%d", keyCode);
+
         switch(event.keyCode) {
             case cc.KEY.a: 
             case cc.KEY.d:
@@ -165,16 +165,13 @@ cc.Class({
 
     touchControlPlayer: function(point) {
         var angle =  Math.atan2(point.y, point.x) * (180/Math.PI); 
-       // KBEngine.INFO_MSG("angle = " + angle);
         //向右走
         if( (angle > -90 && angle < 0 || angle > 0 && angle < 30)  && this.player)  
         {  
-           // KBEngine.INFO_MSG("right walk");
             this.player.rightWalk();
         } 
         else if( (angle < -90 && angle >= -180 || angle <= 180 && angle > 150) && this.player)  
         {
-          //  KBEngine.INFO_MSG("left walk");
             this.player.leftWalk();
         }
         else if(angle >= 30 && angle <= 60 && this.player)  
@@ -183,12 +180,10 @@ cc.Class({
         }
         else if(angle >= 120 && angle <= 150 && this.player)  
         {
-           // KBEngine.INFO_MSG("left jump");
            this.player.touchLeftJump();
         }
         else if(angle > 60 && angle < 120 && this.player)  
         {
-          //  KBEngine.INFO_MSG("jump");
             this.player.jump();
         }
     },
@@ -204,8 +199,6 @@ cc.Class({
         var touchPos = this.touchControl.convertToNodeSpaceAR(event.getLocation());
         var len = cc.pDistance(touchPos, cc.v2(0, 0));
 
-       KBEngine.INFO_MSG("onTouchBegan: pos(" + touchPos.x + ", " + touchPos.y + "," + "  Radius = " + this.touchRadius);
-      
         this.stickBg.setPosition(touchPos);
     } ,
 
@@ -215,8 +208,6 @@ cc.Class({
         var touchPos = this.stickBg.convertToNodeSpaceAR( event.getLocation());
         var len = cc.pDistance(touchPos, this.stickBg.position);
 
-       // console.log("onTouchMoved: pos(%f, %f) radius=%s", touchPos.x, touchPos.y, this.touchRadius);
-        
         var normal = touchPos.normalize();
         var point = normal.mul(this.stickBgRadius);
         this.stick.setPosition(point);
@@ -227,7 +218,6 @@ cc.Class({
     onTouchEnded: function(event) {
         if(!this.enableEvent) return;
 
-       // console.log("onTouchEnded");
         this.stickBg.setPosition(this.oriStickPos);
         this.stick.setPosition(0, 0);
         if(this.player) {
@@ -282,7 +272,6 @@ cc.Class({
         var point = new cc.Vec2(pos.x, pos.y);
        
         if(this.item) {
-            cc.log("carama settarget item");
             this.cameraControl.setTarget(this.item);
         }
         

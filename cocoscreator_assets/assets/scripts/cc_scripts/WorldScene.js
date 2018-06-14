@@ -174,6 +174,7 @@ cc.Class({
 
     onDisconnected : function() {
         KBEngine.INFO_MSG("disconnect! will try to reconnect...");
+        KBEngine.app.reloginBaseapp();
     },
     
     onReloginBaseappTimer : function(self) {

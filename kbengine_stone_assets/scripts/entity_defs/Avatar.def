@@ -15,6 +15,16 @@
 			<Flags>		ALL_CLIENTS			</Flags>
 		</accountName>
 
+		<nickName>
+			<Type>		UNICODE			</Type>
+			<Flags>		ALL_CLIENTS			</Flags>
+		</nickName>
+
+		<avatarName>
+			<Type>		UNICODE			</Type>
+			<Flags>		ALL_CLIENTS			</Flags>
+		</avatarName>
+
 		<dbid>
 			<Type>		DBID				</Type>
 			<Flags>		CELL_PUBLIC			</Flags>

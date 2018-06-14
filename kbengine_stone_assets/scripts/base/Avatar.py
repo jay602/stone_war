@@ -27,6 +27,8 @@ class Avatar(KBEngine.Proxy):
 		self.cellData["totalTime"] = 0
 		self.cellData["score"] = 0
 		self.cellData["hitRate"] = 0.0
+		self.cellData["nickName"] = ""
+		self.cellData["avatarName"] = ""
 		
 		DEBUG_MSG("new avatar: accountName=%s" % (self.__ACCOUNT_NAME__))
 		datas = self.getClientDatas()
@@ -135,8 +137,8 @@ class Avatar(KBEngine.Proxy):
 		客户端对应实体已经销毁,客户端断线会被调用
 		"""
 		#断线超时了，则销毁
-		DEBUG_MSG("Avatar[%i].onClientDeath:" % self.id)
-		self.destroySelf()
+		DEBUG_MSG("Avatar[%i]  onClientDeath:" % (self.id))
+		#self.destroySelf()
 
 		
 	def onDestroyTimer(self):
@@ -151,7 +153,7 @@ class Avatar(KBEngine.Proxy):
 			KBEngine.globalData["Halls"].enterRoom(self, self.cellData["position"], self.cellData["direction"], self.roomKey)
 
 	def decodeEncryptedData(self, encryptedData, iv, sessionId):
-		DEBUG_MSG("decodeEncryptedData: encryptedData=%s, iv=%s, sessionId=%s" % (encryptedData, iv, sessionId))
+		DEBUG_MSG("decodeEncryptedData: len=%d encryptedData=%s , iv=%s, sessionId=%s" % (len(encryptedData), encryptedData, iv, sessionId))
 		if not self.sessionKey:
 			DEBUG_MSG("not sessionKey")
 			return
@@ -167,20 +169,25 @@ class Avatar(KBEngine.Proxy):
 		cipher = pyaes.Decrypter(pyaes.AESModeOfOperationCBC(sessionKey, iv))
 		halfLen = int(len(encryptedData) / 2)
 
-		datas = cipher.feed(encryptedData[:halfLen])
-		datas += cipher.feed(encryptedData[halfLen:])
-		datas += cipher.feed()
-		decrypted = eval(datas.decode())
-		DEBUG_MSG(decrypted)
-
-		self.decryptedData = decrypted
-		INFO_MSG("nickName = %s" % (decrypted["nickName"]))
-		self.cellData["accountName"] = decrypted["nickName"]
+		try:
+			datas = cipher.feed(encryptedData[:halfLen])
+			datas += cipher.feed(encryptedData[halfLen:])
+			datas += cipher.feed()
+			decrypted = eval(datas.decode())
+			DEBUG_MSG(decrypted)
+			self.decryptedData = decrypted
+			INFO_MSG("nickName = %s" % (decrypted["nickName"]))
+			self.cellData["accountName"] = decrypted["nickName"]
+			self.cellData["nicktName"] = decrypted["nickName"]
 		
-		if decrypted['watermark']['appid'] != GameConfigs.APPID:
-			DEBUG_MSG("appid not equal: %s != %s" % (decrypted['watermark']['appid'], GameConfigs.APPID))
+			if decrypted['watermark']['appid'] != GameConfigs.APPID:
+				DEBUG_MSG("appid not equal: %s != %s" % (decrypted['watermark']['appid'], GameConfigs.APPID))
+		except Exception as err:
+			self.cellData["accountName"] = self.cellData["avatarName"]
+			self.cellData["nicktName"] = self.cellData["avatarName"]
+			DEBUG_MSG("encry data error: " + str(err))
+			DEBUG_MSG("avatar name : " + self.cellData["avatarName"])
 
-		return decrypted
 
 	def _unpad(self, s):
 		return s[:-ord(s[len(s)-1:])]
