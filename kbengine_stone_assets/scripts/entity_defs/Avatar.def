@@ -164,6 +164,10 @@
 			<Arg>	ENTITYCALL </Arg>
 		</createCell>
 
+		<enterRoom>
+			<Exposed/>
+		</enterRoom>
+
 		<decodeEncryptedData>
 			<Exposed/>
 			<Arg>	STRING 	</Arg>

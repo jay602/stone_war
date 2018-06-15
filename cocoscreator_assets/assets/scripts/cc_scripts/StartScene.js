@@ -134,7 +134,16 @@ cc.Class({
         KBEngine.Event.register("onReloginBaseappFailed", this, "onReloginBaseappFailed");
         KBEngine.Event.register("onReloginBaseappSuccessfully", this, "onReloginBaseappSuccessfully");
 		KBEngine.Event.register("onLoginBaseapp", this, "onLoginBaseapp");
-	
+     },
+
+     unInstallEvents() {
+        KBEngine.Event.deregister("onConnectionState", this, "onConnectionState");
+        KBEngine.Event.deregister("onLoginFailed", this, "onLoginFailed");
+        KBEngine.Event.deregister("onLoginBaseappFailed", this, "onLoginBaseappFailed");
+		KBEngine.Event.deregister("enterScene", this, "enterScene");
+        KBEngine.Event.deregister("onReloginBaseappFailed", this, "onReloginBaseappFailed");
+        KBEngine.Event.deregister("onReloginBaseappSuccessfully", this, "onReloginBaseappSuccessfully");
+		KBEngine.Event.deregister("onLoginBaseapp", this, "onLoginBaseapp");
      },
 
      onConnectionState : function(success) {
@@ -190,7 +199,6 @@ cc.Class({
          
      enterScene : function(rndUUID, eid, accountEntity) {
         var player = KBEngine.app.player();
-        //debugger;
         if(player && window.wx != undefined) {
             KBEngine.INFO_MSG("begin decodeEncryptedData ......");
             player.decodeEncryptedData();
@@ -198,7 +206,11 @@ cc.Class({
 
         cc.log("Login is successfully!(登陆成功!)");
         this.label_hint.string = "Login is successfully!(登陆成功!)";
-        cc.director.loadScene("WorldScene");
+        
+        cc.director.loadScene("WorldScene", ()=> {
+            player.enterRoom();
+            this.unInstallEvents();
+        });
      },
  
      onLoginBaseapp : function() {

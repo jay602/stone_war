@@ -41,7 +41,8 @@
     "WebView",
     "MotionStreak",
     "DragonBones",
-    "StudioComponent"
+    "StudioComponent",
+    "Chipmunk"
   ],
   "fit-height": true,
   "fit-width": true,

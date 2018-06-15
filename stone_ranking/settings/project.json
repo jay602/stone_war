@@ -14,6 +14,7 @@
   "design-resolution-height": 640,
   "design-resolution-width": 1136,
   "excluded-modules": [
+    "CCSpriteDistortion",
     "LabelOutline",
     "ParticleSystem",
     "TiledMap",

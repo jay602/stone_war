@@ -221,7 +221,15 @@ KBEngine.Avatar = KBEngine.Entity.extend(
             var iv = cc.sys.localStorage.getItem("iv");
             var sessionId = cc.sys.localStorage.getItem("3rdSessionId");
             KBEngine.INFO_MSG("decodeEncryptedData: encryptedData=" + encryptedData + ", iv=" + iv + ", sessionId=" + sessionId);
-            this.baseCall("decodeEncryptedData", encryptedData, iv, sessionId);
+            if(encryptedData && iv) {
+                this.baseCall("decodeEncryptedData", encryptedData, iv, sessionId);
+            }
+        },
+
+        enterRoom: function()
+        {
+            KBEngine.INFO_MSG("avatar " + this.id + " enter room");
+            this.baseCall("enterRoom");
         }
     });
     

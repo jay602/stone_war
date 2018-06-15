@@ -95,13 +95,14 @@ class Avatar(KBEngine.Proxy):
 		"""
 
 		INFO_MSG("Avatar[%i] entities enable. EntityCall:%s" % (self.id, self.client))
-		self.addTimer(1, 0, TIMER_TYPE_ENTER_ROOM)
+		#self.addTimer(1, 0, TIMER_TYPE_ENTER_ROOM)
 		
 	def onLogOnAttempt(self, ip, port, password):
 		"""
 		KBEngine method.
 		客户端登陆失败时会回调到这里
 		"""
+		INFO_MSG("%s login failed" % (self.__ACCOUNT_NAME__))
 		INFO_MSG(ip, port, password)
 		return KBEngine.LOG_ON_ACCEPT
 		
@@ -147,7 +148,7 @@ class Avatar(KBEngine.Proxy):
 
 	def enterRoom(self):
 		# 如果玩家存在cell， 说明已经在地图中了， 因此不需要再次进入地图
-		DEBUG_MSG("Avatar %i reqEnterRoom, hasCell=%i" % (self.id, self.cell!=None))
+		DEBUG_MSG("avatar %i enter room, hasCell=%i" % (self.id, self.cell!=None))
 		if self.cell is None:
 			# 玩家上线了或者重登陆了， 此处告诉大厅，玩家请求登陆到游戏地图中
 			KBEngine.globalData["Halls"].enterRoom(self, self.cellData["position"], self.cellData["direction"], self.roomKey)
