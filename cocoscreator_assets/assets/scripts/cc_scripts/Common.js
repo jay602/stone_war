@@ -11,7 +11,8 @@ window.MULTIPLE = 8;
 window.
 
 window.ItemPrefabUrl = {
-    'map1': ['itemPrefab/map1/cd','itemPrefab/map1/pdg', 'itemPrefab/map1/sk', 'itemPrefab/map1/sk2', 'itemPrefab/map1/sk3', 'itemPrefab/map1/sl'],
+    'map1': ['itemPrefab/map1/cd','itemPrefab/map1/pdg', 'itemPrefab/map1/sk', 'itemPrefab/map1/sk2', 'itemPrefab/map1/sk3', 'itemPrefab/map1/sl',
+                'itemPrefab/map1/sld'],
     'map2': ['itemPrefab/map1/cd','itemPrefab/map1/lyg', 'itemPrefab/map1/pdg', 'itemPrefab/map1/sk2'],
     'map3': ['itemPrefab/map1/cd','itemPrefab/map1/lyg', 'itemPrefab/map1/pdg', 'itemPrefab/map1/sk2'],
 };
@@ -41,7 +42,7 @@ window.JOY_STICK_POSITION_Y = 120;
 window.APPID = '################';
 window.APP_SECRET = '********************';
 
-window.SERVER_IP = "127.0.0.1";
+window.SERVER_IP = "192.168.0.106";
 window.SERVER_PORT = 20013;
 
 window.NGINX_IP = "127.0.0.1";

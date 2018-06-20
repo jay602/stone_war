@@ -193,6 +193,7 @@ cc.Class({
 
     recordPrePosition: function() {
         this.prePosition = this.node.getPosition();
+        KBEngine.INFO_MSG("item " + this.node.name + " pre position: " + this.prePosition.x + " , " + this.prePosition.y);
     },
 
     pickUped: function(event) {

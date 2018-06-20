@@ -139,8 +139,12 @@ class Avatar(KBEngine.Proxy):
 		"""
 		#断线超时了，则销毁
 		DEBUG_MSG("Avatar[%i]  onClientDeath:" % (self.id))
-		#self.destroySelf()
+		self.destroySelf()
 
+	def joinRoom(self):
+		self.loginCount += 1
+		DEBUG_MSG("avatar %i enter world, logincount=%i" % (self.id, self.loginCount))
+		self.addTimer(1, 0, TIMER_TYPE_ENTER_ROOM)
 		
 	def onDestroyTimer(self):
 		DEBUG_MSG("Avatar::onDestroyTimer: %i" % (self.id))

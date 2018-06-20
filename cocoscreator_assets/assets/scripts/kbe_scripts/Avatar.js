@@ -226,10 +226,10 @@ KBEngine.Avatar = KBEngine.Entity.extend(
             }
         },
 
-        enterRoom: function()
+        joinRoom: function()
         {
-            KBEngine.INFO_MSG("avatar " + this.id + " enter room");
-            this.baseCall("enterRoom");
+            KBEngine.INFO_MSG("avatar " + this.id + " join room");
+            this.baseCall("joinRoom");
         }
     });
     

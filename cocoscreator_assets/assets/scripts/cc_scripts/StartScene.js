@@ -42,7 +42,6 @@ cc.Class({
         this.code = "";
         
         cc.director.preloadScene("WorldScene");
-        KBEngine.INFO_MSG("ip: " + location.hostname);
 
         if(cc.sys.platform == cc.sys.WECHAT_GAME) {
             KBEngine.INFO_MSG("wx login ........");
@@ -52,6 +51,8 @@ cc.Class({
         } else {
             this.textinput_name.string = this.userName;
         }
+
+        this.loginCount = 0;
      },
 
     wxLoginNative: function(){
@@ -121,12 +122,13 @@ cc.Class({
      initKbengine: function() {
         var args = new KBEngine.KBEngineArgs();
 	
-	    args.ip = NGINX_IP;
-        args.port = NGINX_PORT;
+	    args.ip = SERVER_IP;
+        args.port = SERVER_PORT;
 	    KBEngine.create(args);
      },
 
      installEvents:function() {
+        KBEngine.INFO_MSG("start scene install event .....");
         KBEngine.Event.register("onConnectionState", this, "onConnectionState");
         KBEngine.Event.register("onLoginFailed", this, "onLoginFailed");
         KBEngine.Event.register("onLoginBaseappFailed", this, "onLoginBaseappFailed");
@@ -137,6 +139,7 @@ cc.Class({
      },
 
      unInstallEvents() {
+        KBEngine.INFO_MSG("start scene uninstall event .....");
         KBEngine.Event.deregister("onConnectionState", this, "onConnectionState");
         KBEngine.Event.deregister("onLoginFailed", this, "onLoginFailed");
         KBEngine.Event.deregister("onLoginBaseappFailed", this, "onLoginBaseappFailed");
@@ -150,11 +153,13 @@ cc.Class({
         var logStr = "";
 		if(!success) {
             logStr = " Connect(" + KBEngine.app.ip + ":" + KBEngine.app.port + ") is error! (连接错误)";
+            this.btn_start.node.active = true;
+            this.label_hint.string = "连接错误";
         }
 		else {
             logStr = "Connect successfully, please wait...(连接成功，请等候...)";
         }
-        this.label_hint.string = logStr;
+     
         KBEngine.INFO_MSG(logStr);
 	},
 
@@ -169,11 +174,13 @@ cc.Class({
            logStr = "Login is failed(登陆失败), err=" + KBEngine.app.serverErr(failedcode);
         }    
         
-        this.label_hint.string = logStr;
+        this.label_hint.string = "登陆失败," +  KBEngine.app.serverErr(failedcode);
+        this.btn_start.node.active = true;
         KBEngine.INFO_MSG(logStr);	
      },
 
      onReloginBaseappFailed: function(failedcode){
+        this.btn_start.node.active = true;
         KBEngine.INFO_MSG("reogin is failed(断线重连失败), err=" + KBEngine.app.serverErr(failedcode))
      },
 
@@ -182,6 +189,7 @@ cc.Class({
     },
 
      onLoginBaseappFailed : function(failedcode) {
+        this.btn_start.node.active = true;
         KBEngine.INFO_MSG("LoginBaseapp is failed(登陆网关失败), err=" + KBEngine.app.serverErr(failedcode));
      },
 
@@ -205,20 +213,23 @@ cc.Class({
         }
 
         cc.log("Login is successfully!(登陆成功!)");
-        this.label_hint.string = "Login is successfully!(登陆成功!)";
+        this.label_hint.string = "登陆成功 !!!";
         
         cc.director.loadScene("WorldScene", ()=> {
-            player.enterRoom();
-            this.unInstallEvents();
+            KBEngine.INFO_MSG("load world scene finished");
+            player.joinRoom();
         });
+
+        this.unInstallEvents();
      },
  
      onLoginBaseapp : function() {
-         cc.log("Connect to loginBaseapp, please wait...(连接到网关， 请稍后...)");
+        cc.log("Connect to loginBaseapp, please wait...(连接到网关， 请稍后...)");
      },
  
      Loginapp_importClientMessages : function() {
-         cc.log("Loginapp_importClientMessages ...");
+        this.label_hint.string = "登陆中 ... ...";
+        cc.log("Loginapp_importClientMessages ...");
      },
  
      Baseapp_importClientMessages : function() {
@@ -245,6 +256,10 @@ cc.Class({
         KBEngine.INFO_MSG("login with datas: " + datas);
 
         KBEngine.Event.fire("login", this.userName, "123456", datas);  
+        this.label_hint.string = "登陆中 ... ...";
+        this.loginCount++;
+        KBEngine.INFO_MSG("login count = " + this.loginCount);
+        this.btn_start.node.active = false;
      },
 
 });

@@ -523,9 +523,22 @@ cc.Class({
             }
 
             this.setPlaceItem(item, this.getItemPoint());
+            this.playThrowPreAnim();
             return true;
         }
         return false;
+    },
+
+    playThrowPreAnim() {
+        if(this.anim) {
+            this.anim.playThrowPreAnim(); 
+        }
+    },
+
+    playThrowAnim() {
+        if(this.anim) {
+            this.anim.playThrowAnim(); 
+        }
     },
 
     adjustArrowDir: function(pos, center) {
@@ -596,6 +609,7 @@ cc.Class({
         }
 
         this.throwItem(this.item, impulse);
+        this.playThrowAnim();
 
         if(this.gameState) {
             this.gameState.forceLayout.active = false;

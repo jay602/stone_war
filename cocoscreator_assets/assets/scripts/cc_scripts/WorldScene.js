@@ -48,6 +48,8 @@ cc.Class({
             default: null,
             type: cc.Node,
         },
+
+        gameHint: cc.Label,
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -109,7 +111,7 @@ cc.Class({
 
     installEvents : function() {
         // common
-        KBEngine.INFO_MSG("installEvents ......");
+        KBEngine.INFO_MSG("world scene installEvents ......");
 		KBEngine.Event.register("onDisconnected", this, "onDisconnected");
 		KBEngine.Event.register("onConnectionState", this, "onConnectionState");
 		KBEngine.Event.register("onReloginBaseappFailed", this, "onReloginBaseappFailed");
@@ -141,7 +143,7 @@ cc.Class({
     },
 
     unInstallEvents: function() {
-        KBEngine.INFO_MSG("unInstallEvents ......");
+        KBEngine.INFO_MSG("world scene unInstallEvents ......");
         KBEngine.Event.deregister("onDisconnected", this, "onDisconnected");
 		KBEngine.Event.deregister("onConnectionState", this, "onConnectionState");
 		KBEngine.Event.deregister("onReloginBaseappFailed", this, "onReloginBaseappFailed");
@@ -335,6 +337,10 @@ cc.Class({
         this.gameState.newTurn(second);
         if(!this.gameState.isGameStart()) {
             this.gameState.setGameStart(true);
+
+            var action = cc.fadeTo(1.0, 0);
+            this.gameHint.string = "游戏开始 !!!";
+            this.gameHint.node.runAction(action);
         }
 
         if(this.curAvatarID == KBEngine.app.player().id) {
@@ -382,6 +388,7 @@ cc.Class({
             return;
         var action = player.getComponent("AvatarAction");
         action.setPlaceItem(item, position);
+        action.playThrowPreAnim();
     },
 
     otherAvatarThrowItem: function(avatarID, itemID, force){
@@ -393,6 +400,7 @@ cc.Class({
         
         this.setCameraTarget(itemID);
         var action = player.getComponent("AvatarAction");
+        action.playThrowAnim();
         action.throwItem(item, force);
     },
 

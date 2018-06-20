@@ -88,6 +88,12 @@
 			<Flags>	 	BASE				</Flags>
 		</openId>
 
+		<loginCount>
+			<Type>		INT32				</Type>
+			<Flags>	 	BASE				</Flags>
+			<Default>		0				</Default>
+		</loginCount>
+
 		<decryptedData>
 			<Type>		PY_DICT				</Type>
 			<Flags>	 	BASE				</Flags>
@@ -164,9 +170,9 @@
 			<Arg>	ENTITYCALL </Arg>
 		</createCell>
 
-		<enterRoom>
+		<joinRoom>
 			<Exposed/>
-		</enterRoom>
+		</joinRoom>
 
 		<decodeEncryptedData>
 			<Exposed/>

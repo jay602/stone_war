@@ -41,11 +41,11 @@ ITEMS = {
     "map1" : {
        "cd" : { "harm": 40, "pos": (-53.11, 0.0, -0.18846) }, 
        "pdg" : { "harm": 30, "pos": (-15.36, 0.0, 4.637) }, 
-       #"sk" : { "harm": 20, "pos": (102.5, 0.0, 2.3) },
+       "sl" : { "harm": 20, "pos": (112.22, 0.0, 1.634) },
        "sk" : { "harm": 20, "pos": (85.4, 0.0, 0.81) },
        "sk2" : { "harm": 20, "pos": (47.363, 0.0, 3.38) },  
-       "sk3" : { "harm": 20, "pos": (1.879, 0.0, 6.207) }
-       #"sk3" : { "harm": 10, "pos": (-0.2, 0.0, 7) }
+       "sk3" : { "harm": 20, "pos": (1.879, 0.0, 6.207) },
+       "sld" : { "harm": 10, "pos": (-20, 0.0, 2) }
     }
 }
 
@@ -67,8 +67,8 @@ PLAYER_HP = 100
 DESKTOP_BROWSER = 101
 WECHAT_GAME = 104
 
-APPID = "**************"
-APP_SECRET = '*********************'
+APPID = "*************"
+APP_SECRET = '*****************'
 WEI_XIN_URL = 'https://api.weixin.qq.com/sns/jscode2session'
 
 

@@ -4,20 +4,7 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>pipiP_throw_pre0005.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{260,260},{256,256}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{256,256}}</string>
-                <key>sourceSize</key>
-                <string>{256,256}</string>
-            </dict>
-            <key>pipiP_throw_pre0006.png</key>
+            <key>pop_ throw0001.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{518,2},{256,256}}</string>
@@ -30,7 +17,7 @@
                 <key>sourceSize</key>
                 <string>{256,256}</string>
             </dict>
-            <key>pipiP_throw_pre0007.png</key>
+            <key>pop_ throw0002.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{260,2},{256,256}}</string>
@@ -43,7 +30,7 @@
                 <key>sourceSize</key>
                 <string>{256,256}</string>
             </dict>
-            <key>pipiP_throw_pre0008.png</key>
+            <key>pop_ throw0003.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{2,518},{256,256}}</string>
@@ -56,7 +43,72 @@
                 <key>sourceSize</key>
                 <string>{256,256}</string>
             </dict>
-            <key>pipiP_throw_pre0009.png</key>
+            <key>pop_ throw0004.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{2,518},{256,256}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{256,256}}</string>
+                <key>sourceSize</key>
+                <string>{256,256}</string>
+            </dict>
+            <key>pop_ throw0005.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{2,518},{256,256}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{256,256}}</string>
+                <key>sourceSize</key>
+                <string>{256,256}</string>
+            </dict>
+            <key>pop_ throw0006.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{2,518},{256,256}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{256,256}}</string>
+                <key>sourceSize</key>
+                <string>{256,256}</string>
+            </dict>
+            <key>pop_ throw0007.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{2,518},{256,256}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{256,256}}</string>
+                <key>sourceSize</key>
+                <string>{256,256}</string>
+            </dict>
+            <key>pop_ throw0008.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{2,518},{256,256}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{256,256}}</string>
+                <key>sourceSize</key>
+                <string>{256,256}</string>
+            </dict>
+            <key>pop_ throw0009.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{2,260},{256,256}}</string>
@@ -69,75 +121,10 @@
                 <key>sourceSize</key>
                 <string>{256,256}</string>
             </dict>
-            <key>pipiP_throw_pre0010.png</key>
+            <key>pop_ throw0010.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{2,2},{256,256}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{256,256}}</string>
-                <key>sourceSize</key>
-                <string>{256,256}</string>
-            </dict>
-            <key>pipiP_throw_pre0011.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{2,260},{256,256}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{256,256}}</string>
-                <key>sourceSize</key>
-                <string>{256,256}</string>
-            </dict>
-            <key>pipiP_throw_pre0012.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{2,518},{256,256}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{256,256}}</string>
-                <key>sourceSize</key>
-                <string>{256,256}</string>
-            </dict>
-            <key>pipiP_throw_pre0013.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{260,2},{256,256}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{256,256}}</string>
-                <key>sourceSize</key>
-                <string>{256,256}</string>
-            </dict>
-            <key>pipiP_throw_pre0014.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{518,2},{256,256}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{256,256}}</string>
-                <key>sourceSize</key>
-                <string>{256,256}</string>
-            </dict>
-            <key>pipiP_throw_pre0015.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{260,260},{256,256}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -153,13 +140,13 @@
             <key>format</key>
             <integer>2</integer>
             <key>realTextureFileName</key>
-            <string>pipi_throw_pre.png</string>
+            <string>pop_throw.png</string>
             <key>size</key>
             <string>{1024,1024}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:f4eccfa306d462c12c7836d71b77b4de:62ee5735051eaeab3789ada20fe96a74:2bcb9815396d8ca970bc40f125845ba7$</string>
+            <string>$TexturePacker:SmartUpdate:54fb2dbed7468ceff6751b596a68c0a1:6236274aadf4821365526e8c33ed663b:f380d4e207c99ebc90eaac67b7164670$</string>
             <key>textureFileName</key>
-            <string>pipi_throw_pre.png</string>
+            <string>pop_throw.png</string>
         </dict>
     </dict>
 </plist>

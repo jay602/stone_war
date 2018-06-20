@@ -17,6 +17,8 @@ cc.Class({
         jumpAnim : "",
         idleAnim : "",
         dieAnim : "",
+        throwPreAnim: "",
+        throwAnim: "",
 
         modelID : 0,
         anim: {
@@ -42,17 +44,33 @@ cc.Class({
             this.jumpAnim = "pipi_jump";
             this.idleAnim = "pipi_idle";
             this.dieAnim = "pipi_die";
+            this.throwPreAnim = "pipi_throw_pre";
+            this.throwAnim = "pipi_throw";
          }else if(this.modelID == 1){
             this.walkAnim = "pop_walk";
             this.jumpAnim = "pop_jump";
             this.idleAnim = "pop_idle";
             this.dieAnim = "pop_die";
+            this.throwPreAnim = "pop_throw_pre";
+            this.throwAnim = "pop_throw";
          }
     },
 
    playWalkAnim: function(){
         if(this.anim) {
             this.anim.play(this.walkAnim);
+        }
+    },
+
+    playThrowPreAnim () {
+        if(this.anim) {
+            this.anim.play(this.throwPreAnim);
+        }
+    },
+
+    playThrowAnim () {
+        if(this.anim) {
+            this.anim.play(this.throwAnim);
         }
     },
 

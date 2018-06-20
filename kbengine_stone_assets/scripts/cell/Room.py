@@ -75,7 +75,7 @@ class Room(KBEngine.Entity):
 
 		#够两人了，就游戏开始
 		if len(self.avatars) == GameConfigs.ROOM_MAX_PLAYER:
-			self.addTimer(1, 0, TIMER_TYPE_GAME_START)
+			self.addTimer(2, 0, TIMER_TYPE_GAME_START)
 
 	def onTimer(self, id, userArg):
 		"""
