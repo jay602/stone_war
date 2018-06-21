@@ -148,7 +148,7 @@ cc.Class({
         this.hpValue = 100;
         this.itemPoint = null;
         this.items = [];
-        this.touchThrowCenter = null;
+        this.startThrowPoint = null;
     },
 
     addItem: function(item){
@@ -506,6 +506,7 @@ cc.Class({
             var point = this.arrow.convertToWorldSpaceAR(cc.v2(0, 0));
             //this.testNode1.setPosition(pickPos);
             var center = new cc.Vec2(point.x, point.y);
+            this.startThrowPoint = center;
             this.adjustArrowDir(pickPos, center);
         }
     },
@@ -542,8 +543,7 @@ cc.Class({
     },
 
     adjustArrowDir: function(pos, center) {
-        //KBEngine.INFO_MSG("adjust arrow dir: pos(" + pos.x + ", " + pos.y + ")");
-       // KBEngine.INFO_MSG("adjust arrow dir: center(" + center.x + ", " + center.y + ")");
+        pos = new cc.Vec2(pos.x, pos.y);
         this.arrow.active = true;
         var dx = pos.x - center.x;
         var dy = pos.y - center.y;
@@ -561,9 +561,12 @@ cc.Class({
         this.arrowAngle = angle*factor;
 
         this.calculateForce(pos, center);
+        var result = pos.sub(center);
+        var arrowPoint = this.getArrowWorldPoit();
+        var point = arrowPoint.add(result);
 
-       // this.testNode1.setPosition(center);
-        this.testNode2.setPosition(pos);
+        this.testNode1.setPosition(arrowPoint);
+        this.testNode2.setPosition(point);
     },
 
     getArrowWorldPoit: function() {
@@ -574,7 +577,7 @@ cc.Class({
 
     adjustThrow: function(pos) {
         if(!this.hasPickUpItem) return;
-       
+        
         this.adjustArrowDir(pos, this.getArrowWorldPoit());
     },
 
@@ -595,8 +598,8 @@ cc.Class({
         if(!this.hasPickUpItem) return;
         KBEngine.INFO_MSG("throw stone");
         var impulse = null
-        if(cc.sys.isMobile && this.touchThrowCenter) {
-            impulse = this.calculateForce(pos, this.touchThrowCenter);
+        if(cc.sys.isMobile && this.startThrowPoint) {
+            impulse = this.calculateForce(pos, this.startThrowPoint);
             KBEngine.INFO_MSG(" touch throw item: force(" + impulse.x + "," + impulse.y + ")");
         } else {
             impulse = this.calculateForce(pos, this.getArrowWorldPoit());
@@ -614,12 +617,12 @@ cc.Class({
         if(this.gameState) {
             this.gameState.forceLayout.active = false;
         }
-        
+        this.ctx.clear();
         this.hasPickUpItem = false;
         this.arrow.active = false;
         this.item = null;
         this.itemAction = null;
-        this.touchThrowCenter = null;
+        this.startThrowPoint = null;
     },
 
     throwItem: function(item, impulse) {
@@ -643,21 +646,20 @@ cc.Class({
         if(item) {
             var itemId = item.getComponent("ItemAction").itemID;
             if(this.pickUpItem(item, itemId)) {
-                this.arrow.active = true;
                 this.arrow.scaleX = this.node.scaleX;
-                this.touchThrowCenter = touchPos;
+                this.startThrowPoint = touchPos;
                 
-                this.testNode1.setPosition(touchPos);
                 KBEngine.INFO_MSG("touch pick item: center(" + touchPos.x + ", " + touchPos.y + ")");
+                return item;
             }
         }
 
-        return item;
+        return null;
     },
 
     touchAdjustThrow: function(touchPos) {
-        if(this.touchThrowCenter) {
-            this.adjustArrowDir(touchPos, this.touchThrowCenter);
+        if(this.startThrowPoint) {
+            this.adjustArrowDir(touchPos, this.startThrowPoint);
         }
     },
 
@@ -770,7 +772,7 @@ cc.Class({
         this.testNode2.setPosition(end);
 
         this.ctx.clear();
-        this.ctx.fillColor = this.touchThrowCenter ? cc.Color.RED : cc.Color.GREEN;
+        this.ctx.fillColor = this.startThrowPoint ? cc.Color.RED : cc.Color.GREEN;
         this.ctx.circle(this.testNode1.x, this.testNode1.y, 2);
         this.ctx.fill();
 
@@ -783,9 +785,26 @@ cc.Class({
 
         this.ctx.stroke();
     },
+
+    drawForce() {
+        if(this.arrow.active) {
+            this.ctx.clear();
+            this.ctx.fillColor  = cc.Color.YELLOW;
+            this.ctx.circle(this.testNode1.x, this.testNode1.y, 3);
+            this.ctx.fill();
+
+            this.ctx.strokeColor = cc.Color.YELLOW;
+            this.ctx.moveTo(this.testNode1.x, this.testNode1.y);
+            this.ctx.lineTo(this.testNode2.x, this.testNode2.y)
+    
+            this.ctx.stroke();
+        }
+       
+    },
    
     update: function(dt) {
         //this.drawTestNode();
+        this.drawForce();
 
         if(this.arrow.active) {
             this.arrow.rotation = this.arrowAngle;

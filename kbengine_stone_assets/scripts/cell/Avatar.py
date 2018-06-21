@@ -174,7 +174,7 @@ class Avatar(KBEngine.Entity, EntityCommon):
 		if self.HP <= 0:
 			self.HP = 0
 
-		DEBUG_MSG("avatar %i recv harm=%i hp=%i harmCount=%i from player %i " % (exposed, harm, self.HP, self.harmCount, otherPlayer.id))
+		DEBUG_MSG("avatar %i recv harm=%i hp=%i harmCount=%i " % (exposed, harm, self.HP, self.harmCount))
 
 		self.client.onRecvDamage(self.id, harm, self.HP)
 		self.otherClients.onRecvDamage(self.id, harm, self.HP)

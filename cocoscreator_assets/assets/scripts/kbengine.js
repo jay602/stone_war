@@ -3194,7 +3194,7 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 	{  
 		if(noconnect)
 		{
-			KBEngine.INFO_MSG("KBEngineApp::login_loginapp: start connect " + KBEngine.app.protocol + "://" + KBEngine.app.ip + ":" + KBEngine.app.port + "!");
+			KBEngine.INFO_MSG("KBEngineApp::login_loginapp: start connect " + KBEngine.app.protocol + "://" + KBEngine.app.ip + ":" + KBEngine.app.port + " !");
 			KBEngine.app.connect(KBEngine.app.protocol + "://" + KBEngine.app.ip + ":" + KBEngine.app.port);
 			KBEngine.app.socket.onopen = KBEngine.app.onOpenLoginapp_login;  
 		}
