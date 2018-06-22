@@ -42,7 +42,7 @@ window.JOY_STICK_POSITION_Y = 120;
 window.APPID = '################';
 window.APP_SECRET = '********************';
 
-window.SERVER_IP = "47.100.12.1";
+window.SERVER_IP = "127.0.0.1";
 window.SERVER_PORT = 20013;
 
 window.NGINX_IP = "127.0.0.1";
