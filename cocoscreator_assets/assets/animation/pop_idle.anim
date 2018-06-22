@@ -1,9 +1,37 @@
 {
   "__type__": "cc.AnimationClip",
-  "_name": "",
+  "_name": "pop_idle",
   "_objFlags": 0,
-  "_duration": 0,
-  "sample": 60,
-  "curveData": {},
+  "_rawFiles": null,
+  "_duration": 0.42857142857142855,
+  "sample": 7,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0,
+            "value": {
+              "__uuid__": "54bc1a61-db98-4a90-8587-17bb461f248c"
+            }
+          },
+          {
+            "frame": 0.14285714285714285,
+            "value": {
+              "__uuid__": "ffe6c0fc-1ae7-46ef-9009-c190c0d7cef3"
+            }
+          },
+          {
+            "frame": 0.2857142857142857,
+            "value": {
+              "__uuid__": "1b7a6fcc-f888-4570-ab58-5e5c369b434b"
+            }
+          }
+        ]
+      }
+    }
+  },
   "events": []
 }

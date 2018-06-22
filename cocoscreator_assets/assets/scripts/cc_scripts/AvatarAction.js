@@ -17,7 +17,7 @@ cc.Class({
 
         jumpSpeed: cc.v2(300, 550),
         maxSpeed: cc.v2(400, 550),
-        walkspeed: cc.v2(110, 50),
+        walkspeed: cc.v2(180, 50),
         jumpSpeedY : 0,
         maxThrowSpeed: cc.v2(800, 800),
 
@@ -133,6 +133,7 @@ cc.Class({
         this.hpProcessBar.active = false;
 
         this.hp = this.hpProcessBar.getChildByName("hp");
+        this.camera = cc.find("Camera");
 
         this.testNode1 = cc.find("testNode1");
         this.testNode2 = cc.find("testNode2");
@@ -209,6 +210,8 @@ cc.Class({
         this.hpValue = hp;
 
         this.showHarm(harmStr);
+        var action = cc.shake(0.5, 30, 30);
+        this.camera.runAction(action);
 
         cc.log("avatar %d recvDamage: harm=%d, hp=%d", this.eid, harm, hp);
         if(this.eid == KBEngine.app.player().id) {
@@ -379,14 +382,32 @@ cc.Class({
         }
     },
 
-    onStopWalk: function(pos) {
-        KBEngine.INFO_MSG("Avatar onStopWalk, pos1(" + pos.x + ", " + pos.y + "), pos2(" + this.node.x
-            + ", " + this.node.y + ")");
-
+    walkFinish: function() {
         this.moveFlag = STATIC;
         if(this.anim){
             this.anim.stopPlayAnim();
             this.anim.playIdleAnim();
+        }
+    },
+
+    onStopWalk: function(pos) {
+        KBEngine.INFO_MSG("Avatar onStopWalk, pos1(" + pos.x + ", " + pos.y + "), pos2(" + this.node.x
+            + ", " + this.node.y + ")");
+
+        if(pos.x != this.node.x) {
+            this.moveFlag = STATIC;
+            var duration = Math.abs(pos.x - this.node.x) / this.walkspeed.x;
+            var move = cc.moveTo(duration, pos);
+            var walk = cc.walk(duration, this.anim);
+
+            var finished = cc.callFunc( () => {
+                this.walkFinish()
+            }, this);
+
+            var action = cc.sequence(move, walk, finished);
+            this.node.runAction(action);
+        }else {
+            this.walkFinish();
         }
     },
 
@@ -584,20 +605,26 @@ cc.Class({
     calculateForce: function(pos, center) {
         var point = new cc.Vec2(center.x, center.y);
         var force = point.sub(pos);
-        force.mulSelf(MULTIPLE);
-        if(force.y > MAX_THROW_FORCE_Y) 
-            force.y = MAX_THROW_FORCE_Y; 
+        KBEngine.INFO_MSG("calculateForce: point1(" + point.x + " , " + point.y + ")");
+        KBEngine.INFO_MSG("calculateForce: point2(" + pos.x + " , " + pos.y + ")");
+        KBEngine.INFO_MSG("calculateForce: force(" + force.x + " , " + force.y + ")");
+
+        force.mulSelf(12);
+        // if(force.y > MAX_THROW_FORCE_Y) 
+        //     force.y = MAX_THROW_FORCE_Y; 
 
         if(this.gameState) {
             this.gameState.showForce(force);
         }
+
         return force;
     },
 
     throw: function(pos) {
         if(!this.hasPickUpItem) return;
+
         KBEngine.INFO_MSG("throw stone");
-        var impulse = null
+        var impulse = null;
         if(cc.sys.isMobile && this.startThrowPoint) {
             impulse = this.calculateForce(pos, this.startThrowPoint);
             KBEngine.INFO_MSG(" touch throw item: force(" + impulse.x + "," + impulse.y + ")");

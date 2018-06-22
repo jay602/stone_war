@@ -3,8 +3,8 @@
   "_name": "pipi_throw",
   "_objFlags": 0,
   "_rawFiles": null,
-  "_duration": 0.7,
-  "sample": 10,
+  "_duration": 1,
+  "sample": 7,
   "speed": 1,
   "wrapMode": 1,
   "curveData": {
@@ -18,37 +18,37 @@
             }
           },
           {
-            "frame": 0.1,
+            "frame": 0.14285714285714285,
             "value": {
               "__uuid__": "0138763b-8103-44ba-9df8-bc4af8dc3e4f"
             }
           },
           {
-            "frame": 0.2,
+            "frame": 0.2857142857142857,
             "value": {
               "__uuid__": "c93e207c-b6f3-4955-ba51-134be88c3c9c"
             }
           },
           {
-            "frame": 0.3,
+            "frame": 0.42857142857142855,
             "value": {
               "__uuid__": "764ca392-17de-4725-affc-e0a1ba4569b0"
             }
           },
           {
-            "frame": 0.4,
+            "frame": 0.5714285714285714,
             "value": {
               "__uuid__": "cb99f40a-5023-4931-ad2d-d297790d3020"
             }
           },
           {
-            "frame": 0.5,
+            "frame": 0.7142857142857143,
             "value": {
               "__uuid__": "e7da34e7-6c48-4b1d-a62c-cf223dee4702"
             }
           },
           {
-            "frame": 0.6,
+            "frame": 0.8571428571428571,
             "value": {
               "__uuid__": "ef2c02c7-95d6-4c48-8efa-df9f33b951e8"
             }

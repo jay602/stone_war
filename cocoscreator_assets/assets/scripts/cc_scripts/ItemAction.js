@@ -51,7 +51,7 @@ cc.Class({
     },
 
     onLoad () {
-        this.chainCollider = this.node.getComponent(cc.PhysicsChainCollider );
+        this.phyPolyCollider = this.node.getComponent(cc.PhysicsPolygonCollider);
         this.polyCollider = this.node.getComponent(cc.PolygonCollider);
         this.rigidBody = this.node.getComponent(cc.RigidBody);
         
@@ -77,22 +77,22 @@ cc.Class({
     },
 
     onCollisionEnter: function (other, self) {
-        if(self.tag == 110 && this.player &&other.node.name === this.player.name && this.playerControl &&this.playerControl.isEnable()) {
+        if(self.tag == 110 && this.player && other.node.name === this.player.name && this.playerControl &&this.playerControl.isEnable()) {
             if(other.node.getComponent("AvatarAction").isDead())
                 return;
 
-            this.draw.drawPoly(this.chainCollider.points, cc.color(100, 0, 0, 50), 1, cc.color(0, 0, 0, 125));
+            this.draw.drawPoly(this.phyPolyCollider.points, cc.color(100, 0, 0, 50), 1, cc.color(0, 0, 0, 125));
             this.canPicked = true;
             other.node.getComponent("AvatarAction").addItem(self.node);
         }
     },
 
     onCollisionStay: function (other, self) {
-        if(self.tag == 110 && this.player &&other.node.name === this.player.name && this.playerControl &&this.playerControl.isEnable()) {
+        if(self.tag == 110 && this.player && other.node.name === this.player.name && this.playerControl &&this.playerControl.isEnable()) {
             if(other.node.getComponent("AvatarAction").isDead())
                 return;
 
-            this.draw.drawPoly(this.chainCollider.points, cc.color(100, 0, 0, 50), 1, cc.color(0, 0, 0, 125));
+            this.draw.drawPoly(this.phyPolyCollider.points, cc.color(100, 0, 0, 50), 1, cc.color(0, 0, 0, 125));
             this.canPicked = true;
 
             other.node.getComponent("AvatarAction").addItem(self.node);
@@ -100,7 +100,7 @@ cc.Class({
     },
 
     onCollisionExit: function (other, self) {
-        if(self.tag == 110 && this.player &&other.node.name === this.player.name && this.playerControl &&this.playerControl.isEnable()) {
+        if(self.tag == 110 && this.player && other.node.name === this.player.name && this.playerControl &&this.playerControl.isEnable()) {
             this.draw.clear();
             this.canPicked = false;
             other.node.getComponent("AvatarAction").removeItem(self.node);
@@ -221,10 +221,16 @@ cc.Class({
     throw: function(impulse) {
         var itemRigidbody = this.node.getComponent(cc.RigidBody);
         itemRigidbody.gravityScale = 1;
+
         var worldCenter = itemRigidbody.getWorldCenter();
         itemRigidbody.applyLinearImpulse(impulse, worldCenter, true);
 
-        cc.log("AvatarActio::thowItem : force(%f, %f), worldCenter(%f, %f) pos(%f, %f)", impulse.x, impulse.y, worldCenter.x, worldCenter.y
+        var torque = impulse.x >= 0 ?  -500 : 500;
+        
+        itemRigidbody.applyTorque(torque, true);
+        KBEngine.INFO_MSG("torque = " + torque);
+
+        cc.log("AvatarActio::thowItem torque : force(%f, %f), worldCenter(%f, %f) pos(%f, %f)", impulse.x, impulse.y, worldCenter.x, worldCenter.y
         , this.node.x, this.node.y);
         
         this.isThrowed = true;
@@ -235,5 +241,4 @@ cc.Class({
         itemRigidbody.gravityScale = 0;
         itemRigidbody.linearVelocity = cc.v2(0, 0);
     },
-
 });
