@@ -210,8 +210,11 @@ cc.Class({
         this.hpValue = hp;
 
         this.showHarm(harmStr);
-        var action = cc.shake(0.5, 30, 30);
+        var action = cc.shake(1, 30, 30);
         this.camera.runAction(action);
+
+        var blinkAction = cc.blink(3, 10);
+        this.node.runAction(blinkAction);
 
         cc.log("avatar %d recvDamage: harm=%d, hp=%d", this.eid, harm, hp);
         if(this.eid == KBEngine.app.player().id) {
