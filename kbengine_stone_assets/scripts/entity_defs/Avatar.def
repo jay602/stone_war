@@ -1,9 +1,21 @@
 <root>
-	<Interfaces>
-		<Interface>	EntityCommon		</Interface>
-	</Interfaces>
-
 	<Properties>
+		<sessionKey>
+			<Type>		UNICODE		</Type>
+			<Flags>	 	BASE		</Flags>
+		</sessionKey>
+
+		<openId>
+			<Type>		UNICODE				</Type>
+			<Flags>	 	BASE				</Flags>
+		</openId>
+
+		<modelID>
+			<Type>		UINT8			</Type>
+			<Flags>		ALL_CLIENTS			</Flags>
+			<Default>		0				</Default>
+		</modelID>
+
 		<roomKey>
 			<Type>		SPACE_KEY			</Type>
 			<Flags>		BASE				</Flags>
@@ -14,11 +26,6 @@
 			<Type>		UNICODE			</Type>
 			<Flags>		ALL_CLIENTS			</Flags>
 		</accountName>
-
-		<nickName>
-			<Type>		UNICODE			</Type>
-			<Flags>		ALL_CLIENTS			</Flags>
-		</nickName>
 
 		<avatarName>
 			<Type>		UNICODE			</Type>
@@ -75,24 +82,8 @@
 
 		<sessionId>
 			<Type>		STRING				</Type>
-			<Flags>	 BASE_AND_CLIENT		</Flags>
+			<Flags>	 	BASE				</Flags>
 		</sessionId>
-
-		<sessionKey>
-			<Type>		STRING				</Type>
-			<Flags>	 	BASE_AND_CLIENT		</Flags>
-		</sessionKey>
-
-		<openId>
-			<Type>		STRING				</Type>
-			<Flags>	 	BASE				</Flags>
-		</openId>
-
-		<loginCount>
-			<Type>		INT32				</Type>
-			<Flags>	 	BASE				</Flags>
-			<Default>		0				</Default>
-		</loginCount>
 
 		<decryptedData>
 			<Type>		PY_DICT				</Type>
@@ -176,9 +167,8 @@
 
 		<decodeEncryptedData>
 			<Exposed/>
-			<Arg>	STRING 	</Arg>
-			<Arg>	STRING 	</Arg>
-			<Arg>	STRING 	</Arg>
+			<Arg>	UNICODE 	</Arg>
+			<Arg>	UNICODE 	</Arg>
 		</decodeEncryptedData>
 	</BaseMethods>
 

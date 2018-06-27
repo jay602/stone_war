@@ -44,18 +44,17 @@ cc.Class({
         cc.director.preloadScene("WorldScene");
 
         if(cc.sys.platform == cc.sys.WECHAT_GAME) {
-            KBEngine.INFO_MSG("wx login ........");
             this.btn_start.node.active = false;
             this.textinput_name.node.active = false;
+            this.enableWxShare();
             this.wxLoginNative();
         } else {
             this.textinput_name.string = this.userName;
         }
-
-        this.loginCount = 0;
      },
 
-    wxLoginNative: function(){
+
+     enableWxShare: function () {
         wx.showShareMenu({
             withShareTicket:true,
         });
@@ -66,33 +65,25 @@ cc.Class({
                 imageUrl:SHARE_PICTURE,
             }
         });
+     },
 
-        var self = this;
+    wxLoginNative: function(){
         wx.login({
             success: (res) => {
-                KBEngine.INFO_MSG("wx.login success ...");
-                KBEngine.INFO_MSG("res ：" + JSON.stringify(res));
                 if(res.code) {
                     this.code = res.code;
-                    KBEngine.INFO_MSG('code: ' + self.code);
-                   
                     wx.getUserInfo({
                         success: (res) => {
                             this.btn_start.node.active = true;
-                            var userInfo = res.userInfo;
                             this.userName = this.code;
-                            WEI_XIN_NICK_NAME = userInfo.nickName;
-                            this.textinput_name.string = self.userName;
                             cc.sys.localStorage.setItem("encryptedData", res.encryptedData);
                             cc.sys.localStorage.setItem("iv", res.iv);
-                            KBEngine.INFO_MSG("wx.getUserInfo success: " + JSON.stringify(res));
                         }
                     });
                 }
-                
             }
         });
-      },
+    },
 
      randomstring: function(L){
         var s= '';
@@ -205,19 +196,15 @@ cc.Class({
         }
      },
          
-     enterScene : function(rndUUID, eid, accountEntity) {
-        var player = KBEngine.app.player();
-        if(player && window.wx != undefined) {
-            KBEngine.INFO_MSG("begin decodeEncryptedData ......");
-            player.decodeEncryptedData();
-        }
-
-        cc.log("Login is successfully!(登陆成功!)");
+     enterScene : function() {
+        KBEngine.INFO_MSG("Login is successfully!(登陆成功!)");
         this.label_hint.string = "登陆成功 !!!";
         
         cc.director.loadScene("WorldScene", ()=> {
             KBEngine.INFO_MSG("load world scene finished");
-            player.joinRoom();
+            var player = KBEngine.app.player();
+            if(player)
+                player.joinRoom();
         });
 
         this.unInstallEvents();
@@ -236,29 +223,47 @@ cc.Class({
          cc.log("Baseapp_importClientMessages ..");
      },
          
-     Baseapp_importClientEntityDef : function() {
+     Baseapp_importClientEntityDef: function() {
          cc.log("Baseapp_importClientEntityDef ..")
      },
- 
+
+     createDictString: function(dic) {
+        var dictString = "";
+        var len = 0;
+        for(var pro in dic) len++;
+
+        if(len > 0) {
+            var index = 0;
+            var dictString = "{"
+            for(var prop in dic) {
+                dictString += "'" + prop + "'" ;
+                dictString += ":";
+                dictString += "'" + dic[prop] + "'";
+                if(index == len-1) {
+                    dictString += "}";
+                }else {
+                    dictString += ",";
+                }
+                index++;
+            }
+        }
+
+        return dictString;
+     },
  
     startGame: function (event) {
-        KBEngine.INFO_MSG("user name : " + this.userName);
-        KBEngine.INFO_MSG("user name length: " + this.userName.length);
         if(this.userName.length == 0)
         {
             this.label_hint.string = "用户名不能为空";
             return;
         }
-        PLAYER_NAME = this.userName;
-        var datas = "";
-        datas += "platform=" + cc.sys.platform + "&";
-        datas += "code=" + this.code;
-        KBEngine.INFO_MSG("login with datas: " + datas);
+       
+        var datas = {};
+        datas["platform"] = cc.sys.platform;
+        datas = this.createDictString(datas);
 
         KBEngine.Event.fire("login", this.userName, "123456", datas);  
         this.label_hint.string = "登陆中 ... ...";
-        this.loginCount++;
-        KBEngine.INFO_MSG("login count = " + this.loginCount);
         this.btn_start.node.active = false;
      },
 

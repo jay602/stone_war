@@ -167,9 +167,6 @@ cc.Class({
 
     setAccountName: function(name) {
         this.accountName = name;
-        // if(cc.sys.platform == cc.sys.WECHAT_GAME && WEI_XIN_NICK_NAME.length > 0 && ) {
-        //     this.accountName = WEI_XIN_NICK_NAME;
-        // }
     },
 
     setHP: function(hp){
@@ -475,26 +472,7 @@ cc.Class({
     },
 
     onJump: function() {
-       // KBEngine.INFO_MSG("AvatarAction onJump, position(" + this.node.x + ", "+ this.node.y + ")");
         this._jump();
-    },
-
-    onLeftJump: function() {
-      //  KBEngine.INFO_MSG("AvatarAction on left jump, position(" + this.node.x + ", "+ this.node.y + ")");
-
-        if(this._jump()) {
-            this.node.scaleX = this.leftDir; 
-            this.moveFlag = MOVE_LEFT;
-        }
-    },
-
-    onRightJump: function() {
-      //  KBEngine.INFO_MSG("AvatarAction on right jump, position(" + this.node.x + ", "+ this.node.y + ")");
-
-       if(this._jump()) {
-            this.node.scaleX = this.rightDir; 
-            this.moveFlag = MOVE_RIGHT;
-        }
     },
 
     setAnim: function(anim) {
@@ -696,17 +674,7 @@ cc.Class({
     onStartMove: function(position) {
         this.targetPosition = position;
 
-        // var dx = position.x - this.node.x;
-        // if (dx > 0.5) // 右
-        // {
-        //     this.moveFlag = MOVE_RIGHT;
-        // } else if (dx < -0.5) //左
-        // {
-        //     this.moveFlag = MOVE_LEFT;
-        // } else 
-        // {
-        //     this.moveFlag = STATIC;
-        // }
+        
 
         this.hpProcessBar.scaleX = this.node.scaleX;
         this.labelName.scaleX = this.node.scaleX;

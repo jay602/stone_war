@@ -65,9 +65,9 @@
 	</dbmgr>
 	
 	<baseapp>
+		<externalAddress>  </externalAddress>							<!-- Type: String -->
 		<backupPeriod> 500 </backupPeriod>
 	</baseapp>
-
 	
 	<cellapp>
 		<ids>

@@ -4,8 +4,8 @@ from KBEDebug import *
 import GameConfigs
 import GameUtils
 import random
-import base64
 import json
+import base64
 import pyaes
 #from Crypto.Cipher import AES
 
@@ -27,28 +27,20 @@ class Avatar(KBEngine.Proxy):
 		self.cellData["totalTime"] = 0
 		self.cellData["score"] = 0
 		self.cellData["hitRate"] = 0.0
-		self.cellData["nickName"] = ""
 		self.cellData["avatarName"] = ""
 		
 		DEBUG_MSG("new avatar: accountName=%s" % (self.__ACCOUNT_NAME__))
 		datas = self.getClientDatas()
-		INFO_MSG(datas)
 		if datas[0]:
-			INFO_MSG(datas[0])
-			
-			userInfo = eval(datas[0].decode())
-			if '3rdSessionId' in userInfo:
-				self.sessionId = userInfo['3rdSessionId']
+			try:			
+				userInfo = eval(datas[0].decode())
+				if 'session_key' in userInfo:
+					self.sessionKey = userInfo['session_key']
 
-			if 'session_key' in userInfo:
-				self.sessionKey = userInfo['session_key']
-
-			if 'openid' in userInfo:
-				self.openId = userInfo['openid']
-			
-			INFO_MSG("sessionId= " + self.sessionId)
-			INFO_MSG("sessionKey= " + self.sessionKey)
-			INFO_MSG("openId= " + self.openId)
+				if 'openid' in userInfo:
+					self.openId = userInfo['openid']
+			except Exception as err:
+				DEBUG_MSG("getClientDatas Error: " + str(err))
 
 	def createCell(self, space):
 		"""
@@ -142,8 +134,7 @@ class Avatar(KBEngine.Proxy):
 		self.destroySelf()
 
 	def joinRoom(self):
-		self.loginCount += 1
-		DEBUG_MSG("avatar %i enter world, logincount=%i" % (self.id, self.loginCount))
+		DEBUG_MSG("avatar %i join room" % (self.id))
 		self.addTimer(1, 0, TIMER_TYPE_ENTER_ROOM)
 		
 	def onDestroyTimer(self):
@@ -157,14 +148,15 @@ class Avatar(KBEngine.Proxy):
 			# 玩家上线了或者重登陆了， 此处告诉大厅，玩家请求登陆到游戏地图中
 			KBEngine.globalData["Halls"].enterRoom(self, self.cellData["position"], self.cellData["direction"], self.roomKey)
 
-	def decodeEncryptedData(self, encryptedData, iv, sessionId):
-		DEBUG_MSG("decodeEncryptedData: len=%d encryptedData=%s , iv=%s, sessionId=%s" % (len(encryptedData), encryptedData, iv, sessionId))
+	def decodeEncryptedData(self, encryptedData, iv):
 		if not self.sessionKey:
+			self.cellData["accountName"] = self.cellData["avatarName"]
 			DEBUG_MSG("not sessionKey")
 			return
 
 		sessionKey = base64.b64decode(self.sessionKey)
 		if len(sessionKey) < 10 :
+			self.cellData["accountName"] = self.cellData["avatarName"]
 			DEBUG_MSG("sessionKey invalid size")
 			return
 			
@@ -181,21 +173,12 @@ class Avatar(KBEngine.Proxy):
 			decrypted = eval(datas.decode())
 			DEBUG_MSG(decrypted)
 			self.decryptedData = decrypted
-			INFO_MSG("nickName = %s" % (decrypted["nickName"]))
 			self.cellData["accountName"] = decrypted["nickName"]
-			self.cellData["nicktName"] = decrypted["nickName"]
 		
 			if decrypted['watermark']['appid'] != GameConfigs.APPID:
 				DEBUG_MSG("appid not equal: %s != %s" % (decrypted['watermark']['appid'], GameConfigs.APPID))
 		except Exception as err:
 			self.cellData["accountName"] = self.cellData["avatarName"]
-			self.cellData["nicktName"] = self.cellData["avatarName"]
 			DEBUG_MSG("encry data error: " + str(err))
-			DEBUG_MSG("avatar name : " + self.cellData["avatarName"])
-
-
-	def _unpad(self, s):
-		return s[:-ord(s[len(s)-1:])]
-
 
 	

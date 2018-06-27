@@ -5,11 +5,6 @@
 			<Flags>		ALL_CLIENTS			</Flags>
 			<Default>		0				</Default>
 		</modelID>
-
-		<modelRadius>
-			<Type>		FLOAT				</Type>
-			<Flags>		CELL_PUBLIC			</Flags>
-		</modelRadius>
 	</Properties>
 
 	<CellMethods>

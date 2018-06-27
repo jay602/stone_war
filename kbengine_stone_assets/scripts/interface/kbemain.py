@@ -93,88 +93,41 @@ def onRequestCreateAccount(registerName, password, datas):
 	KBEngine.createAccountResponse(commitName, realAccountName, datas, KBEngine.SERVER_SUCCESS)
 	
 def onRequestAccountLogin(loginName, password, datas):
-	"""
-	KBEngine method.
-	请求登陆账号回调
-	@param loginName: 客户端请求时所提交的名称
-	@type  loginName: string
-	
-	@param password: 密码
-	@type  password: string
-	
-	@param datas: 客户端请求时所附带的数据，可将数据转发第三方平台
-	@type  datas: bytes
-	"""
-
 	commitName = loginName
-	INFO_MSG('onRequestAccountLogin: loginName=%s' % (loginName))
-	INFO_MSG('onRequestAccountLogin: commitName=%s' % (commitName))
-	INFO_MSG(datas)
-	
-	
-	# 默认账号名就是提交时的名
 	realAccountName = copy.deepcopy(commitName)
-
 	wetchat = '%d' % GameConfigs.WECHAT_GAME
-	code= None
-	IsWeiWinLogin = False
-
-	param = datas.decode()
-	params = param.split('&')
-	INFO_MSG(params)
-	 
 	isWeiXinLogin = False
+	param = eval(datas.decode('utf8'))
 
-	if params and len(params) >= 2:
-		param1 = params[0].split('=')
-		param2 = params[1].split('=')
-
-		if param1[0] == 'platform' and param1[1] == wetchat and param2[0] == 'code' and param2[1] != 'null':
-			code = param2[1]
+	if param["platform"] == wetchat:
 			values = {}
 			values['appid'] = GameConfigs.APPID
 			values['secret'] = GameConfigs.APP_SECRET
-			values['js_code'] = code
+			values['js_code'] = loginName
 			values['grant_type'] = 'authorization_code'
 			query_string = parse.urlencode(values)
+			#构建微信接口URL: https://api.weixin.qq.com/sns/jscode2session?appid=APPID&secret=SECRET&js_code=JSCODE&grant_type=authorization_code
 			url = GameConfigs.WEI_XIN_URL + "?" + query_string
 			
 			try:
-				INFO_MSG("vist weixin : " + url)
-
+				DEBUG_MSG("visist wei xin server ....")
 				#阻塞同步访问，大量用户访问时，会造成性能下降，建议使用异步访问
+				#向微信服务器请求session_key和openid
 				respone = request.urlopen(url).read().decode("utf8")
 				userInfo = eval(respone)
-
-				INFO_MSG("wei_xin_server respone= " + respone)
-				INFO_MSG(userInfo)
-				isWeiXinLogin = True
 				if respone:
-					sessionId = get3rdSession(respone)
+					isWeiXinLogin = True
 					realAccountName = userInfo["openid"]
-					if not sessionId in g_3rdSession:
-						g_3rdSession[sessionId] = userInfo
-						userInfo['3rdSessionId'] = sessionId
-						datas = str(userInfo).encode()
-						INFO_MSG(datas)
+					datas = str(userInfo).encode()
 						
 			except Exception as err:
 				isWeiXinLogin = False
-				INFO_MSG("weixin Error: " + str(err))
+				DEBUG_MSG("weixin Error: " + str(err))
 
-	# 此处可通过http等手段将请求提交至第三方平台，平台返回的数据也可放入datas
-	# datas将会回调至客户端
-	# 如果使用http访问，因为interfaces是单线程的，同步http访问容易卡住主线程，建议使用
-	# KBEngine.registerReadFileDescriptor()和KBEngine.registerWriteFileDescriptor()结合
-	# tornado异步访问。也可以结合socket模拟http的方式与平台交互。
-	
-	# 如果返回码为KBEngine.SERVER_ERR_LOCAL_PROCESSING则表示验证登陆成功，但dbmgr需要检查账号密码，KBEngine.SERVER_SUCCESS则无需再检查密码
 	if not isWeiXinLogin:
-		INFO_MSG("Clear datas")
 		datas = bytes()
+
 	KBEngine.accountLoginResponse(commitName, realAccountName, datas, KBEngine.SERVER_ERR_LOCAL_PROCESSING)
-	INFO_MSG("accountLoginResponse, data:")
-	INFO_MSG(datas)
 	
 def onRequestCharge(ordersID, entityDBID, datas):
 	"""

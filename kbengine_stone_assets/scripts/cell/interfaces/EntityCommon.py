@@ -23,17 +23,12 @@ class EntityCommon:
 		"""
 		return False
 
-	def isFood(self):
+	def isItem(self):
 		"""
 		virtual method.
 		"""
 		return False
-		
-	def isSmash(self):
-		"""
-		virtual method.
-		"""
-		return False
+
 	
 	def getCurrRoomBase(self):
 		"""

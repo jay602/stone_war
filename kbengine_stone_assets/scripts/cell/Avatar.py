@@ -16,7 +16,7 @@ class Avatar(KBEngine.Entity, EntityCommon):
 		DEBUG_MSG(self.position)
 		self.startPosition = copy.deepcopy(self.position)
 		self.getCurrRoom().onEnter(self)
-		DEBUG_MSG("new avatar cell: id=%i accountName=%s nickName=%s avatarName=%s" % (self.id, self.accountName, self.nickName, self.avatarName))
+		DEBUG_MSG("new avatar cell: id=%i accountName=%s  avatarName=%s" % (self.id, self.accountName, self.avatarName))
 		
 	def isAvatar(self):
 		"""
@@ -90,7 +90,6 @@ class Avatar(KBEngine.Entity, EntityCommon):
 		DEBUG_MSG("avatar %i pick up item=%i" % (self.id, itemID))
 		DEBUG_MSG(position)
 		self.otherClients.onPickUpItem(itemID, position)
-
 
 	def throwItem(self, exposed, itemID, force):
 		DEBUG_MSG("avavtar %i throw item=%d, force, selfID=%i" % (exposed, itemID, self.id))

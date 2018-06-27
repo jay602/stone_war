@@ -16,11 +16,6 @@ KBEngine.Item = KBEngine.Entity.extend(
         {
             this._super();
         },
-
-        hello : function() 
-        {
-            cc.log("item %d say hello", this.id);
-        }
 });
     
     

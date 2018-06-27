@@ -68,9 +68,7 @@ class Halls(KBEngine.Entity):
 		index = roomDatas["PlayerCount"] % 2 
 		entityCall.cellData["modelID"] = index
 		entityCall.cellData["avatarName"] = GameConfigs.PLAYER_NAMES[index]
-		#entityCall.cellData["accountName"] = entityCall.cellData["avatarName"]
-		#entityCall.cellData["nicktName"] = entityCall.cellData["avatarName"]
-
+	
 		entityCall.cellData["position"] = GameConfigs.PLAYER_STRAT_POINT["map1"][index]
 		roomDatas["PlayerCount"] += 1
 

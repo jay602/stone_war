@@ -4,28 +4,23 @@
 
 var KBEngine = require("kbengine");
 
-var getCurrentTime = function(){
-    　　　　　　 var date = new Date();
-                var year=date.getFullYear(); //获取当前年份
-                var mon=date.getMonth()+1; //获取当前月份
-                var da=date.getDate(); //获取当前日
-                var day=date.getDay(); //获取当前星期几
-                var hour=date.getHours(); //获取小时
-                var minute=date.getMinutes(); //获取分钟
-                var second=date.getSeconds(); //获取秒
-                var millseocnd =date.getMilliseconds()
-                var str = "当前时间: " + hour + ":" + minute + ":" + second + "." +  millseocnd;
-                return str;
-　　　　};
-
-KBEngine.Avatar = KBEngine.Entity.extend(
-    {
+KBEngine.Avatar = KBEngine.Entity.extend({
         __init__ : function()
         {
             this._super();
             if(this.isPlayer()) {
-                cc.sys.localStorage.setItem("3rdSessionId", this.sessionId);
-                KBEngine.Event.fire("enterScene", KBEngine.app.entity_uuid, this.id, this);
+                if(window.wx != undefined)
+                    this.decodeEncryptedData();
+                KBEngine.Event.fire("enterScene");
+            }
+        },
+
+        decodeEncryptedData: function()
+        {
+            var encryptedData = cc.sys.localStorage.getItem("encryptedData");
+            var iv = cc.sys.localStorage.getItem("iv");
+            if(encryptedData && iv) {
+                this.baseCall("decodeEncryptedData", encryptedData, iv);
             }
         },
                    
@@ -117,7 +112,6 @@ KBEngine.Avatar = KBEngine.Entity.extend(
             vec3.y = pos.y;
             vec3.z = 0.0;
             this.cellCall("pickUpItem", itemID, vec3);
-            console.log("cellCall: avatar pick item = %d pos(%f, %f)", itemID, pos.x, pos.y);
         }, 
                     
         throwItem : function(itemID, force)
@@ -134,7 +128,6 @@ KBEngine.Avatar = KBEngine.Entity.extend(
         {
             var v2 = new cc.Vec2(force.x, force.y);
             KBEngine.Event.fire("otherAvatarThrowItem", this.id, itemID, v2);
-            KBEngine.INFO_MSG("another avatar on throw time: " + getCurrentTime());
         },
 
         onNewTurn : function(eid, second)
@@ -211,19 +204,8 @@ KBEngine.Avatar = KBEngine.Entity.extend(
 
         onContinueGame: function(avatarID)
         {
-            KBEngine.INFO_MSG("12 avatar " + avatarID + "on continue game, local avatarID=" + this.id);
+            KBEngine.INFO_MSG("avatar " + avatarID + "on continue game, local avatarID=" + this.id);
             KBEngine.Event.fire("onAvatarEnterWorld", KBEngine.app.entity_uuid, this.id, this);
-        },
-
-        decodeEncryptedData: function()
-        {
-            var encryptedData = cc.sys.localStorage.getItem("encryptedData");
-            var iv = cc.sys.localStorage.getItem("iv");
-            var sessionId = cc.sys.localStorage.getItem("3rdSessionId");
-            KBEngine.INFO_MSG("decodeEncryptedData: encryptedData=" + encryptedData + ", iv=" + iv + ", sessionId=" + sessionId);
-            if(encryptedData && iv) {
-                this.baseCall("decodeEncryptedData", encryptedData, iv, sessionId);
-            }
         },
 
         joinRoom: function()

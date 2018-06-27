@@ -4,7 +4,7 @@
 		详细说明请参考：http://kbengine.org/cn/docs/configuration/entities.html
 					http://www.kbengine.org/cn/docs/programming/entitydef.html
 	-->
-	<Avatar hasClient="true"></Avatar><!-- <Avatar hasCell="true" hasBase="true" hasClient="true"></Player> -->
+	<Avatar hasClient="true"></Avatar>
 	<Halls/>
 	<Room ></Room>
 	<Item hasClient="true"></Item>
