@@ -33,7 +33,7 @@ class Room(KBEngine.Entity):
 		self.secondTimer = 0
 		self.totalTime = 0
 		self.readyPlayerCount = 0
-		DEBUG_MSG('created space[%d] entityID = %i.' % (self.roomKeyC, self.id))
+		DEBUG_MSG('created space[%d] entityID = %i spaceid=%i' % (self.roomKeyC, self.id, self.spaceID))
 		KBEngine.globalData["Room_%i" % self.spaceID] = self.base
 		self.createItems()
 
@@ -44,11 +44,6 @@ class Room(KBEngine.Entity):
 		for name, prop in GameConfigs.ITEMS["map1"].items():
 			harm = prop['harm']
 			pos = prop['pos']
-			DEBUG_MSG("create item: name=%s harm=%i." % (name, harm))
-			DEBUG_MSG("prop: ")
-			DEBUG_MSG(prop)
-			DEBUG_MSG("item positin")
-			DEBUG_MSG(pos)
 			dir = (0.0, 0.0, 0.0)
 			entity = KBEngine.createEntity("Item", self.spaceID, pos, dir, {
 			                               "name": name, "harm": harm})
@@ -89,73 +84,22 @@ class Room(KBEngine.Entity):
 			self.newTurnTimer = self.addTimer(
 				GameConfigs.PLAY_TIME_PER_TURN, 0, TIMER_TYPE_NEXT_PLAYER)
 			DEBUG_MSG("Time to Game Start, newTurnTimer=%i" % (self.newTurnTimer))
+		
+		if TIMER_TYPE_SECOND == userArg:
+			self.totalTime += 1
 
 		if TIMER_TYPE_NEXT_PLAYER == userArg:
 			self.nextPlayer()
 
-		if TIMER_TYPE_GAME_OVER == userArg:
-			DEBUG_MSG("Game is Over !!!")
-			self.settleAccount()
-
-		if TIMER_TYPE_SECOND == userArg:
-			self.totalTime += 1
-
-		if TIMER_TYPE_RESET_ROOM == userArg:
-			self.resetGameState()
-
 	def getTotalTime(self):
 		return self.totalTime
 
-	def settleAccount(self):
-		for entity in self.avatars.values():
-				win = not entity.isDead()
-				result = "lose"
-				if win:
-					result = "win"
-				DEBUG_MSG("entity id=%i is %s" % (entity.id, result))
-
-				if entity.HP > 0:
-					self.curEid = entity.id
-
-				if entity.throwCount > 0:
-					entity.hitRate = round(entity.hitCount/entity.throwCount, 3)
-				else:
-					entity.hitRate = 0.0
-
-				entity.totalTime = self.totalTime
-				entity.score = int(100000 * entity.hitRate *
-				                   entity.totalHarm / entity.totalTime)
-				entity.client.onGameOver(
-					win, entity.hitRate, entity.totalTime, entity.totalHarm, entity.score)
-
-				DEBUG_MSG("entity id=%i,  hitCount=%i, throwCount=%i" %
-				          (entity.id, entity.hitCount, entity.throwCount))
-				DEBUG_MSG("entity id=%i, game result(%f, %i, %i, %i)" % (
-					entity.id, entity.hitRate, entity.totalTime, entity.totalHarm, entity.score))
-
-		self.addTimer(1, 0, TIMER_TYPE_RESET_ROOM)
-
-	def resetGameState(self):
-		DEBUG_MSG("resetGameState room: %i" % (self.roomKeyC))
-		for key in list(self.items):
-		    item = self.items.pop(key)
-		    item.destroy()
-
-		index = 0
-		for entity in self.avatars.values():
-			entity.resetGameData()
-			entity.position = GameConfigs.PLAYER_POSITON[index]
-			index += 1
-
-		self.readyPlayerCount = 0
-
 	def startGame(self):
 		DEBUG_MSG("start game curEid=%i" % (self.curEid))
-		self.secondTimer = self.addTimer(2, 1, TIMER_TYPE_SECOND)
+		self.secondTimer = self.addTimer(1, 1, TIMER_TYPE_SECOND)
 		self.newTurn(self.curEid)
 
 	def newTurn(self, eid):
-		DEBUG_MSG("Room Key=%i" % (self.roomKeyC))
 		for item in self.items.values():
 			item.throwPlayerID = 0
 
@@ -210,8 +154,46 @@ class Room(KBEngine.Entity):
 		if self.secondTimer > 0:
 			self.delTimer(self.secondTimer)
 			self.secondTimer = 0
+		self.settleAccount()
 
-		self.addTimer(1, 0, TIMER_TYPE_GAME_OVER)
+	#游戏算分
+	def settleAccount(self):
+		for entity in self.avatars.values():
+				win = not entity.isDead()
+				result = "lose"
+				if win:
+					result = "win"
+				DEBUG_MSG("entity id=%i is %s" % (entity.id, result))
+
+				if entity.HP > 0:
+					self.curEid = entity.id
+
+				if entity.throwCount > 0:
+					entity.hitRate = round(entity.hitCount/entity.throwCount, 3)
+				else:
+					entity.hitRate = 0.0
+
+				entity.totalTime = self.totalTime
+				entity.score = int(100000 * entity.hitRate *
+				                   entity.totalHarm / entity.totalTime)
+				entity.client.onGameOver(
+					win, entity.hitRate, entity.totalTime, entity.totalHarm, entity.score)
+
+		self.resetGameState()
+
+	def resetGameState(self):
+		DEBUG_MSG("resetGameState room: %i" % (self.roomKeyC))
+		for key in list(self.items):
+		    item = self.items.pop(key)
+		    item.destroy()
+
+		index = 0
+		for entity in self.avatars.values():
+			entity.resetGameData()
+			entity.position = GameConfigs.PLAYER_POSITON[index]
+			index += 1
+
+		self.readyPlayerCount = 0
 
 	def resetItem(self, itemID):
 		item = self.items[itemID]

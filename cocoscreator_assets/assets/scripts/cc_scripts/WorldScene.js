@@ -52,12 +52,9 @@ cc.Class({
         gameHint: cc.Label,
     },
 
-    // LIFE-CYCLE CALLBACKS:
-
     onLoad () {
         this.keyBoardListener = null;
         this.mouseListener = null;
-        this.curPlayerCount = 0;
         this.entities = {};
         this.playerControl = null;
         this.curAvatarID = 0;
@@ -71,25 +68,23 @@ cc.Class({
         this.gameState = this.node.getComponent("GameState");
 
         if(cc.sys.platform == cc.sys.WECHAT_GAME) {
-            wx.showShareMenu({
-                withShareTicket:true,
-                success:function(res) {
-                    KBEngine.INFO_MSG("分享成功, " + JSON.stringify(res));
-                },
-                fail:function() {
-                    KBEngine.INFO_MSG("分享失败");
-                },
-            });
-            wx.onShareAppMessage(function() {
-                return {
-                    title: "投石作战",
-                    imageUrl:SHARE_PICTURE,
-                }
-         });
+            this.enableWxShare();
         }
     },
 
-    
+    enableWxShare: function () {
+        wx.showShareMenu({
+            withShareTicket:true,
+        });
+
+        wx.onShareAppMessage(function() {
+            return {
+                title: "投石作战",
+                imageUrl:SHARE_PICTURE,
+            }
+        });
+     },
+
     enablePhysicManager: function () {
         cc.director.getCollisionManager().enabled = true;
         cc.director.getPhysicsManager().enabled = true;
@@ -228,8 +223,6 @@ cc.Class({
                 }else if(entity.direction.z <= -1) {
                     ae.scaleX = -1;
                 }
-                this.curPlayerCount++;
-               
             }else if(entity.className == "Item") {
                 cc.log("Item:%s enter world", entity.name);
                 ae = cc.instantiate(ItemPrefabMap[entity.name]);
@@ -252,9 +245,7 @@ cc.Class({
         
     },
 
-    onAvatarEnterWorld : function(rndUUID, eid, avatar) {
-        var ret = this.player==null;
-        console.log("player is null = %s", ret.toString());
+    onAvatarEnterWorld : function(avatar) {
         this.createPlayer(avatar);
     },
 
@@ -331,7 +322,6 @@ cc.Class({
     newTurn: function(avatarID, second){
         this.curAvatarID = avatarID;
         this.setCameraTarget(avatarID);
-        cc.log("WorldScene::newTurn: eid=%d  playerID=%d second=%d", avatarID,  KBEngine.app.player().id, second);
        
         this.resetItem();
         this.gameState.newTurn(second);
@@ -482,10 +472,6 @@ cc.Class({
     },
 
     onGameOver: function(avatarID, isWin, hitRate, totalTime, totalHarm, score) {
-        KBEngine.INFO_MSG("WorldScene::onGameOver: avatarID= " + avatarID + ", isWin=" + isWin.toString());
-        KBEngine.INFO_MSG("hitRate=" + hitRate + " , totalTime=" + totalTime + " , totalHarm="
-            + totalHarm + " , score=" + score);
-
         if(avatarID == KBEngine.app.player().id) {
             if(this.player.name == PIPI_NAME) {
                 GAME_RESULT = isWin ? PIPI_WIN : PIPI_LOSE;
@@ -508,7 +494,6 @@ cc.Class({
         this.disEnableControlPlayer();
         this.unInstallEvents();
         this.player = null;
-        // this.entities = null;
     },
 
     onResetItem: function(itemID, position) {
@@ -541,7 +526,6 @@ cc.Class({
                 touchControl.setPosition(JOY_STICK_POSITION_X, JOY_STICK_POSITION_Y);
                 ctrl.setTouchControl(touchControl);
            }
-           
             //注意顺序： anim ---> action --->ctrl
             anim.setModelID(avatar.modelID);
             anim.setAnim(this.player.getComponent(cc.Animation));
@@ -552,7 +536,6 @@ cc.Class({
             action.setGameState(this.gameState);
             action.setHP(avatar.HP);
             action.setAccountName(avatar.accountName);
-            
 
             ctrl.setPlayer(this.player);
 
@@ -561,7 +544,6 @@ cc.Class({
             this.player.setPosition(avatar.position.x*SCALE, avatar.position.z*SCALE);
 
             this.entities[avatar.id] = this.player;
-
             this.gameState.setPlayerHP(avatar.HP);
         }
     },

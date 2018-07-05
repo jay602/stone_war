@@ -1,8 +1,7 @@
 /**
- * 自定义抖动动作
+ * 自定义动作
  */
 var walk = cc.ActionInterval.extend({
-    //抖动时间
     duration: 0,
     anim: null,
 
@@ -32,13 +31,7 @@ var walk = cc.ActionInterval.extend({
     }
 });
 
-/**
- * 自定义抖动动作
- * @param {float}duration 抖动时间
- * @param {number}shakeStrengthX X轴抖动幅度
- * @param {number}shakeStrengthY Y轴抖动幅度
- * @returns {Shake}
- */
+
 cc.walk = function(duration,shakeStrengthX,shakeStrengthY){
     return new walk(duration,shakeStrengthX,shakeStrengthY);
 };

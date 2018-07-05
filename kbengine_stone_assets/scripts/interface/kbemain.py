@@ -8,6 +8,9 @@ import string
 import hashlib
 import copy
 from urllib import request, parse
+import tornado.ioloop
+import tornado.httpclient 
+from LoginPoller import LoginPoller
 
 """
 interfaces进程主要处理KBEngine服务端与第三方平台的接入接出工作。
@@ -35,9 +38,8 @@ interfaces进程主要处理KBEngine服务端与第三方平台的接入接出�
 	并将socket挂接到KBEngine中（这样可防止阻塞导致主线程卡），然后监听指定的端口。
 	使用KBE的KBEngine.registerReadFileDescriptor()和KBEngine.registerWriteFileDescriptor()，具体查看API文档与Poller.py。
 """
+g_LoginPoller = LoginPoller()
 
-g_poller = Poller()
-g_3rdSession = {}
 
 def onInterfaceAppReady():
 	"""
@@ -45,10 +47,8 @@ def onInterfaceAppReady():
 	interfaces已经准备好了
 	"""
 	INFO_MSG('onInterfaceAppReady: bootstrapGroupIndex=%s, bootstrapGlobalIndex=%s' % \
-	 (os.getenv("KBE_BOOTIDX_GROUP"), os.getenv("KBE_BOOTIDX_GLOBAL")))
-
-	#KBEngine.addTimer(0.01, 1.0, onTick)
-	g_poller.start("localhost", 30040)
+		(os.getenv("KBE_BOOTIDX_GROUP"), os.getenv("KBE_BOOTIDX_GLOBAL")))
+	
 
 def onTick(timerID):
 	"""
@@ -98,7 +98,15 @@ def onRequestAccountLogin(loginName, password, datas):
 	wetchat = '%d' % GameConfigs.WECHAT_GAME
 	isWeiXinLogin = False
 	param = eval(datas.decode('utf8'))
-
+	
+	if param["platform"] == wetchat:
+		callback = lambda _commitName, _realAccountName, _datas, _result:{
+					KBEngine.accountLoginResponse(_commitName, _realAccountName, _datas, _result)
+				}
+		g_LoginPoller.wxLogin(loginName, callback)
+	else:
+		KBEngine.accountLoginResponse(commitName, realAccountName, datas, KBEngine.SERVER_ERR_LOCAL_PROCESSING)
+	"""
 	if param["platform"] == wetchat:
 			values = {}
 			values['appid'] = GameConfigs.APPID
@@ -123,11 +131,11 @@ def onRequestAccountLogin(loginName, password, datas):
 			except Exception as err:
 				isWeiXinLogin = False
 				DEBUG_MSG("weixin Error: " + str(err))
+	"""
+	#if not isWeiXinLogin:
+		#datas = bytes()
 
-	if not isWeiXinLogin:
-		datas = bytes()
-
-	KBEngine.accountLoginResponse(commitName, realAccountName, datas, KBEngine.SERVER_ERR_LOCAL_PROCESSING)
+	#KBEngine.accountLoginResponse(commitName, realAccountName, datas, KBEngine.SERVER_ERR_LOCAL_PROCESSING)
 	
 def onRequestCharge(ordersID, entityDBID, datas):
 	"""
@@ -157,3 +165,4 @@ def get3rdSession(openid):
     md5 = hashlib.md5()
     md5.update(openid.encode("utf-8"))
     return md5.hexdigest()
+

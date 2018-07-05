@@ -44,18 +44,6 @@
 			<Default>		100				</Default>
 		</HP>
 
-		<totalHarm>
-			<Type>		INT32				</Type>
-			<Flags>	  CELL_PUBLIC_AND_OWN	</Flags>
-			<Default>		0				</Default>
-		</totalHarm>
-
-		<totalTime>
-			<Type>		INT32				</Type>
-			<Flags>	  CELL_PUBLIC_AND_OWN	</Flags>
-			<Default>		0				</Default>
-		</totalTime>
-
 		<hitCount>
 			<Type>		INT32				</Type>
 			<Flags>	  CELL_PUBLIC_AND_OWN	</Flags>
@@ -67,6 +55,18 @@
 			<Flags>	 CELL_PUBLIC_AND_OWN	</Flags>
 			<Default>		0				</Default>
 		</throwCount>
+
+		<totalHarm>
+			<Type>		INT32				</Type>
+			<Flags>	  CELL_PUBLIC_AND_OWN	</Flags>
+			<Default>		0				</Default>
+		</totalHarm>
+
+		<totalTime>
+			<Type>		INT32				</Type>
+			<Flags>	  CELL_PUBLIC_AND_OWN	</Flags>
+			<Default>		0				</Default>
+		</totalTime>
 
 		<score>
 			<Type>		INT32				</Type>

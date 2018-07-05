@@ -75,5 +75,5 @@ class Room(KBEngine.Entity):
 		KBEngine method.
 		entity的cell部分实体被创建成功
 		"""
-		DEBUG_MSG("Room::onGetCell: %i" % self.id)
+		DEBUG_MSG("Room::onGetCell: id=%i roomKey=%i" % (self.id, self.roomKey))
 		KBEngine.globalData["Halls"].onRoomGetCell(self, self.roomKey)

@@ -51,13 +51,12 @@
 				<loginAutoCreate> true </loginAutoCreate>
 			</account_registration>
 		</account_system>
+
 		
-		<databaseInterfaces>
-			<default>
-				<!-- <host> localhost </host> -->
-				<!-- <databaseName> kbe </databaseName> -->
-			</default>
-		</databaseInterfaces>
+		<!-- 数据库接口 
+			(database interfaces)
+		-->
+		
 		
 		<ids>
 			<increasing_range> 10000 </increasing_range>				<!-- Type: Integer -->
@@ -65,7 +64,7 @@
 	</dbmgr>
 	
 	<baseapp>
-		<externalAddress>  </externalAddress>							<!-- Type: String -->
+		<externalAddress> </externalAddress>							<!-- Type: String -->
 		<backupPeriod> 500 </backupPeriod>
 	</baseapp>
 	

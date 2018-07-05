@@ -132,8 +132,7 @@ cc.Class({
         if(player == undefined || !player.inWorld)
             return;
 
-        cc.director.loadScene("WorldScene", function() {
-            KBEngine.INFO_MSG("load WorldScene finish");
+        cc.director.loadScene("WorldScene", () => {
             player.continueGame();
         });
     },

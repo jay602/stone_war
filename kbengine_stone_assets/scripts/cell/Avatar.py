@@ -16,7 +16,7 @@ class Avatar(KBEngine.Entity, EntityCommon):
 		DEBUG_MSG(self.position)
 		self.startPosition = copy.deepcopy(self.position)
 		self.getCurrRoom().onEnter(self)
-		DEBUG_MSG("new avatar cell: id=%i accountName=%s  avatarName=%s" % (self.id, self.accountName, self.avatarName))
+		DEBUG_MSG("new avatar cell: id=%i accountName=%s  avatarName=%s spaceID=%i" % (self.id, self.accountName, self.avatarName, self.spaceID))
 		
 	def isAvatar(self):
 		"""
@@ -174,15 +174,12 @@ class Avatar(KBEngine.Entity, EntityCommon):
 			self.HP = 0
 
 		DEBUG_MSG("avatar %i recv harm=%i hp=%i harmCount=%i " % (exposed, harm, self.HP, self.harmCount))
-
-		self.client.onRecvDamage(self.id, harm, self.HP)
-		self.otherClients.onRecvDamage(self.id, harm, self.HP)
+		self.allClients.onRecvDamage(self.id, harm, self.HP)
 
 		#HP小于等于0，则通知播放死亡动画，然后结束当局游戏
 		if self.HP <= 0:
 			DEBUG_MSG("avatar id=%i name=%s is defeated !!!" % (self.id, self.accountName))
-			self.client.onDie(self.id)
-			self.otherClients.onDie(self.id)
+			self.allClients.onDie(self.id)
 			room.gameOver()
 
 
@@ -218,11 +215,9 @@ class Avatar(KBEngine.Entity, EntityCommon):
 		DEBUG_MSG("Avatar %i continueGame" % (self.id))
 		if self.id != exposed:
 			return
-		DEBUG_MSG(self.position)
+			
 		self.position = copy.deepcopy(self.startPosition)
-		DEBUG_MSG(self.startPosition)
 		self.client.onContinueGame(self.id)
-		#self.otherClients.onContinueGame(self.id)
 
 		room = self.getCurrRoom()
 		if room:

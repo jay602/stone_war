@@ -27,10 +27,8 @@ KBEngine.Avatar = KBEngine.Entity.extend({
         onEnterWorld : function()
         {
             this._super();
-            KBEngine.INFO_MSG("333 444 Avatar " +  this.id +" onEnterWorld");
             if(this.isPlayer()) {
-                KBEngine.INFO_MSG("111 22 player " +  this.id +" onEnterWorld");
-                KBEngine.Event.fire("onAvatarEnterWorld", KBEngine.app.entity_uuid, this.id, this);
+                KBEngine.Event.fire("onAvatarEnterWorld", this);
             }		
         },
 
@@ -121,7 +119,6 @@ KBEngine.Avatar = KBEngine.Entity.extend({
             vec3.y = force.y;
             vec3.z = 0.0;
             this.cellCall("throwItem", itemID, vec3);
-            KBEngine.INFO_MSG("avatar throw time: " + getCurrentTime());
         },
          
         onThrowItem : function(itemID, force)

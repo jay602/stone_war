@@ -53,6 +53,10 @@ cc.Class({
         }
      },
 
+     hello () {
+        cc.log("hello world");
+     },
+
 
      enableWxShare: function () {
         wx.showShareMenu({
@@ -115,6 +119,9 @@ cc.Class({
 	
 	    args.ip = SERVER_IP;
         args.port = SERVER_PORT;
+        args.isWss = true;
+        args.isByIP = LOGIN_BY_IP
+        args.serverURL = SERVER_URL
 	    KBEngine.create(args);
      },
 
@@ -261,7 +268,7 @@ cc.Class({
         var datas = {};
         datas["platform"] = cc.sys.platform;
         datas = this.createDictString(datas);
-
+        KBEngine.INFO_MSG("login name=" + this.userName);
         KBEngine.Event.fire("login", this.userName, "123456", datas);  
         this.label_hint.string = "登陆中 ... ...";
         this.btn_start.node.active = false;

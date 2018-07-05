@@ -471,6 +471,20 @@ cc.Class({
         return canJump;
     },
 
+    onLeftJump: function() {
+          if(this._jump()) {
+              this.node.scaleX = this.leftDir; 
+              this.moveFlag = MOVE_LEFT;
+          }
+    },
+  
+    onRightJump: function() {
+        if(this._jump()) {
+            this.node.scaleX = this.rightDir; 
+            this.moveFlag = MOVE_RIGHT;
+        }
+    },
+
     onJump: function() {
         this._jump();
     },
@@ -586,9 +600,6 @@ cc.Class({
     calculateForce: function(pos, center) {
         var point = new cc.Vec2(center.x, center.y);
         var force = point.sub(pos);
-        KBEngine.INFO_MSG("calculateForce: point1(" + point.x + " , " + point.y + ")");
-        KBEngine.INFO_MSG("calculateForce: point2(" + pos.x + " , " + pos.y + ")");
-        KBEngine.INFO_MSG("calculateForce: force(" + force.x + " , " + force.y + ")");
 
         force.mulSelf(12);
         // if(force.y > MAX_THROW_FORCE_Y) 

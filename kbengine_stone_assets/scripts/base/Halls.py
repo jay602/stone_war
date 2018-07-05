@@ -68,13 +68,8 @@ class Halls(KBEngine.Entity):
 		index = roomDatas["PlayerCount"] % 2 
 		entityCall.cellData["modelID"] = index
 		entityCall.cellData["avatarName"] = GameConfigs.PLAYER_NAMES[index]
-	
 		entityCall.cellData["position"] = GameConfigs.PLAYER_STRAT_POINT["map1"][index]
 		roomDatas["PlayerCount"] += 1
-
-		DEBUG_MSG(" Halls:enterRoom: entity%i avatarName=%s index=%i" % (entityCall.id, entityCall.cellData["avatarName"], index))
-		DEBUG_MSG(entityCall.cellData["position"])
-		DEBUG_MSG("Room Player Count=%i" % (roomDatas["PlayerCount"]))
 
 		roomEntityCall = roomDatas["roomEntityCall"]
 		if roomEntityCall is not None:

@@ -197,7 +197,6 @@ cc.Class({
         if(!this.enableEvent) return;
         
         var touchPos = this.touchControl.convertToNodeSpaceAR(event.getLocation());
-        var len = cc.pDistance(touchPos, cc.v2(0, 0));
 
         this.stickBg.setPosition(touchPos);
     } ,
@@ -206,7 +205,6 @@ cc.Class({
         if(!this.enableEvent) return;
 
         var touchPos = this.stickBg.convertToNodeSpaceAR( event.getLocation());
-        var len = cc.pDistance(touchPos, this.stickBg.position);
 
         var normal = touchPos.normalize();
         var point = normal.mul(this.stickBgRadius);

@@ -85,7 +85,6 @@ class Avatar(KBEngine.Proxy):
 		该entity被正式激活为可使用， 此时entity已经建立了client对应实体， 可以在此创建它的
 		cell部分。
 		"""
-
 		INFO_MSG("Avatar[%i] entities enable. EntityCall:%s" % (self.id, self.client))
 		#self.addTimer(1, 0, TIMER_TYPE_ENTER_ROOM)
 		
@@ -134,19 +133,18 @@ class Avatar(KBEngine.Proxy):
 		self.destroySelf()
 
 	def joinRoom(self):
-		DEBUG_MSG("avatar %i join room" % (self.id))
-		self.addTimer(1, 0, TIMER_TYPE_ENTER_ROOM)
-		
-	def onDestroyTimer(self):
-		DEBUG_MSG("Avatar::onDestroyTimer: %i" % (self.id))
-		self.destroySelf()
+		self.enterRoom()
 
 	def enterRoom(self):
 		# 如果玩家存在cell， 说明已经在地图中了， 因此不需要再次进入地图
-		DEBUG_MSG("avatar %i enter room, hasCell=%i" % (self.id, self.cell!=None))
+		DEBUG_MSG("avatar %i enter room" % (self.id))
 		if self.cell is None:
 			# 玩家上线了或者重登陆了， 此处告诉大厅，玩家请求登陆到游戏地图中
 			KBEngine.globalData["Halls"].enterRoom(self, self.cellData["position"], self.cellData["direction"], self.roomKey)
+
+	def onDestroyTimer(self):
+		DEBUG_MSG("Avatar::onDestroyTimer: %i" % (self.id))
+		self.destroySelf()
 
 	def decodeEncryptedData(self, encryptedData, iv):
 		if not self.sessionKey:

@@ -2363,7 +2363,6 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 	
 	this.args = kbengineArgs;
 	
-	
 	this.username = "testhtml51";
 	this.password = "123456";
 	this.clientdatas = "";
@@ -2387,7 +2386,7 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 		
 	// 登录loginapp的地址
 	this.ip = this.args.ip;
-	KBEngine.INFO_MSG("login server ip = " + this.ip);
+	
 	this.port = this.args.port;
 	
 	// 服务端分配的baseapp地址
@@ -2395,6 +2394,10 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 	this.baseappPort = 0;
 
 	this.protocol = this.args.isWss ? "wss" : "ws";
+	this.isByIP = this.args.isByIP
+	this.serverURL = this.args.serverURL;
+
+	KBEngine.INFO_MSG("login server  = " + (this.isByIP ? this.ip : this.serverURL));
 
 	this.resetSocket = function()
 	{
@@ -2437,7 +2440,7 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 		KBEngine.app.serverScriptVersion = "";
 		KBEngine.app.serverProtocolMD5 = "";
 		KBEngine.app.serverEntityDefMD5 = "";
-		KBEngine.app.clientVersion = "1.1.8";
+		KBEngine.app.clientVersion = "1.1.9";
 		KBEngine.app.clientScriptVersion = "0.1.0";
 		
 		// player的相关信息
@@ -3146,7 +3149,12 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 		if(noconnect)
 		{
 			KBEngine.INFO_MSG("KBEngineApp::createAccount_loginapp: start connect to " + KBEngine.app.protocol +  "://" + KBEngine.app.ip + ":" + KBEngine.app.port + "!");
-			KBEngine.app.connect(KBEngine.app.protocol + "://" + KBEngine.app.ip + ":" + KBEngine.app.port);
+			if(KBEngine.app.isByIP) {
+				KBEngine.app.connect(KBEngine.app.protocol + "://" + KBEngine.app.ip + ":" + KBEngine.app.port);
+			} else {
+				KBEngine.app.connect(KBEngine.app.protocol + "://" + KBEngine.app.serverURL);
+			}
+			
 			KBEngine.app.socket.onopen = KBEngine.app.onOpenLoginapp_createAccount;  
 		}
 		else
@@ -3195,7 +3203,12 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 		if(noconnect)
 		{
 			KBEngine.INFO_MSG("KBEngineApp::login_loginapp: start connect " + KBEngine.app.protocol + "://" + KBEngine.app.ip + ":" + KBEngine.app.port + " !");
-			KBEngine.app.connect(KBEngine.app.protocol + "://" + KBEngine.app.ip + ":" + KBEngine.app.port);
+			if(KBEngine.app.isByIP) {
+				KBEngine.app.connect(KBEngine.app.protocol + "://" + KBEngine.app.ip + ":" + KBEngine.app.port);
+			} else {
+				KBEngine.app.connect(KBEngine.app.protocol + "://" + KBEngine.app.serverURL);
+			}
+			
 			KBEngine.app.socket.onopen = KBEngine.app.onOpenLoginapp_login;  
 		}
 		else
@@ -3242,7 +3255,12 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 		if(noconnect)
 		{
 			KBEngine.INFO_MSG("KBEngineApp::createAccount_loginapp: start connect to ws://" + KBEngine.app.ip + ":" + KBEngine.app.port + "!");
-			KBEngine.app.connect("ws://" + KBEngine.app.ip + ":" + KBEngine.app.port);
+			if(KBEngine.app.isByIP) {
+				KBEngine.app.connect(KBEngine.app.protocol + "://" + KBEngine.app.ip + ":" + KBEngine.app.port);
+			} else {
+				KBEngine.app.connect(KBEngine.app.protocol + "://" + KBEngine.app.serverURL);
+			}
+			
 			KBEngine.app.socket.onopen = KBEngine.app.onOpenLoginapp_resetpassword;  
 		}
 		else
@@ -3279,7 +3297,11 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 		{
 			KBEngine.Event.fire("onLoginBaseapp");
 			KBEngine.INFO_MSG("KBEngineApp::login_baseapp: start connect to "+ KBEngine.app.protocol +"://" + KBEngine.app.baseappIp + ":" + KBEngine.app.baseappPort + "!");
-			KBEngine.app.connect(KBEngine.app.protocol + "://" + KBEngine.app.baseappIp + ":" + KBEngine.app.baseappPort);
+			if(KBEngine.app.isByIP) {
+				KBEngine.app.connect(KBEngine.app.protocol + "://" + KBEngine.app.baseappIp + ":" + KBEngine.app.baseappPort);
+			} else {
+				KBEngine.app.connect(KBEngine.app.protocol + "://" + KBEngine.app.baseappIp);
+			}
 			
 			if(KBEngine.app.socket != undefined && KBEngine.app.socket != null)
 				KBEngine.app.socket.onopen = KBEngine.app.onOpenBaseapp;  
@@ -3295,15 +3317,22 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 	}
 	
 	this.reloginBaseapp = function()
-	{  
+	{
+		var dateObject = new Date();
+		KBEngine.app.lastTickTime = dateObject.getTime();
+		KBEngine.app.lastTickCBTime = dateObject.getTime();
+
 		if(KBEngine.app.socket != undefined && KBEngine.app.socket != null)
 			return;
 		
 		KBEngine.app.resetSocket();
 		KBEngine.Event.fire("onReloginBaseapp");
 		KBEngine.INFO_MSG("KBEngineApp::reloginBaseapp: start connect to " + KBEngine.app.protocol +"://" + KBEngine.app.baseappIp + ":" + KBEngine.app.baseappPort + "!");
-		KBEngine.app.connect(KBEngine.app.protocol + "://" + KBEngine.app.baseappIp + ":" + KBEngine.app.baseappPort);
-		
+		if(KBEngine.app.isByIP) {
+			KBEngine.app.connect(KBEngine.app.protocol + "://" + KBEngine.app.baseappIp + ":" + KBEngine.app.baseappPort);
+		} else {
+			KBEngine.app.connect(KBEngine.app.protocol + "://" + KBEngine.app.baseappIp);
+		}
 		if(KBEngine.app.socket != undefined && KBEngine.app.socket != null)
 			KBEngine.app.socket.onopen = KBEngine.app.onReOpenBaseapp;  
 	}

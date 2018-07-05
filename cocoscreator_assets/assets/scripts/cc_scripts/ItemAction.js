@@ -107,7 +107,7 @@ cc.Class({
         }
     },
 
-    // 只在两个碰撞体开始接触时被调用一次
+    
     onBeginContact: function (contact, selfCollider, otherCollider) {
         if( (otherCollider.node.name == PIPI_NAME || otherCollider.node.name == POP_NAME) && this.isThrowed) { //扣血
             let avatarID = otherCollider.node.getComponent("AvatarAction").getEntityID();
@@ -229,9 +229,6 @@ cc.Class({
         
         itemRigidbody.applyTorque(torque, true);
         KBEngine.INFO_MSG("torque = " + torque);
-
-        cc.log("AvatarActio::thowItem torque : force(%f, %f), worldCenter(%f, %f) pos(%f, %f)", impulse.x, impulse.y, worldCenter.x, worldCenter.y
-        , this.node.x, this.node.y);
         
         this.isThrowed = true;
     },

@@ -1,2 +1,2 @@
 # stone_war
-cocos creator + KBEngine1.1.5
+cocos creator 1.9.1 + KBEngine1.1.8
