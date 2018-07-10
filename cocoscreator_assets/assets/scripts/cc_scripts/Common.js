@@ -37,7 +37,7 @@ window.JOY_STICK_POSITION_Y = 120;
 
 window.LOGIN_BY_IP = false;
 
-window.SERVER_URL = "***********************";     //登录服务器的域名
+window.SERVER_URL = "xxx.com";     //登录服务器的域名
 window.SERVER_IP = "192.168.0.106";
 window.SERVER_PORT = "20013";
 
