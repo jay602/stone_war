@@ -50,6 +50,18 @@ cocos creator 1.9.1 + KBEngine1.1.x
 	                KBEngine.create(args);
                 },
 
+    配置微信小游戏的APPID和APP_SECRET
+        kbengine_stone_assets/scripts/common/GameConfigs.py
+                APPID = "*******************"
+                APP_SECRET = "************************"
+
+    配置第三方库pyaes和tornado
+        第三方库放在"kbengine_stone_assets/docs/thirdlibs/"目录下
+![demo_configure](https://github.com/jay602/stone_war/blob/master/kbengine_stone_assets/docs/img/20180710161101.png)
+
+        解压"pyaes.rar"和"tornado.zip"到"kbe/res/scripts/common/Lib/site-packages"
+![demo_configure](https://github.com/jay602/stone_war/blob/master/kbengine_stone_assets/docs/img/20180710161458.png)
+
 ## 启动服务器:
 
 	先开启服务端
