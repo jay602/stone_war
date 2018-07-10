@@ -120,8 +120,8 @@ cc.Class({
 	    args.ip = SERVER_IP;
         args.port = SERVER_PORT;
         args.isWss = true;
-        args.isByIP = LOGIN_BY_IP
-        args.serverURL = SERVER_URL
+        args.isByIP = LOGIN_BY_IP;
+        args.serverURL = SERVER_URL;
 	    KBEngine.create(args);
      },
 
