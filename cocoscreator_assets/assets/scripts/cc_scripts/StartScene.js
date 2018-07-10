@@ -120,7 +120,7 @@ cc.Class({
 	    args.ip = SERVER_IP;
         args.port = SERVER_PORT;
         args.isWss = true;              //是否是有wss协议， true:wss  false:ws
-        args.isByIP = true;             //用ip还是用域名登录服务器   有修改官方的kbengine.js
+        args.isByIP = false;             //用ip还是用域名登录服务器   有修改官方的kbengine.js
         args.serverURL = SERVER_URL;
 	    KBEngine.create(args);
      },

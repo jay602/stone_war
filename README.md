@@ -32,7 +32,7 @@ cocos creator 1.9.1 + KBEngine1.1.x
     2. 拷贝服务端资产库"kbengine_stone_assets"到服务端引擎根目录"kbengine/"之下，如下图：
 ![demo_configure](https://github.com/jay602/stone_war/blob/master/kbengine_stone_assets/docs/img/20180710153206.png)
 
-## 配置Demo(可选):
+## 配置Demo:
     改变登录IP地址与端口
         cocoscreator_assets/assets/scripts/cc_scripts/Common.js
                 window.SERVER_URL = "xxx.com";     //登录服务器的域名
@@ -86,7 +86,9 @@ cocos creator 1.9.1 + KBEngine1.1.x
     构建完成后，点”运行”，启动微信开发者工具,点微信开发者工具的”预览”按钮，生成小游戏的二维码，用手机微信扫描，即可在微信上测试小游戏
 ![demo_configure](https://github.com/jay602/stone_war/blob/master/kbengine_stone_assets/docs/img/picture3.png)
 
-
+    用cocos creator打开"stone_ranking"工程, 构建排行榜的子域工程
+![demo_configure](https://github.com/jay602/stone_war/blob/master/kbengine_stone_assets/docs/img/20180710164004.png)
+![demo_configure](https://github.com/jay602/stone_war/blob/master/kbengine_stone_assets/docs/img/20180710164030.png)
 
 ## 演示截图:
 
