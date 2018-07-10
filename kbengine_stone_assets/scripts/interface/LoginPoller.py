@@ -38,10 +38,11 @@ class LoginPoller:
 			ERROR_MSG("wx Error: %s" % (response.error))
 		else:
 			INFO_MSG(response.body)
-			wxLoginResult = response.body.decode('utf8')
+			datas = response.body
+			wxLoginResult = datas.decode('utf8')
 			DEBUG_MSG(wxLoginResult)
 			if wxLoginResult:
 				userInfo = eval(wxLoginResult)
 				realAccountName = userInfo["openid"]
 				DEBUG_MSG("wx login result, loginname: %s" % (self._loginName))
-				self._callback(self._loginName, realAccountName, response.body, KBEngine.SERVER_ERR_LOCAL_PROCESSING)
+				self._callback(self._loginName, realAccountName, datas, KBEngine.SERVER_ERR_LOCAL_PROCESSING)

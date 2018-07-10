@@ -67,7 +67,9 @@ PLAYER_HP = 100
 DESKTOP_BROWSER = 101
 WECHAT_GAME = 104
 
+#小游戏的appid
 APPID = "*******************"
+#小游戏的secret
 APP_SECRET = "************************"
 WEI_XIN_URL = 'https://api.weixin.qq.com/sns/jscode2session'
 
