@@ -83,12 +83,14 @@ cocos creator 1.9.1 + KBEngine1.1.x
     构建项目, 在cocos creator的菜单栏里选择"项目" ---> "构建发布",  然后点击"构建"
 ![demo_configure](https://github.com/jay602/stone_war/blob/master/kbengine_stone_assets/docs/img/picture2.png)
 
-    构建完成后，点”运行”，启动微信开发者工具,点微信开发者工具的”预览”按钮，生成小游戏的二维码，用手机微信扫描，即可在微信上测试小游戏
-![demo_configure](https://github.com/jay602/stone_war/blob/master/kbengine_stone_assets/docs/img/picture3.png)
-
     用cocos creator打开"stone_ranking"工程, 构建排行榜的子域工程
 ![demo_configure](https://github.com/jay602/stone_war/blob/master/kbengine_stone_assets/docs/img/20180710164004.png)
 ![demo_configure](https://github.com/jay602/stone_war/blob/master/kbengine_stone_assets/docs/img/20180710164030.png)
+
+    构建完成后，在“cocoscreator_assets”主工程的"构建发布"对话框上点”运行”，启动微信开发者工具,点微信开发者工具的”预览”按钮，生成小游戏的二维码，用手机微信扫描，即可在微信上测试小游戏
+![demo_configure](https://github.com/jay602/stone_war/blob/master/kbengine_stone_assets/docs/img/picture3.png)
+
+    
 
 ## 演示截图:
 
