@@ -28,6 +28,13 @@ class Room(KBEngine.Entity):
 		DEBUG_MSG("Room::enterRoom: avatar%i" % (entityCall.id))
 		entityCall.createCell(self.cell)
 		self.onEnter(entityCall)
+	
+	def onEnter(self, entityCall):
+		"""
+		defined method.
+		进入场景
+		"""
+		self.avatars[entityCall.id] = entityCall
 
 	def leaveRoom(self, entityID):
 		"""
@@ -42,13 +49,7 @@ class Room(KBEngine.Entity):
 		引擎回调timer触发
 		"""
 		pass
-		
-	def onEnter(self, entityCall):
-		"""
-		defined method.
-		进入场景
-		"""
-		self.avatars[entityCall.id] = entityCall
+	
 		
 	def onLeave(self, entityID):
 		"""

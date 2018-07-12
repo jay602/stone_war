@@ -106,6 +106,7 @@ def onRequestAccountLogin(loginName, password, datas):
 		g_LoginPoller.wxLogin(loginName, callback)
 	else:
 		KBEngine.accountLoginResponse(commitName, realAccountName, datas, KBEngine.SERVER_ERR_LOCAL_PROCESSING)
+		
 	"""
 	if param["platform"] == wetchat:
 			values = {}

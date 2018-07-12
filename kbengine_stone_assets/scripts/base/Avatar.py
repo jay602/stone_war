@@ -29,7 +29,6 @@ class Avatar(KBEngine.Proxy):
 		self.cellData["hitRate"] = 0.0
 		self.cellData["avatarName"] = ""
 		
-		DEBUG_MSG("new avatar: accountName=%s" % (self.__ACCOUNT_NAME__))
 		datas = self.getClientDatas()
 		if datas[0]:
 			try:			

@@ -100,19 +100,11 @@
 			<Arg>		VECTOR3			</Arg>
 		</onStopWalk>
 
-		<onJump>
-		</onJump>
-
 		<onLeftJump>
 		</onLeftJump>
 
 		<onRightJump>
 		</onRightJump>
-
-		<onNewTurn>
-				<Arg>		ENTITY_ID		</Arg>
-				<Arg>		INT32		    </Arg>
-		</onNewTurn>
 
 		<onPickUpItem>
 				<Arg>		ENTITY_ID		</Arg>
@@ -123,6 +115,11 @@
 				<Arg>		ENTITY_ID		</Arg>
 				<Arg>		VECTOR3			</Arg>
 		</onThrowItem>
+
+		<onNewTurn>
+				<Arg>		ENTITY_ID		</Arg>
+				<Arg>		INT32		    </Arg>
+		</onNewTurn>
 
 		<onRecoverItem>
 			<Arg>		ENTITY_ID	</Arg>
@@ -154,6 +151,9 @@
 		<onContinueGame>
 			<Arg>		ENTITY_ID		</Arg>
 		</onContinueGame>
+
+		<onJump>
+		</onJump>
 	</ClientMethods>
 
 	<BaseMethods>
@@ -183,10 +183,6 @@
 			<Arg>		VECTOR3		</Arg>
 		</stopWalk>
 
-		<jump>
-			<Exposed/>
-		</jump>
-
 		<rightJump>
 			<Exposed/>
 		</rightJump>
@@ -210,6 +206,10 @@
 		<newTurn>
 			<Exposed/>
 		</newTurn>
+
+		<jump>
+			<Exposed/>
+		</jump>
 
 		<recoverItem>
 			<Exposed/>

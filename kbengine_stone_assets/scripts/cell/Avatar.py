@@ -12,8 +12,6 @@ class Avatar(KBEngine.Entity, EntityCommon):
 	def __init__(self):
 		KBEngine.Entity.__init__(self)
 		EntityCommon.__init__(self)
-		DEBUG_MSG("Avatar %i cell new" % (self.id))
-		DEBUG_MSG(self.position)
 		self.startPosition = copy.deepcopy(self.position)
 		self.getCurrRoom().onEnter(self)
 		DEBUG_MSG("new avatar cell: id=%i accountName=%s  avatarName=%s spaceID=%i" % (self.id, self.accountName, self.avatarName, self.spaceID))
@@ -124,7 +122,6 @@ class Avatar(KBEngine.Entity, EntityCommon):
 			return
 
 		self.otherClients.onStopWalk(pos)
-
 
 	def startWalk(self, exposed, moveFlag):
 		DEBUG_MSG("avavtar %i start walk, selfID=%i moveflag=%i" % (exposed, self.id, moveFlag))

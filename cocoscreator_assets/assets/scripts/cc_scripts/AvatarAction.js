@@ -290,6 +290,24 @@ cc.Class({
         this.node.x += num;
     },
 
+   
+
+    onLeftWalk: function() {
+        this.moveFlag = MOVE_LEFT;
+        if(!this.jumping) {
+            this.node.scaleX = this.leftDir;
+            this.playWalkAnim();
+        }
+    },
+
+    onRightWalk: function() {
+        this.moveFlag = MOVE_RIGHT;
+        if(!this.jumping) {
+            this.node.scaleX = this.rightDir;
+            this.playWalkAnim();
+        }
+    },
+
     leftWalk: function() {
         if(this.moveFlag == MOVE_LEFT) 
             return;
@@ -304,19 +322,10 @@ cc.Class({
             this.labelName.scaleX = this.node.scaleX;
             this.playWalkAnim();
         }
-        
 
         var player = KBEngine.app.player();
         if(player != undefined && player.inWorld && player.id == this.eid) {
             player.startWalk(MOVE_LEFT);
-        }
-    },
-
-    onLeftWalk: function() {
-        this.moveFlag = MOVE_LEFT;
-        if(!this.jumping) {
-            this.node.scaleX = this.leftDir;
-            this.playWalkAnim();
         }
     },
 
@@ -338,14 +347,6 @@ cc.Class({
         var player = KBEngine.app.player();
         if(player != undefined && player.inWorld  && player.id == this.eid) {
             player.startWalk(MOVE_RIGHT);
-        }
-    },
-
-    onRightWalk: function() {
-        this.moveFlag = MOVE_RIGHT;
-        if(!this.jumping) {
-            this.node.scaleX = this.rightDir;
-            this.playWalkAnim();
         }
     },
 
@@ -812,7 +813,6 @@ cc.Class({
     },
    
     update: function(dt) {
-        //this.drawTestNode();
         this.drawForce();
 
         if(this.arrow.active) {
@@ -833,61 +833,18 @@ cc.Class({
 
             if(this.jumpFrame == 0) {
                 if(jumpHeight<8.5) jumpHeight = 8.56;
-                
-                // var start = this.start_point.convertToWorldSpaceAR(cc.v2(0, 0));
-                // var end = this.end_point.convertToWorldSpaceAR(cc.v2(0, 0));
-                // results = cc.director.getPhysicsManager().rayCast(start, end, cc.RayCastType.AllClosest);
-        
-                // for (var i = 0; i < results.length; i++) {
-                //     var result = results[i];
-                //     var collider = result.collider;
-                //     if(collider.node.name == "land_bg") {
-                //         var rayHeight = result.point.y - end.y; 
-                //         KBEngine.INFO_MSG("first jump : endPoint(" + end.x + ", " + end.y + ")");
-                //         KBEngine.INFO_MSG("first jump : rayPoint(" + result.point.x + ", " + result.point.y + ")");
-                //         KBEngine.INFO_MSG("first jump : rayCast height = " + rayHeight);
-                //         break;
-                //     }
-                // }
             }
 
             this.jumpFrame++;
             this.addAxisY(jumpHeight);
             this.isOnGround = false;
-
-            // KBEngine.INFO_MSG("player jumping, position(" + this.node.x + ", "+ this.node.y + ")");
-            // KBEngine.INFO_MSG("player jumping, jumpHeight= " + jumpHeight);
-            // KBEngine.INFO_MSG("player jumping, dt= " + dt);
-            //KBEngine.INFO_MSG("player jumping, jumpSpeedY= " + this.jumpSpeedY);
-            //KBEngine.INFO_MSG("player jumping, acced= " + this.gravity * dt);
-            
         }
 
         if(this.moveFlag == MOVE_LEFT) {
             this.addAxisX(-speedX);
-            // if(player.id == this.eid) {
-            //    if(!this.isCollideLand) {
-            //         this.addAxisX(-speedX);
-            //    }
-            // }else {
-            //    if(this.targetPosition && this.node.x >= this.targetPosition.x) {
-            //         KBEngine.INFO_MSG("update: other avatar move left");
-            //         this.addAxisX(-speedX);
-            //      } 
-            // }
         } 
         else if (this.moveFlag == MOVE_RIGHT ) {
             this.addAxisX(speedX);
-            // if(player.id == this.eid) {
-            //     if(!this.isCollideLand) {
-            //         this.addAxisX(speedX);
-            //     }
-            // }else {
-            //     if(this.targetPosition && this.node.x <= this.targetPosition.x) {
-            //         KBEngine.INFO_MSG("update: other avatar move left");
-            //         this.addAxisX(speedX);
-            //     } 
-            // }
         }  
 
         var start = this.start_point.convertToWorldSpaceAR(cc.v2(0, 0));
@@ -907,13 +864,6 @@ cc.Class({
                
                 if(this.jumping) {
                     if(ret) break;
-                    // KBEngine.INFO_MSG("player stop jump, position(" + this.node.x + ", "+ this.node.y + ")");
-
-                    // var rayHeight = result.point.y - end.y; 
-                    // KBEngine.INFO_MSG("endPoint(" + end.x + ", " + end.y + ")");
-                    // KBEngine.INFO_MSG("rayPoint(" + result.point.x + ", " + result.point.y + ")");
-                    // KBEngine.INFO_MSG("rayCast height = " + rayHeight);
-
                     this.jumping = false;
                     this.moveFlag = STATIC;
                     this.anim.playIdleAnim();
