@@ -1,6 +1,6 @@
 ## 投石对战微信小游戏
 
-cocos creator 1.9.1 + KBEngine1.1.x
+cocos creator 1.9.1 + KBEngine1.1.9
 
 ## 本项目作为KBEngine服务端引擎的微信小游戏演示而写
 
