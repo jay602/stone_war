@@ -29,6 +29,63 @@
 			<port>	 30099		</port>
 		</InterfacesServiceAddr>
 
+		<!-- 数据库接口 
+			(database interfaces)
+		-->
+		<databaseInterfaces>
+			<!-- 数据库接口名称 （可以定义多个不同的接口，但至少存在一个default）
+				（Database interface name)
+			-->
+			<default>
+				<!-- 如果为true，则为纯净的数据库，引擎不创建实体表 
+					（If true is pure database, engine does not create the entity table)
+				-->
+				<pure> false </pure>
+
+				<!-- 数据库类型 （mysql、redis）
+					（Database type(mysql, redis))
+				-->
+				<type> mysql </type>											<!-- Type: String -->
+
+				<!-- 数据库地址 
+					（Database address)
+				-->
+				<host> localhost </host>										<!-- Type: String -->
+				<port> 0 </port>												<!-- Type: Integer -->
+
+				<!-- 数据库账号验证 
+					（Database auth)
+				-->
+				<auth>  
+					<username> kbe </username>									<!-- Type: String -->
+					<password> pwd123456 </password>							<!-- Type: String -->
+					
+					<!-- 为true则表示password是加密(rsa)的, 可防止明文配置 
+						(is true, password is RSA)
+					-->
+					<encrypt> true </encrypt>
+				</auth>
+
+				<!-- 数据库名称 
+					(Database name)
+				-->
+				<databaseName> kbe </databaseName> 								<!-- Type: String -->
+				
+				<!-- 数据库允许的连接数 
+					(Number of connections allowed by the database)
+				-->
+				<numConnections> 5 </numConnections>							<!-- Type: Integer -->
+				
+				<!-- 字符编码类型 
+					(Character encoding type)
+				-->
+				<unicodeString>
+					<characterSet> utf8 </characterSet> 						<!-- Type: String -->
+					<collation> utf8_bin </collation> 							<!-- Type: String -->
+				</unicodeString>
+			</default>
+		</databaseInterfaces>
+
 		<account_system>
 			<!-- 账号Entity的名称
 			    (Name of AccountEntity)
@@ -60,64 +117,6 @@
 				<loginAutoCreate> true </loginAutoCreate>
 			</account_registration>
 		</account_system>
-
-		
-		<!-- 数据库接口 
-			(database interfaces)
-		-->
-		<databaseInterfaces>
-			<!-- 数据库接口名称 （可以定义多个不同的接口，但至少存在一个default）
-				（Database interface name)
-			-->
-			<default>
-				<!-- 如果为true，则为纯净的数据库，引擎不创建实体表 
-					（If true is pure database, engine does not create the entity table)
-				-->
-				<pure> false </pure>
-
-				<!-- 数据库类型 （mysql、redis）
-					（Database type(mysql, redis))
-				-->
-				<type> mysql </type>											<!-- Type: String -->
-
-				<!-- 数据库地址 
-					（Database address)
-				-->
-				<host> rm-bp1x8sd7135u0x1z7.mysql.rds.aliyuncs.com </host>										<!-- Type: String -->
-				<port> 0 </port>												<!-- Type: Integer -->
-
-				<!-- 数据库账号验证 
-					（Database auth)
-				-->
-				<auth>  
-					<username> kbe_wxdemo </username>									<!-- Type: String -->
-					<password> yolo4809wxdemo </password>							<!-- Type: String -->
-					
-					<!-- 为true则表示password是加密(rsa)的, 可防止明文配置 
-						(is true, password is RSA)
-					-->
-					<encrypt> true </encrypt>
-				</auth>
-
-				<!-- 数据库名称 
-					(Database name)
-				-->
-				<databaseName> kbe_wxdemo </databaseName> 								<!-- Type: String -->
-				
-				<!-- 数据库允许的连接数 
-					(Number of connections allowed by the database)
-				-->
-				<numConnections> 5 </numConnections>							<!-- Type: Integer -->
-				
-				<!-- 字符编码类型 
-					(Character encoding type)
-				-->
-				<unicodeString>
-					<characterSet> utf8 </characterSet> 						<!-- Type: String -->
-					<collation> utf8_bin </collation> 							<!-- Type: String -->
-				</unicodeString>
-			</default>
-		</databaseInterfaces>
 		
 		<ids>
 			<increasing_range> 10000 </increasing_range>				<!-- Type: Integer -->
@@ -125,7 +124,7 @@
 	</dbmgr>
 	
 	<baseapp>
-		<externalAddress> wxdemo.comblockengine.com/baseapp0 </externalAddress>							<!-- Type: String -->
+		<externalAddress> </externalAddress>							<!-- Type: String -->
 		<backupPeriod> 500 </backupPeriod>
 	</baseapp>
 	
