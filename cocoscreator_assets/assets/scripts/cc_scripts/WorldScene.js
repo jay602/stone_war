@@ -72,38 +72,6 @@ cc.Class({
         }
     },
 
-    enableWxShare: function () {
-        wx.showShareMenu({
-            withShareTicket:true,
-        });
-
-        wx.onShareAppMessage(function() {
-            return {
-                title: "投石作战",
-                imageUrl:SHARE_PICTURE,
-            }
-        });
-     },
-
-    enablePhysicManager: function () {
-        cc.director.getCollisionManager().enabled = true;
-        cc.director.getPhysicsManager().enabled = true;
-    },
-
-    enablePhysicsDebugDraw: function() {
-        var manager = cc.director.getCollisionManager();
-        manager.enabledDebugDraw = true;
-        manager.enabledDrawBoundingBox = true;
-
-        cc.director.getPhysicsManager().debugDrawFlags =
-            // cc.PhysicsManager.DrawBits.e_aabbBit |
-            // cc.PhysicsManager.DrawBits.e_pairBit |
-            cc.PhysicsManager.DrawBits.e_centerOfMassBit |
-            // cc.PhysicsManager.DrawBits.e_jointBit |
-            cc.PhysicsManager.DrawBits.e_shapeBit |
-            cc.PhysicsManager.DrawBits.e_rayCast;
-    },
-
     installEvents : function() {
         // common
         KBEngine.INFO_MSG("world scene installEvents ......");
@@ -136,6 +104,40 @@ cc.Class({
         KBEngine.Event.register("onGameOver", this, "onGameOver");
         KBEngine.Event.register("onResetItem", this, "onResetItem");
     },
+
+    enableWxShare: function () {
+        wx.showShareMenu({
+            withShareTicket:true,
+        });
+
+        wx.onShareAppMessage(function() {
+            return {
+                title: "投石作战",
+                imageUrl:SHARE_PICTURE,
+            }
+        });
+     },
+
+    enablePhysicManager: function () {
+        cc.director.getCollisionManager().enabled = true;
+        cc.director.getPhysicsManager().enabled = true;
+    },
+
+    enablePhysicsDebugDraw: function() {
+        var manager = cc.director.getCollisionManager();
+        manager.enabledDebugDraw = true;
+        manager.enabledDrawBoundingBox = true;
+
+        cc.director.getPhysicsManager().debugDrawFlags =
+            // cc.PhysicsManager.DrawBits.e_aabbBit |
+            // cc.PhysicsManager.DrawBits.e_pairBit |
+            cc.PhysicsManager.DrawBits.e_centerOfMassBit |
+            // cc.PhysicsManager.DrawBits.e_jointBit |
+            cc.PhysicsManager.DrawBits.e_shapeBit |
+            cc.PhysicsManager.DrawBits.e_rayCast;
+    },
+
+    
 
     unInstallEvents: function() {
         KBEngine.INFO_MSG("world scene unInstallEvents ......");
@@ -377,7 +379,7 @@ cc.Class({
         if(player == undefined || item == undefined)
             return;
         var action = player.getComponent("AvatarAction");
-        action.setPlaceItem(item, position);
+        action.setPlaceItem(item, action.getItemPoint());
         action.playThrowPreAnim();
     },
 

@@ -23,6 +23,12 @@ KBEngine.Avatar = KBEngine.Entity.extend({
                 this.baseCall("decodeEncryptedData", encryptedData, iv);
             }
         },
+
+        joinRoom: function()
+        {
+            KBEngine.INFO_MSG("avatar " + this.id + " join room");
+            this.baseCall("joinRoom");
+        },
                    
         onEnterWorld : function()
         {
@@ -205,11 +211,7 @@ KBEngine.Avatar = KBEngine.Entity.extend({
             KBEngine.Event.fire("onAvatarEnterWorld", KBEngine.app.entity_uuid, this.id, this);
         },
 
-        joinRoom: function()
-        {
-            KBEngine.INFO_MSG("avatar " + this.id + " join room");
-            this.baseCall("joinRoom");
-        }
+       
     });
     
     

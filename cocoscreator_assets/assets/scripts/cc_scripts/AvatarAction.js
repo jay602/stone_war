@@ -831,20 +831,20 @@ cc.Class({
             }
             var jumpHeight = this.jumpSpeedY*dt
 
-            if(this.jumpFrame == 0) {
-                if(jumpHeight<8.5) jumpHeight = 8.56;
+            if(this.jumpFrame == 0 && jumpHeight < 8.5) {
+                jumpHeight = 8.56;
             }
 
             this.jumpFrame++;
-            this.addAxisY(jumpHeight);
+            this.node.y += jumpHeight;
             this.isOnGround = false;
         }
 
         if(this.moveFlag == MOVE_LEFT) {
-            this.addAxisX(-speedX);
+            this.node.x -= speedX;
         } 
         else if (this.moveFlag == MOVE_RIGHT ) {
-            this.addAxisX(speedX);
+            this.node.x += speedX;
         }  
 
         var start = this.start_point.convertToWorldSpaceAR(cc.v2(0, 0));

@@ -65,7 +65,7 @@ cc.Class({
 
         wx.onShareAppMessage(function() {
             return {
-                title: "投石作战",
+                title: "投石对战",
                 imageUrl:SHARE_PICTURE,
             }
         });
@@ -119,14 +119,13 @@ cc.Class({
 	
 	    args.ip = SERVER_IP;
         args.port = SERVER_PORT;
-        args.isWss = true;              //是否用wss协议， true:wss  false:ws
-        args.isByIP = false;             //用ip还是用域名登录服务器   有修改官方的kbengine.js
+        args.isWss = IS_USE_WSS;              //是否用wss协议， true:wss  false:ws
+        args.isByIP = LOGIN_BY_IP;             //用ip还是用域名登录服务器   有修改官方的kbengine.js
         args.serverURL = SERVER_URL;
 	    KBEngine.create(args);
      },
 
      installEvents:function() {
-        KBEngine.INFO_MSG("start scene install event .....");
         KBEngine.Event.register("onConnectionState", this, "onConnectionState");
         KBEngine.Event.register("onLoginFailed", this, "onLoginFailed");
         KBEngine.Event.register("onLoginBaseappFailed", this, "onLoginBaseappFailed");
@@ -137,7 +136,6 @@ cc.Class({
      },
 
      unInstallEvents() {
-        KBEngine.INFO_MSG("start scene uninstall event .....");
         KBEngine.Event.deregister("onConnectionState", this, "onConnectionState");
         KBEngine.Event.deregister("onLoginFailed", this, "onLoginFailed");
         KBEngine.Event.deregister("onLoginBaseappFailed", this, "onLoginBaseappFailed");

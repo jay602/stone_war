@@ -32,6 +32,6 @@ var walk = cc.ActionInterval.extend({
 });
 
 
-cc.walk = function(duration,shakeStrengthX,shakeStrengthY){
+cc.walk = function(duration,shakeStrengthX,shakeStrengthY) {
     return new walk(duration,shakeStrengthX,shakeStrengthY);
 };
