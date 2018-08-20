@@ -39,17 +39,19 @@ cocos creator 1.9.1 + KBEngine1.1.9
 ## 配置Demo:
     改变登录IP地址与端口
         cocoscreator_assets/assets/scripts/cc_scripts/Common.js
-                window.SERVER_URL = "xxx.com";     //登录服务器的域名
-                window.SERVER_IP = "192.168.0.106";
-                window.SERVER_PORT = "20013";
+               	window.LOGIN_BY_IP = true;              //是否用ip登录
+		window.IS_USE_WSS = false;              //是否用wss协议
+		window.SERVER_URL = "xxx.com";          //服务器域名
+		window.SERVER_IP = "127.0.0.1";
+		window.SERVER_PORT = "20013";
 
         cocoscreator_assets/assets/scripts/cc_scripts/StartScene.js
                  initKbengine: function() {
                     var args = new KBEngine.KBEngineArgs();
-	                args.ip = SERVER_IP;
+	            args.ip = SERVER_IP;
                     args.port = SERVER_PORT;
-                    args.isWss = true;              //是否是有wss协议， true:wss  false:ws
-                    args.isByIP = true;             //用ip还是用域名登录服务器   修改了官方的kbengine.js
+                    args.isWss = IS_USE_WSS;              //是否是有wss协议， true:wss  false:ws
+                    args.isByIP = LOGIN_BY_IP;             //用ip还是用域名登录服务器   修改了官方的kbengine.js
                     args.serverURL = SERVER_URL;
 	                KBEngine.create(args);
                 },
