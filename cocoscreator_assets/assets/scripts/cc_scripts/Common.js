@@ -38,7 +38,7 @@ window.JOY_STICK_POSITION_Y = 120;
 window.LOGIN_BY_IP = true;              //是否用ip登录
 window.IS_USE_WSS = false;              //是否用wss协议
 window.SERVER_URL = "xxx.com";          //服务器域名
-window.SERVER_IP = "132.232.2.181";
+window.SERVER_IP = "127.0.0.1";
 window.SERVER_PORT = "20013";
 
 window.SHARE_PICTURE= "https://lg-08x91vr4-1252948162.cos.ap-shanghai.myqcloud.com/stone_share.png";
