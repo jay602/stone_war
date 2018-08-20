@@ -13,6 +13,10 @@ cocos creator 1.9.1 + KBEngine1.1.9
 ## QQ交流群
 
 	461368412 
+	
+## 我的QQ
+
+	857024709
 
 ## Releases
     sourrce : https://github.com/jay602/stone_war
