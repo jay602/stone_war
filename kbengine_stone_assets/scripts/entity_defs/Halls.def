@@ -23,7 +23,7 @@
 		</onRoomLoseCell>
 		
 		<onRoomGetCell>
-			<Arg>		ENTITYCALL			</Arg>
+			<Arg>		ENTITYCALL		</Arg>
 			<Arg>		SPACE_KEY		</Arg>
 		</onRoomGetCell>
 	</BaseMethods>

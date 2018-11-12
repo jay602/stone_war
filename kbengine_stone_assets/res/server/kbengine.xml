@@ -123,11 +123,6 @@
 		</ids>
 	</dbmgr>
 	
-	<baseapp>
-		<externalAddress> </externalAddress>							<!-- Type: String -->
-		<backupPeriod> 500 </backupPeriod>
-	</baseapp>
-	
 	<cellapp>
 		<ids>
 			<criticallyLowSize> 2000 </criticallyLowSize>				<!-- Type: Integer -->

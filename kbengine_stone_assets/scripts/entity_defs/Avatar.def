@@ -92,6 +92,10 @@
 	</Properties>
 
 	<ClientMethods>
+		<onDie>
+			<Arg>		ENTITY_ID	</Arg>
+		</onDie>
+
 		<onStartWalk>
 			<Arg>		INT32	</Arg>
 		</onStartWalk>
@@ -130,11 +134,7 @@
 			<Arg>		INT32		</Arg>
 			<Arg>		INT32		</Arg>
 		</onRecvDamage>
-
-		<onDie>
-			<Arg>		ENTITY_ID	</Arg>
-		</onDie>
-
+		
 		<onGameOver>
 			<Arg>		BOOL	</Arg>
 			<Arg>		FLOAT	</Arg>

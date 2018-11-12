@@ -33,6 +33,7 @@ class EntityCommon:
 	def getCurrRoomBase(self):
 		"""
 		获得当前space的entity baseEntityCall
+		Room-cell Avatar-cell在同一space,所以两者的spaceID是一样的。
 		"""
 		return KBEngine.globalData.get("Room_%i" % self.spaceID)
 
@@ -43,7 +44,8 @@ class EntityCommon:
 		roomBase = self.getCurrRoomBase()
 		if roomBase is None:
 			return roomBase
-
+		# id是Entity的对象id。这个id是一个整型，在base，cell和client相关联的实体之间是相同的。 
+		# 因此，在cellapp上调用KBEngine.entities.get()得到Room-cell,也就是Avatar所在的房间
 		return KBEngine.entities.get(roomBase.id, None)
 		
 	def getHalls(self):

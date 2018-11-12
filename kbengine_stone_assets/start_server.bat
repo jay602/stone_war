@@ -15,14 +15,14 @@ echo KBE_ROOT = %KBE_ROOT%
 echo KBE_RES_PATH = %KBE_RES_PATH%
 echo KBE_BIN_PATH = %KBE_BIN_PATH%
 
-start %KBE_BIN_PATH%/machine.exe --cid=10002 --gus=1
-start %KBE_BIN_PATH%/logger.exe --cid=20002 --gus=2
-start %KBE_BIN_PATH%/interfaces.exe --cid=30002 --gus=3
-start %KBE_BIN_PATH%/dbmgr.exe --cid=40002 --gus=4
-start %KBE_BIN_PATH%/baseappmgr.exe --cid=50002 --gus=5
-start %KBE_BIN_PATH%/cellappmgr.exe --cid=60002 --gus=6
-start %KBE_BIN_PATH%/baseapp.exe --cid=70012 --gus=7
+start %KBE_BIN_PATH%/machine.exe --cid=110002 --gus=1
+start %KBE_BIN_PATH%/logger.exe --cid=210002 --gus=2
+start %KBE_BIN_PATH%/interfaces.exe --cid=320002 --gus=3
+start %KBE_BIN_PATH%/dbmgr.exe --cid=42002 --gus=4
+start %KBE_BIN_PATH%/baseappmgr.exe --cid=510002 --gus=5
+start %KBE_BIN_PATH%/cellappmgr.exe --cid=610002 --gus=6
+start %KBE_BIN_PATH%/baseapp.exe --cid=720012 --gus=7
 @rem start %KBE_BIN_PATH%/baseapp.exe --cid=70022 --gus=8 --hide=1
-start %KBE_BIN_PATH%/cellapp.exe --cid=80012 --gus=9
+start %KBE_BIN_PATH%/cellapp.exe --cid=820012 --gus=9
 @rem start %KBE_BIN_PATH%/cellapp.exe --cid=80022  --gus=10 --hide=1
-start %KBE_BIN_PATH%/loginapp.exe --cid=90002 --gus=11
+start %KBE_BIN_PATH%/loginapp.exe --cid=920002 --gus=11

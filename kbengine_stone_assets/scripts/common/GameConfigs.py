@@ -68,9 +68,9 @@ DESKTOP_BROWSER = 101
 WECHAT_GAME = 104
 
 #小游戏的appid
-APPID = "*******************"
+APPID = "wxfe3c2a610dc6a2e4"
 #小游戏的secret
-APP_SECRET = "************************"
+APP_SECRET = "c50a771efd3d79dc89efa3d6e2484dcc"
 WEI_XIN_URL = 'https://api.weixin.qq.com/sns/jscode2session'
 
 

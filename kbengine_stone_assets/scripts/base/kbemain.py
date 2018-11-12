@@ -21,6 +21,7 @@ def onBaseAppReady(isBootstrap):
 		# 创建大厅
 		KBEngine.createEntityLocally( "Halls", {} )
 
+
 def onReadyForLogin(isBootstrap):
 	"""
 	KBEngine method.

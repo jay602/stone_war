@@ -24,7 +24,6 @@ class Room(KBEngine.Entity):
 
 		# 把自己移动到一个不可能触碰陷阱的地方
 		self.position = (999999.0, 0.0, 0.0)
-
 		# 这个房间中所有的玩家
 		self.avatars = {}
 		self.items = {}
@@ -33,7 +32,9 @@ class Room(KBEngine.Entity):
 		self.secondTimer = 0
 		self.totalTime = 0
 		self.readyPlayerCount = 0
+
 		DEBUG_MSG('created space[%d] entityID = %i spaceid=%i' % (self.roomKeyC, self.id, self.spaceID))
+		
 		KBEngine.globalData["Room_%i" % self.spaceID] = self.base
 		self.createItems()
 
@@ -81,6 +82,7 @@ class Room(KBEngine.Entity):
 		"""
 		if TIMER_TYPE_GAME_START == userArg:
 			self.startGame()
+			#开始回合倒计时
 			self.newTurnTimer = self.addTimer(
 				GameConfigs.PLAY_TIME_PER_TURN, 0, TIMER_TYPE_NEXT_PLAYER)
 			DEBUG_MSG("Time to Game Start, newTurnTimer=%i" % (self.newTurnTimer))
@@ -90,9 +92,6 @@ class Room(KBEngine.Entity):
 
 		if TIMER_TYPE_NEXT_PLAYER == userArg:
 			self.nextPlayer()
-
-	def getTotalTime(self):
-		return self.totalTime
 
 	def startGame(self):
 		DEBUG_MSG("start game curEid=%i" % (self.curEid))
@@ -107,6 +106,11 @@ class Room(KBEngine.Entity):
 			entity.reset()
 			entity.client.onNewTurn(eid, GameConfigs.PLAY_TIME_PER_TURN)
 			DEBUG_MSG("entity %i on new turn" % (entity.id))
+
+	def getTotalTime(self):
+		return self.totalTime
+
+	
 
 	def onLeave(self, entityID):
 		"""

@@ -47,6 +47,7 @@ class Avatar(KBEngine.Proxy):
 		创建cell实体
 		"""
 		DEBUG_MSG("Avatar::createCellEntity: id=%i" % (self.id))
+		#在这里，space指的是Room实体的CellEntityCall，也就是在Room所在的空间上创建Avatar的cell部分,这样Avatar-cell和Room-cell的spaceId是一样的
 		self.createCellEntity(space)
 
 	def destroySelf(self):

@@ -41,6 +41,7 @@ class Halls(KBEngine.Entity):
 			if roomDatas is not None and roomDatas["PlayerCount"] < GameConfigs.ROOM_MAX_PLAYER:
 				return roomDatas
 
+			#生成一个64位的唯一id,作为房间的id
 			self.lastNewRoomKey = KBEngine.genUUID64()
 			
 			# 将房间base实体创建在任意baseapp上

@@ -11,6 +11,10 @@ from urllib import request, parse
 import tornado.ioloop
 import tornado.httpclient 
 from LoginPoller import LoginPoller
+from TestLogin import TestLogin
+import time
+import math
+import random
 
 """
 interfaces进程主要处理KBEngine服务端与第三方平台的接入接出工作。
@@ -41,6 +45,33 @@ interfaces进程主要处理KBEngine服务端与第三方平台的接入接出�
 g_LoginPoller = LoginPoller()
 
 
+def testLogin(timeid):
+	DEBUG_MSG("start login test........")
+	
+	for i in range(10000):
+		name = "dffrewr"
+		pwd  = "123456"
+		datas = ""
+		onRequestAccountLogin(name, pwd, datas)
+		DEBUG_MSG("login count: %i" % (i))
+
+def randomchar():
+	n = math.floor(random.random() * 62)
+	if n < 10:
+		return chr(n)
+
+	if n < 36:
+		return chr(n+55)
+
+	return chr(n+61)
+
+def randomstring(L):
+	s = ''
+	while len(s) < L :
+		s += randomchar()
+
+	return s
+
 def onInterfaceAppReady():
 	"""
 	KBEngine method.
@@ -48,7 +79,8 @@ def onInterfaceAppReady():
 	"""
 	INFO_MSG('onInterfaceAppReady: bootstrapGroupIndex=%s, bootstrapGlobalIndex=%s' % \
 		(os.getenv("KBE_BOOTIDX_GROUP"), os.getenv("KBE_BOOTIDX_GLOBAL")))
-	
+
+	#KBEngine.addTimer(30, 0, testLogin)
 
 def onTick(timerID):
 	"""
@@ -94,49 +126,57 @@ def onRequestCreateAccount(registerName, password, datas):
 	
 def onRequestAccountLogin(loginName, password, datas):
 	commitName = loginName
-	realAccountName = copy.deepcopy(commitName)
-	wetchat = '%d' % GameConfigs.WECHAT_GAME
-	isWeiXinLogin = False
-	param = eval(datas.decode('utf8'))
-	
-	if param["platform"] == wetchat:
-		callback = lambda _commitName, _realAccountName, _datas, _result:{
-					KBEngine.accountLoginResponse(_commitName, _realAccountName, _datas, _result)
-				}
-		g_LoginPoller.wxLogin(loginName, callback)
-	else:
-		KBEngine.accountLoginResponse(commitName, realAccountName, datas, KBEngine.SERVER_ERR_LOCAL_PROCESSING)
-		
-	"""
-	if param["platform"] == wetchat:
-			values = {}
-			values['appid'] = GameConfigs.APPID
-			values['secret'] = GameConfigs.APP_SECRET
-			values['js_code'] = loginName
-			values['grant_type'] = 'authorization_code'
-			query_string = parse.urlencode(values)
-			#构建微信接口URL: https://api.weixin.qq.com/sns/jscode2session?appid=APPID&secret=SECRET&js_code=JSCODE&grant_type=authorization_code
-			url = GameConfigs.WEI_XIN_URL + "?" + query_string
-			
-			try:
-				DEBUG_MSG("visist wei xin server ....")
-				#阻塞同步访问，大量用户访问时，会造成性能下降，建议使用异步访问
-				#向微信服务器请求session_key和openid
-				respone = request.urlopen(url).read().decode("utf8")
-				userInfo = eval(respone)
-				if respone:
-					isWeiXinLogin = True
-					realAccountName = userInfo["openid"]
-					datas = str(userInfo).encode()
-						
-			except Exception as err:
-				isWeiXinLogin = False
-				DEBUG_MSG("weixin Error: " + str(err))
-	"""
-	#if not isWeiXinLogin:
-		#datas = bytes()
+	realAccountName = loginName
+	#wetchat = '%d' % GameConfigs.WECHAT_GAME
+	#param = eval(datas.decode('utf8'))
+	#isWeiXinLogin = False
 
-	#KBEngine.accountLoginResponse(commitName, realAccountName, datas, KBEngine.SERVER_ERR_LOCAL_PROCESSING)
+	# callback = lambda _commitName, _realAccountName, _datas, _result:{
+	# 				KBEngine.accountLoginResponse(_commitName, _realAccountName, _datas, _result)
+	# 			}
+	# g_LoginPoller.wxLogin(loginName, callback)
+	
+	#if param["platform"] == wetchat:
+		# callback = lambda _commitName, _realAccountName, _datas, _result:{
+		# 			KBEngine.accountLoginResponse(_commitName, _realAccountName, _datas, _result)
+		# 		}
+		# g_LoginPoller.wxLogin(loginName, callback)
+	#else:
+	#	KBEngine.accountLoginResponse(commitName, realAccountName, datas, KBEngine.SERVER_ERR_LOCAL_PROCESSING)
+
+
+	# if param["platform"] == wetchat:
+	# 		values = {}
+	# 		values['appid'] = GameConfigs.APPID
+	# 		values['secret'] = GameConfigs.APP_SECRET
+	# 		values['js_code'] = loginName
+	# 		values['grant_type'] = 'authorization_code'
+	# 		query_string = parse.urlencode(values)
+	# 		#构建微信接口URL: https://api.weixin.qq.com/sns/jscode2session?appid=APPID&secret=SECRET&js_code=JSCODE&grant_type=authorization_code
+	# 		url = GameConfigs.WEI_XIN_URL + "?" + query_string
+			
+	# 		try:
+	# 			DEBUG_MSG("visist wei xin server ....")
+	# 			#阻塞同步访问，大量用户访问时，会造成性能下降，建议使用异步访问
+	# 			#向微信服务器请求session_key和openid
+	# 			start = time.clock()
+	# 			respone = request.urlopen(url).read().decode("utf8")
+	# 			end = time.clock()
+	# 			DEBUG_MSG("visit weixin time %f" % (end - start))
+	# 			userInfo = eval(respone)
+	# 			if respone:
+	# 				isWeiXinLogin = True
+	# 				realAccountName = userInfo["openid"]
+	# 				datas = str(userInfo).encode()
+						
+	# 		except Exception as err:
+	# 			isWeiXinLogin = False
+	# 			DEBUG_MSG("weixin Error: " + str(err))
+	
+	# if not isWeiXinLogin:
+	# 	datas = bytes()
+
+	KBEngine.accountLoginResponse(commitName, realAccountName, datas, KBEngine.SERVER_ERR_LOCAL_PROCESSING)
 	
 def onRequestCharge(ordersID, entityDBID, datas):
 	"""
