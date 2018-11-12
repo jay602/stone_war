@@ -438,7 +438,7 @@ KBEngine.Event = function()
 		this._isPause = false;
 
 		var firedEvents = this._firedEvents;
-		while(fireEvents.length > 0)
+		while(firedEvents.length > 0)
 		{
 			var evt = firedEvents.shift();
 			var info = evt.evtInfo;
@@ -3396,7 +3396,7 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 			bundle.send(KBEngine.app);
 			KBEngine.app.socket.onmessage = KBEngine.app.Client_onImportClientMessages;  
 			KBEngine.INFO_MSG("KBEngineApp::onOpenLoginapp_createAccount: start importClientMessages ...");
-			KBEngine.Event.fire(KBEngine.EventTypes.Loginapp_importClientMessages);
+			KBEngine.Event.fire("Loginapp_importClientMessages");
 		}
 		else
 		{
